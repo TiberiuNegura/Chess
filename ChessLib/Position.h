@@ -5,31 +5,16 @@ class Position : public PositionInterface
 {
 public:
 	// Constructor
-	Position(char row, char column)
-		: row(row)
-		, column(column)
-	{ }
+	Position(char row, char column);
 
 
 	// Getters
-	char getRow() const override
-	{
-		return this->row;
-	}
-	char getColumn() const override
-	{
-		return this->column;
-	}
+	char getRow() const override;
+	char getColumn() const override;
 
-	std::pair<int, int> getMatrixPos() const override
-	{
-		return { getRow() - '0', getColumn() - 'A' };
-	}
+	std::pair<int, int> getMatrixPos() const override;
 
-	static std::pair<char, char> getTablePos(int row, int column)
-	{
-		return { row - '0' , column - 'A' };
-	}
+	static std::pair<char, char> getTablePos(int row, int column);
 
 private:
 	char row, column;
