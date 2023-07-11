@@ -1,8 +1,7 @@
 #pragma once
+#include "PositionInterface.h"
 
-#include <tuple>
-
-class Position
+class Position : public PositionInterface
 {
 public:
 	// Constructor
@@ -13,16 +12,16 @@ public:
 
 
 	// Getters
-	char getRow() const
+	char getRow() const override
 	{
 		return this->row;
 	}
-	char getColumn() const
+	char getColumn() const override
 	{
 		return this->column;
 	}
 
-	std::pair<int, int> getMatrixPos() const
+	std::pair<int, int> getMatrixPos() const override
 	{
 		return { getRow() - '0', getColumn() - 'A' };
 	}
