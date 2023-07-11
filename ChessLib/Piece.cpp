@@ -1,8 +1,12 @@
 #include "Piece.h"
-#include <iostream>
 
-
-void Piece::move()
+void Piece::move(Position position)
 {
-	std::cout << "moved" << std::endl;
+
 }
+
+bool Piece::isValid(Position position)
+{
+	return false;
+}
+

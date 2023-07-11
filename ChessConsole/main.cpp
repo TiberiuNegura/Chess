@@ -1,7 +1,8 @@
-#include "Piece.h"
+#include "PieceInterface.h"
 
 int main()
 {
-	Piece piece;
-	piece.move();
+	return 0;
+
+	
 }

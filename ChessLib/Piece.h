@@ -1,9 +1,15 @@
 #pragma once
 
-class Piece
-{
+#include "PieceInterface.h"
 
-	public:
-		void move();
+class Piece : public PieceInterface
+{
+public:
+	void move(Position position) override;
+	bool isValid(Position position) override;
+	//std::unordered_set<Position> createPattern() override;
+
+
+
 };
 
