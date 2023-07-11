@@ -1,17 +1,10 @@
 #include "Piece.h"
 
-void Piece::move(Position position)
+Piece::Piece(
+	char name,
+	char row,
+	char column,
+	Color color
+) : name(name), position(Position(row, column)), color(color)
 {
-
-}
-
-bool Piece::isValid(Position position)
-{
-	return false;
-}
-
-std::unordered_set<Position, Position::comparator> Piece::createPattern()
-{
-	return std::unordered_set<Position, Position::comparator>();
-}
-
+};

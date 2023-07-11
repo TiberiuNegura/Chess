@@ -2,15 +2,25 @@
 
 #include "PieceInterface.h"
 
+enum class Color {
+	WHITE,
+	BLACK,
+	NONE
+};
+
 class Piece : public PieceInterface
 {
-
+	protected:
+		char name;
+		Position position;
+		Color color;
 	public:
-		void move(Position position) override;
-		bool isValid(Position position) override;
-		std::unordered_set<Position, Position::comparator> createPattern() override;
-
-
-
+		Piece(
+			char name = '*',
+			char row = '0',
+			char column = 'A',
+			Color color = Color::NONE
+		);
+		virtual ~Piece() = default;
 };
 
