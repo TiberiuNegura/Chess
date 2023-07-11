@@ -16,6 +16,12 @@ public:
 
 	static std::pair<char, char> getTablePos(int row, int column);
 
+	struct comparator {
+		int operator()(const std::pair<char, char>& x) const
+		{
+			return (int)x.first + (int)x.second;
+		}
+	};
 private:
 	char row, column;
 };
