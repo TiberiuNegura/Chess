@@ -1,7 +1,14 @@
-#include "Piece.h"
-
+#include "PieceInterface.h"
+#include "PositionInterface.h"
+#include "Position.h"
+#include <memory>
+#include <iostream>
 int main()
 {
-	Piece piece;
-	piece.move();
+	std::shared_ptr<PositionInterface> ptr = std::make_shared<Position>('a', '3');
+	std::cout << ptr->getColumn();
+	
+	return 0;
+
+	
 }
