@@ -2,9 +2,9 @@
 
 Piece::Piece(
 	char name,
-	char row,
-	char column,
+	int row,
+	int column,
 	Color color
-) : name(name), position(Position(row, column)), color(color)
+) : m_name(name), m_position({row, column}), m_color(color)
 {
 };

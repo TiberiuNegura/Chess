@@ -11,14 +11,14 @@ enum class Color {
 class Piece : public PieceInterface
 {
 	protected:
-		char name;
-		Position position;
-		Color color;
+		char m_name;
+		std::pair<int, int> m_position;
+		Color m_color;
 	public:
 		Piece(
 			char name = '*',
-			char row = '0',
-			char column = 'A',
+			int row = 0,
+			int column = 0,
 			Color color = Color::NONE
 		);
 		virtual ~Piece() = default;
