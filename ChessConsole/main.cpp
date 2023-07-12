@@ -13,6 +13,9 @@ int main()
 		std::cout << std::endl;
 	}
 
+	
+	std::cout << game.getElement(1, 0)->createPattern(game.GetGameboard()).size();
+
 	return 0;
 
 	

@@ -1,5 +1,4 @@
 #include "Pawn.h"
-
 Pawn::Pawn(
 	int row,
 	int column,
@@ -22,43 +21,36 @@ bool Pawn::isValid(Position destination, const Matrix& board)
 PositionList Pawn::createPattern(const Matrix& board)
 {
 	PositionList positions;
-	//int first, second;
-	/*if (this->m_color == Color::WHITE) {
-		first = m_position.first;
-		second = m_position.second;
-	}
-	else if (this->m_color == Color::BLACK) {
-		first = 8 - m_position.first;
-		second = 8 - m_position.second;
-	}*/
-	long row = m_position.first, column = m_position.second;
-	if (this->m_color == Color::WHITE) {
-		if(board[row-1][column]->getType() == Type::EMPTY) {
-			positions.emplace_back(board[row - 1][column]->getPosition());
-			if (this->isFirstMove && board[row - 2][column]->getType() == Type::EMPTY) {
-				positions.emplace_back(board[row - 2][column]->getPosition());
+	int row = m_position.first, column = m_position.second;
+	int nextPos = (m_color == Color::WHITE) ? -1 : 1;
+
+
+	if (auto elem = board[row + nextPos][column])
+		{
+			auto type = elem->getType();
+			auto pos = elem->getPosition();
+			positions.emplace_back(pos);
+			if (isFirstMove)
+			{
+				if (auto elem2 = board[pos.first + nextPos][pos.second])
+				{
+					auto type2 = elem2->getType();
+					auto pos2 = elem->getPosition();
+					positions.emplace_back(pos2);
+
+				}
 			}
 		}
+		
+	if (auto elem = board[row + nextPos][column - 1])
+	{
+		auto color = elem->getColor();
+	}
 		if(board[row -1][column -1]->getColor() == Color::BLACK) {
 			positions.emplace_back(board[row - 1][column - 1]->getPosition());
 		}
 		if (board[row - 1][column + 1]->getColor() == Color::BLACK) {
 			positions.emplace_back(board[row - 1][column + 1]->getPosition());
 		}
-	}
-	else if (m_color == Color::BLACK) {
-		if (board[row + 1][column]->getType() == Type::EMPTY) {
-			positions.emplace_back(board[row + 1][column]->getPosition());
-			if (this->isFirstMove && board[row + 2][column]->getType() == Type::EMPTY) {
-				positions.emplace_back(board[row + 2][column]->getPosition());
-			}
-		}
-		if (board[row + 1][column + 1]->getColor() == Color::WHITE) {
-			positions.emplace_back(board[row + 1][column + 1]->getPosition());
-		}
-		if (board[m_position.first + 1][column - 1]->getColor() == Color::WHITE) {
-			positions.emplace_back(board[row +1][column - 1]->getPosition());
-		}
-	}
 	return positions;
 }

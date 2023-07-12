@@ -27,5 +27,4 @@ Type Piece::getType()
 Position Piece::getPosition()
 {
 	return m_position;
-}
-;
+};
