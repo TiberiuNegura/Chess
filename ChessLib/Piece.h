@@ -17,6 +17,10 @@ class Piece : public PieceInterface
 		{
 			return m_name;
 		}
+		int getColor()
+		{
+			return (int)m_color;
+		}
 
 
 

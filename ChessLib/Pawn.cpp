@@ -2,8 +2,11 @@
 
 
 
-Pawn::Pawn(int row, int column, Color color) 
-    : Piece('P', row, column, color, Type::PAWN)
+Pawn::Pawn(
+    int row,
+    int column,
+    Color color
+) : Piece('P', row, column, color, Type::PAWN)
 {
 
 }
@@ -17,7 +20,7 @@ bool Pawn::isValid(std::pair<int, int> destination)
     return false;
 }
 
-std::unordered_set<std::pair<int, int>> Pawn::createPattern()
+std::vector<std::pair<int, int>> Pawn::createPattern()
 {
     throw std::logic_error("The method or operation is not implemented.");
 }

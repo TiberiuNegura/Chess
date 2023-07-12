@@ -1,7 +1,10 @@
 #include "Rook.h"
 
-Rook::Rook(int row, int column, Color color) 
-	: Piece('R', row, column, color, Type::ROOK)
+Rook::Rook(
+	int row,
+	int column,
+	Color color
+) : Piece('R', row, column, color, Type::ROOK)
 {
 
 }
@@ -16,7 +19,7 @@ bool Rook::isValid(std::pair<int, int> destination)
 	return true;
 }
 
-std::unordered_set<std::pair<int, int>> Rook::createPattern()
+std::vector<std::pair<int, int>> Rook::createPattern()
 {
 	throw std::logic_error("The method or operation is not implemented.");
 }

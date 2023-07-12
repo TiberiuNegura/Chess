@@ -20,7 +20,7 @@ bool King::isValid(std::pair<int, int> destination)
 	throw std::logic_error("The method or operation is not implemented.");
 }
 
-std::unordered_set<std::pair<int, int>> King::createPattern()
+std::vector<std::pair<int, int>> King::createPattern()
 {
 	throw std::logic_error("The method or operation is not implemented.");
 }

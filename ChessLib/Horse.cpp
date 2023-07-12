@@ -19,7 +19,7 @@ bool Horse::isValid(std::pair<int, int> destination)
 	return true;
 }
 
-std::unordered_set<std::pair<int, int>> Horse::createPattern()
+std::vector<std::pair<int, int>> Horse::createPattern()
 {
 	throw std::logic_error("The method or operation is not implemented.");
 }
