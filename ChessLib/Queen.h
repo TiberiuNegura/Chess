@@ -5,9 +5,14 @@ class Queen : public Piece
 	public:
 		Queen(int row = 0, int column = 0, Color color = Color::NONE);
 
-		// Inherited via PieceInterface
-		virtual void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) override;
-		virtual bool isValid(std::pair<int, int> destination) override;
-		virtual  std::vector<std::pair<int, int>> createPattern() override;
+		
+
+		// Inherited via Piece
+		virtual void move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board) override;
+
+		virtual bool isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board) override;
+
+		virtual std::vector<std::pair<int, int>> createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board) override;
+
 };
 

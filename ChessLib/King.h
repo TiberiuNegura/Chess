@@ -12,9 +12,15 @@ class King : public Piece
 			Color color = Color::NONE
 		);
 
-		void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) override;
-		bool isValid(std::pair<int, int> destination) override;
-		std::vector<std::pair<int, int>> createPattern() override;
+		
+
+
+		// Inherited via Piece
+		virtual void move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board) override;
+
+		virtual bool isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board) override;
+
+		virtual std::vector<std::pair<int, int>> createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board) override;
 
 };
 

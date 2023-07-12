@@ -3,6 +3,9 @@
 #include <vector>
 #include <memory>
 
+using PiecePtr = std::shared_ptr<class PieceInterface>;
+
+
 enum class Color {
 	WHITE,
 	BLACK,
@@ -22,9 +25,9 @@ enum class Type {
 class PieceInterface
 {
 	public:
-		virtual void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) = 0;
-		virtual bool isValid(std::pair<int, int> destination) = 0;
-		virtual std::vector<std::pair<int, int>> createPattern() = 0;
+		virtual void move(std::pair<int, int> destination,std::array<std::array<PiecePtr, 8>, 8>& board) = 0;
+		virtual bool isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board) = 0;
+		virtual std::vector<std::pair<int, int>> createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board) = 0;
 		
 		virtual char getName() = 0;
 		virtual int getColor() = 0;

@@ -9,17 +9,18 @@ Horse::Horse(
 {
 }
 
-void Horse::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
+void Horse::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	
 }
 
-bool Horse::isValid(std::pair<int, int> destination)
+bool Horse::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	return true;
+	return false;
 }
 
-std::vector<std::pair<int, int>> Horse::createPattern()
+std::vector<std::pair<int, int>> Horse::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return std::vector<std::pair<int, int>>();
 }
+
+

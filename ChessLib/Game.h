@@ -8,7 +8,6 @@
 #include "Queen.h"
 #include "King.h"
 
-using PiecePtr = std::shared_ptr<Piece>;
 
 class Game
 {

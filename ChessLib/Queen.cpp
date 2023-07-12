@@ -6,16 +6,17 @@ Queen::Queen(int row, int column, Color color)
 
 }
 
-void Queen::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
+void Queen::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
 {
 }
 
-bool Queen::isValid(std::pair<int, int> destination)
+bool Queen::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
     return false;
 }
 
-std::vector<std::pair<int, int>> Queen::createPattern()
+std::vector<std::pair<int, int>> Queen::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-    throw std::logic_error("The method or operation is not implemented.")  ;
+    return std::vector<std::pair<int, int>>();
 }
+

@@ -10,17 +10,17 @@ King::King(
 {
 }
 
-void King::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
+void King::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	throw std::logic_error("The method or operation is not implemented.");
 }
 
-bool King::isValid(std::pair<int, int> destination)
+bool King::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return false;
 }
 
-std::vector<std::pair<int, int>> King::createPattern()
+std::vector<std::pair<int, int>> King::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return std::vector<std::pair<int, int>>();
 }
+
