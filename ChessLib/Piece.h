@@ -2,11 +2,6 @@
 
 #include "PieceInterface.h"
 
-enum class Color {
-	WHITE,
-	BLACK,
-	NONE
-};
 
 class Piece : public PieceInterface
 {
@@ -15,7 +10,8 @@ class Piece : public PieceInterface
 			char name = '*',
 			int row = 0,
 			int column = 0,
-			Color color = Color::NONE
+			Color color = Color::NONE,
+			Type type = Type::EMPTY
 		);
 		char getName()
 		{
@@ -29,6 +25,7 @@ class Piece : public PieceInterface
 		char m_name;
 		std::pair<int, int> m_position;
 		Color m_color;
+		Type m_type;
 
 
 };

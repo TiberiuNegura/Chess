@@ -4,6 +4,22 @@
 #include <memory>
 #include <unordered_set>
 
+enum class Color {
+	WHITE,
+	BLACK,
+	NONE
+};
+
+enum class Type {
+	PAWN,
+	ROOK,
+	BISHOP,
+	HORSE,
+	QUEEN,
+	KING,
+	EMPTY
+};
+
 class PieceInterface
 {
 	public:
