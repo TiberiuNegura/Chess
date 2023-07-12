@@ -1,8 +1,12 @@
 #include "Horse.h"
 
-Horse::Horse()
+
+Horse::Horse(
+	int row,
+	int column,
+	Color color
+) : Piece('H', row, column, color, Type::HORSE)
 {
-	this->m_name = 'H';
 }
 
 void Horse::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

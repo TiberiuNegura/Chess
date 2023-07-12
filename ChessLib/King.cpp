@@ -1,8 +1,13 @@
 #include "King.h"
 
-King::King()
+
+
+King::King(
+	int row,
+	int column,
+	Color color
+) : Piece('K', row, column, color, Type::KING)
 {
-	this->m_name = 'K';
 }
 
 void King::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

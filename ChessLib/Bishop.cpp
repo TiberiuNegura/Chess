@@ -1,8 +1,12 @@
 #include "Bishop.h"
 
-Bishop::Bishop()
+
+Bishop::Bishop(
+    int row,
+    int column,
+    Color color
+) : Piece('B', row, column, color, Type::BISHOP)
 {
-    this->m_name = 'B';
 }
 
 void Bishop::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

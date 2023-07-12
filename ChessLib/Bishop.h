@@ -3,7 +3,11 @@
 class Bishop : public Piece
 {
 	public:
-		Bishop();
+		Bishop(
+			int row = 0,
+			int column = 0,
+			Color color = Color::NONE
+		);
 		~Bishop() = default;
 
 		// Inherited via PieceInterface
