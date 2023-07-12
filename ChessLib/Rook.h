@@ -2,7 +2,7 @@
 
 #include "Piece.h"
 
-class Tower : public Piece
+class Rook : public Piece
 {
 	
 public:

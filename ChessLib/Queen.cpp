@@ -11,5 +11,5 @@ bool Queen::isValid(std::pair<int, int> destination)
 
 std::unordered_set<std::pair<int, int>> Queen::createPattern()
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    throw std::logic_error("The method or operation is not implemented.")  ;
 }

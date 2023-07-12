@@ -42,7 +42,7 @@
     <ClInclude Include="King.h">
       <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="Tower.h">
+    <ClInclude Include="Rook.h">
       <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="Horse.h">
@@ -68,7 +68,7 @@
     <ClCompile Include="King.cpp">
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="Tower.cpp">
+    <ClCompile Include="Rook.cpp">
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>
   </ItemGroup>
