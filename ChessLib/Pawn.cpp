@@ -2,6 +2,7 @@
 
 Pawn::Pawn()
 {
+    this->m_name = 'P';
 }
 
 void Pawn::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

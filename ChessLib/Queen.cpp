@@ -1,5 +1,10 @@
 #include "Queen.h"
 
+Queen::Queen()
+{
+    this->m_name = 'Q';
+}
+
 void Queen::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
 {
 }

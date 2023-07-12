@@ -5,10 +5,12 @@
 class King : public Piece
 {
 
-public:
-	void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) override;
-	bool isValid(std::pair<int, int> destination) override;
-	std::unordered_set<std::pair<int, int>> createPattern() override;
+	public:
+		King();
+
+		void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) override;
+		bool isValid(std::pair<int, int> destination) override;
+		std::unordered_set<std::pair<int, int>> createPattern() override;
 
 };
 

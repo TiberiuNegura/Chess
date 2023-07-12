@@ -1,5 +1,10 @@
 #include "King.h"
 
+King::King()
+{
+	this->m_name = 'K';
+}
+
 void King::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
 {
 	throw std::logic_error("The method or operation is not implemented.");

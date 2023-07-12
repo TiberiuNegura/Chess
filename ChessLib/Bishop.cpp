@@ -2,6 +2,7 @@
 
 Bishop::Bishop()
 {
+    this->m_name = 'B';
 }
 
 void Bishop::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

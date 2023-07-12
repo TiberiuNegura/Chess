@@ -1,5 +1,10 @@
 #include "Rook.h"
 
+Rook::Rook()
+{
+	this->m_name = 'R';
+}
+
 void Rook::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
 {
 	

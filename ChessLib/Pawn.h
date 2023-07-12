@@ -1,6 +1,7 @@
+#include "Piece.h"
 
-#include "PieceInterface.h"
-class Pawn : public PieceInterface
+
+class Pawn : public Piece
 {
 	public:
 		Pawn();
@@ -11,5 +12,5 @@ class Pawn : public PieceInterface
 		virtual bool isValid(std::pair<int, int> destination) override;
 		virtual std::unordered_set<std::pair<int, int>> createPattern() override;
 	private:
-		bool isFirstMove;
+		//bool isFirstMove;
 };

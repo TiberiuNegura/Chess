@@ -1,6 +1,6 @@
 #pragma once
-#include "PieceInterface.h"
-class Queen : public PieceInterface
+#include "Piece.h"
+class Queen : public Piece
 {
 	public:
 		Queen();

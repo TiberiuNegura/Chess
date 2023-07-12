@@ -10,11 +10,6 @@ enum class Color {
 
 class Piece : public PieceInterface
 {
-	protected:
-		char m_name;
-		std::pair<int, int> m_position;
-		Color m_color;
-
 	public:
 		Piece(
 			char name = '*',
@@ -22,7 +17,19 @@ class Piece : public PieceInterface
 			int column = 0,
 			Color color = Color::NONE
 		);
+		char getName()
+		{
+			return m_name;
+		}
+
+
+
 		virtual ~Piece() = default;
+	protected:
+		char m_name;
+		std::pair<int, int> m_position;
+		Color m_color;
+
 
 };
 

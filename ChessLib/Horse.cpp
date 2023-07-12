@@ -1,5 +1,10 @@
 #include "Horse.h"
 
+Horse::Horse()
+{
+	this->m_name = 'H';
+}
+
 void Horse::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
 {
 	
