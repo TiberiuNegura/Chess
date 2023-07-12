@@ -4,7 +4,9 @@
 class Pawn : public Piece
 {
 	public:
-		Pawn();
+		Pawn(int row = 0, int column = 0, Color color = Color::NONE)
+			: Piece('P', row, column, color, Type::PAWN)
+		{ }
 		~Pawn() = default;
 
 		// Inherited via PieceInterface

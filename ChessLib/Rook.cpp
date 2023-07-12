@@ -1,8 +1,9 @@
 #include "Rook.h"
 
-Rook::Rook()
+Rook::Rook(int row, int column, Color color) 
+	: Piece('R', row, column, color, Type::ROOK)
 {
-	this->m_name = 'R';
+
 }
 
 void Rook::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

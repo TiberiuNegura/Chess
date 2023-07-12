@@ -8,7 +8,6 @@ class Bishop : public Piece
 			int column = 0,
 			Color color = Color::NONE
 		);
-		~Bishop() = default;
 
 		// Inherited via PieceInterface
 		virtual void move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces) override;

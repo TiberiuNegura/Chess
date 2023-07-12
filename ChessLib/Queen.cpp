@@ -1,8 +1,9 @@
 #include "Queen.h"
 
-Queen::Queen()
+Queen::Queen(int row, int column, Color color) 
+    : Piece('Q', row, column, color, Type::QUEEN)
 {
-    this->m_name = 'Q';
+
 }
 
 void Queen::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)

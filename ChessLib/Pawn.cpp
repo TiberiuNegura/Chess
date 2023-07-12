@@ -1,8 +1,11 @@
 #include "Pawn.h"
 
-Pawn::Pawn()
+
+
+Pawn::Pawn(int row, int column, Color color) 
+    : Piece('P', row, column, color, Type::PAWN)
 {
-    this->m_name = 'P';
+
 }
 
 void Pawn::move(std::pair<int, int> destination, std::vector<std::shared_ptr<PieceInterface>>& pieces)
