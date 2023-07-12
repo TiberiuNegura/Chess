@@ -14,6 +14,7 @@ class Piece : public PieceInterface
 		char m_name;
 		std::pair<int, int> m_position;
 		Color m_color;
+
 	public:
 		Piece(
 			char name = '*',
@@ -22,5 +23,6 @@ class Piece : public PieceInterface
 			Color color = Color::NONE
 		);
 		virtual ~Piece() = default;
+
 };
 
