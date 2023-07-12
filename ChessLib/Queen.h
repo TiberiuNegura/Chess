@@ -8,11 +8,11 @@ class Queen : public Piece
 		
 
 		// Inherited via Piece
-		virtual void move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board) override;
+		virtual void move(Position destination, Matrix& board) override;
 
-		virtual bool isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board) override;
+		virtual bool isValid(Position destination, const Matrix& board) override;
 
-		virtual std::vector<std::pair<int, int>> createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board) override;
+		virtual PositionList createPattern(const Matrix& board) override;
 
 };
 

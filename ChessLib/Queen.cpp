@@ -6,17 +6,17 @@ Queen::Queen(int row, int column, Color color)
 
 }
 
-void Queen::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
+void Queen::move(Position destination, Matrix& board)
 {
 }
 
-bool Queen::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
+bool Queen::isValid(Position destination, const Matrix& board)
 {
     return false;
 }
 
-std::vector<std::pair<int, int>> Queen::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
+PositionList Queen::createPattern(const Matrix& board)
 {
-    return std::vector<std::pair<int, int>>();
+    return PositionList();
 }
 

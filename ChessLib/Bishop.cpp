@@ -9,17 +9,17 @@ Bishop::Bishop(
 {
 }
 
-void Bishop::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
+void Bishop::move(Position destination, Matrix& board)
 {
 }
 
-bool Bishop::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
+bool Bishop::isValid(Position destination, const Matrix& board)
 {
     return false;
 }
 
-std::vector<std::pair<int, int>> Bishop::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
+PositionList Bishop::createPattern(const Matrix& board)
 {
-    return std::vector<std::pair<int, int>>();
+    return PositionList();
 }
 

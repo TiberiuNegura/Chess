@@ -1,5 +1,7 @@
 #include "Game.h"
 
+using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
+
 Game::Game()
 {
 	for (int column = 0; column < 8; column++) {

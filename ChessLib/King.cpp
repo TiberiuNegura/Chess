@@ -10,17 +10,17 @@ King::King(
 {
 }
 
-void King::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
+void King::move(Position destination, Matrix& board)
 {
 }
 
-bool King::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
+bool King::isValid(Position destination, const Matrix& board)
 {
 	return false;
 }
 
-std::vector<std::pair<int, int>> King::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
+PositionList King::createPattern(const Matrix& board)
 {
-	return std::vector<std::pair<int, int>>();
+	return PositionList();
 }
 

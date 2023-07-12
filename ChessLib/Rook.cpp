@@ -9,17 +9,17 @@ Rook::Rook(
 
 }
 
-void Rook::move(std::pair<int, int> destination, std::array<std::array<PiecePtr, 8>, 8>& board)
+void Rook::move(Position destination, Matrix& board)
 {
 }
 
-bool Rook::isValid(std::pair<int, int> destination, const std::array<std::array<PiecePtr, 8>, 8>& board)
+bool Rook::isValid(Position destination, const Matrix& board)
 {
 	return false;
 }
 
-std::vector<std::pair<int, int>> Rook::createPattern(const std::array<std::array<PiecePtr, 8>, 8>& board)
+PositionList Rook::createPattern(const Matrix& board)
 {
-	return std::vector<std::pair<int, int>>();
+	return PositionList();
 }
 

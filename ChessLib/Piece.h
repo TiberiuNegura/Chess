@@ -13,21 +13,16 @@ class Piece : public PieceInterface
 			Color color = Color::NONE,
 			Type type = Type::EMPTY
 		);
-		char getName()
-		{
-			return m_name;
-		}
-		int getColor()
-		{
-			return (int)m_color;
-		}
-
+		char getName() override;
+		Color getColor() override;
+		Type getType() override;
+		Position getPosition() override;
 
 
 		virtual ~Piece() = default;
 	protected:
 		char m_name;
-		std::pair<int, int> m_position;
+		Position m_position;
 		Color m_color;
 		Type m_type;
 
