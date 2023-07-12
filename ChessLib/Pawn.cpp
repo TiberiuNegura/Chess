@@ -1,19 +1,5 @@
 #include "Pawn.h"
 
-void Pawn::move(Position position)
-{
-}
-
-bool Pawn::isValid(Position position)
-{
-    return false;
-}
-
-std::unordered_set<Position, Position::comparator> Pawn::createPattern()
-{
-    return std::unordered_set<Position, Position::comparator>();
-}
-
 Pawn::Pawn()
 {
 }
@@ -29,5 +15,5 @@ bool Pawn::isValid(std::pair<int, int> destination)
 
 std::unordered_set<std::pair<int, int>> Pawn::createPattern()
 {
-    return std::unordered_set<std::pair<int, int>>();
+    throw std::logic_error("The method or operation is not implemented.");
 }

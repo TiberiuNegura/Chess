@@ -15,5 +15,5 @@ bool Bishop::isValid(std::pair<int, int> destination)
 
 std::unordered_set<std::pair<int, int>> Bishop::createPattern()
 {
-    return std::unordered_set<std::pair<int, int>>();
+    throw std::logic_error("The method or operation is not implemented.");
 }
