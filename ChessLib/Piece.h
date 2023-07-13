@@ -25,6 +25,7 @@ class Piece : public PieceInterface
 		Position m_position;
 		Color m_color;
 		Type m_type;
+		static bool IsOutOfBounds(int row, int column);
 
 
 };

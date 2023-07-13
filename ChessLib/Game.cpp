@@ -35,7 +35,7 @@ PiecePtr Game::getElement(int row, int column)
 	return m_board[row][column];
 }
 
-std::array<std::array<PiecePtr, 8>, 8> Game::GetGameboard()
+Matrix& Game::GetGameboard() 
 {
 	return this->m_board;
 }

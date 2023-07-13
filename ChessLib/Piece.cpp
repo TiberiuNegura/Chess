@@ -27,4 +27,9 @@ Type Piece::getType()
 Position Piece::getPosition()
 {
 	return m_position;
-};
+}
+bool Piece::IsOutOfBounds(int row, int column)
+{
+	return !(0 <= row && row < 8 && 0 <= column && column < 8);
+}
+;

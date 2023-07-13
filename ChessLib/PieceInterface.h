@@ -29,7 +29,7 @@ enum class Type {
 class PieceInterface
 {
 	public:
-		virtual void move(Position destination,Matrix& board) = 0;
+		virtual void move(Position destination, Matrix& board) = 0;
 		virtual bool isValid(Position destination, const Matrix& board) = 0;
 		virtual PositionList createPattern(const Matrix& board) = 0;
 		
