@@ -6,8 +6,7 @@ Horse::Horse(
 	int column,
 	Color color
 ) : Piece('H', row, column, color, Type::HORSE)
-{
-}
+{ }
 
 // PieceInterface implemented methods
 void Horse::Move(Position destination, Matrix& board)

@@ -5,8 +5,7 @@ Pawn::Pawn(
 	int row,
 	int column,
 	Color color
-) : Piece('P', row, column, color, Type::PAWN)
-  , isFirstMove(true)
+) : Piece('P', row, column, color, Type::PAWN), isFirstMove(true)
 { }
 
 

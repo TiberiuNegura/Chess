@@ -1,8 +1,11 @@
 #include "Queen.h"
 
 // Constructor
-Queen::Queen(int row, int column, Color color) 
-    : Piece('Q', row, column, color, Type::QUEEN)
+Queen::Queen(
+    int row,
+    int column,
+    Color color
+): Piece('Q', row, column, color, Type::QUEEN)
 { }
 
 
