@@ -28,7 +28,6 @@ Game::Game()
 
 	m_board[0][4] = std::make_shared<King>(0, 4, Color::BLACK);
 	m_board[7][4] = std::make_shared<King>(7, 4, Color::WHITE);
-
 }
 
 PiecePtr Game::getElement(int row, int column)
