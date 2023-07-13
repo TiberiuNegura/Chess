@@ -1,24 +1,13 @@
 #pragma once
 
 #include <memory>
-#include "Pawn.h"
-#include "Rook.h"
-#include "Bishop.h"
-#include "Horse.h"
-#include "Queen.h"
-#include "King.h"
+#include "IGame.h"
 
-class Game
+class Game : public IGame
 {
 public:
 	// Constructor
 	Game();
 
-	// Getters
-	PiecePtr GetElement(int row, int column);
-	Matrix& GetGameboard();
-
-private:
-	Matrix m_board;
 };
 

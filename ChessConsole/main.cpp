@@ -1,25 +1,26 @@
 #include "Game.h"
+#include "Board.h"
 #include <memory>
 #include <iostream>
 
 int main()
 {
-	Game game;
+	Board board;
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++) {
-			game.GetElement(row, column) == nullptr ? std::cout<<"* " : std::cout << game.GetElement(row, column)->GetName() << " ";
+			board.GetGameBoard()[row][column] == nullptr ? std::cout<<"* " : std::cout << board.GetGameBoard()[row][column]->GetName() << " ";
 		}
 		std::cout << std::endl;
 	}
 
 	
-	game.GetElement(1, 0)->Move({ 3, 0 }, game.GetGameboard());
+	board.GetGameBoard()[1][0]->Move({ 3, 0 }, board.GetGameBoard());
 	std::cout << "--------------------------------------------------------------------\n";
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++) {
-			game.GetElement(row, column) == nullptr ? std::cout << "* " : std::cout << game.GetElement(row, column)->GetName() << " ";
+			board.GetGameBoard()[row][column] == nullptr ? std::cout << "* " : std::cout << board.GetGameBoard()[row][column]->GetName() << " ";
 		}
 		std::cout << std::endl;
 	}

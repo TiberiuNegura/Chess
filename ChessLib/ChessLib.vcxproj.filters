@@ -16,66 +16,96 @@
     <Filter Include="Header Files\API">
       <UniqueIdentifier>{d93e91b1-89dd-41a7-80f4-690c3f73c648}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Pieces">
+    <Filter Include="Source Files\Board">
+      <UniqueIdentifier>{ba6cff55-3b45-4122-a5a0-114c640162b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{f1927bee-9572-44ad-87fc-a8c81ea2a031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Board">
+      <UniqueIdentifier>{235390aa-7e25-4acc-b757-6089893d335d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{7e5bd230-40f0-480e-95c4-5d1f1a0eadd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Piece">
+      <UniqueIdentifier>{daabed86-546c-4243-92bb-dc15f49608da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Piece\Pieces">
       <UniqueIdentifier>{ab88318c-6f8f-4168-b334-efb9ddaf1fc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Pieces">
+    <Filter Include="Source Files\Piece">
+      <UniqueIdentifier>{1219802d-7375-4e4e-916a-d2953a5f7285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Piece\Pieces">
       <UniqueIdentifier>{4ddb92c4-45f0-4df0-8891-dbc49d7ec2f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Piece.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PieceInterface.h">
+    <ClInclude Include="IPiece.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="Bishop.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="Pawn.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="Queen.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="King.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="Rook.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="Horse.h">
-      <Filter>Header Files\Pieces</Filter>
+      <Filter>Header Files\Piece\Pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Header Files\Board</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
+      <Filter>Header Files\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="IBoard.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="IGame.h">
+      <Filter>Header Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Piece.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Pawn.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="Queen.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="Horse.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="King.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="Rook.cpp">
-      <Filter>Source Files\Pieces</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="Bishop.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Piece\Pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files\Board</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Source Files\Piece</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

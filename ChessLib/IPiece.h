@@ -6,7 +6,7 @@
 #include <memory>
 
 // Notations of STL and memory data structures
-using PiecePtr = std::shared_ptr<class PieceInterface>;
+using PiecePtr = std::shared_ptr<class IPiece>;
 using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
 using Position = std::pair<int, int>;
 using PositionList = std::vector<Position>;
@@ -31,7 +31,7 @@ enum class Type {
 	EMPTY
 };
 
-class PieceInterface
+class IPiece
 {
 public:
 	virtual void Move(Position destination, Matrix& board) = 0;
@@ -45,7 +45,6 @@ public:
 	virtual Position GetPosition() const = 0;
 
 	// Destructor
-	virtual ~PieceInterface() = default;
-
+	virtual ~IPiece() = default;
 };
 
