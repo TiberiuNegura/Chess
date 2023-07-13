@@ -8,18 +8,18 @@ int main()
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++) {
-			game.getElement(row, column) == nullptr ? std::cout<<"* " : std::cout << game.getElement(row, column)->getName() << " ";
+			game.GetElement(row, column) == nullptr ? std::cout<<"* " : std::cout << game.GetElement(row, column)->GetName() << " ";
 		}
 		std::cout << std::endl;
 	}
 
 	
-	game.getElement(1, 0)->move({ 2, 0 }, game.GetGameboard());
+	game.GetElement(1, 0)->Move({ 2, 0 }, game.GetGameboard());
 	std::cout << "--------------------------------------------------------------------\n";
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++) {
-			game.getElement(row, column) == nullptr ? std::cout << "* " : std::cout << game.getElement(row, column)->getName() << " ";
+			game.GetElement(row, column) == nullptr ? std::cout << "* " : std::cout << game.GetElement(row, column)->GetName() << " ";
 		}
 		std::cout << std::endl;
 	}

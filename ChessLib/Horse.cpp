@@ -1,6 +1,6 @@
 #include "Horse.h"
 
-
+// Constructor
 Horse::Horse(
 	int row,
 	int column,
@@ -9,16 +9,18 @@ Horse::Horse(
 {
 }
 
-void Horse::move(Position destination, Matrix& board)
+// PieceInterface implemented methods
+void Horse::Move(Position destination, Matrix& board)
 {
+
 }
 
-bool Horse::isValid(Position destination, const Matrix& board)
+bool Horse::IsValid(Position destination, const Matrix& board) const
 {
 	return false;
 }
 
-PositionList Horse::createPattern(const Matrix& board)
+PositionList Horse::CreatePattern(const Matrix& board) const
 {
 	return PositionList();
 }

@@ -1,5 +1,6 @@
 #include "Piece.h"
 
+// Constructor
 Piece::Piece(
 	char name,
 	int row,
@@ -7,24 +8,24 @@ Piece::Piece(
 	Color color,
 	Type type
 ) : m_name(name), m_position({row, column}), m_color(color), m_type(type)
-{
-}
+{ }
 
-char Piece::getName()
+// Getters
+char Piece::GetName() const
 {
 	return m_name;
 }
 
-Color Piece::getColor()
+Color Piece::GetColor() const
 {
 	return m_color;
 }
-Type Piece::getType()
+Type Piece::GetType() const
 {
 	return m_type;
 }
 
-Position Piece::getPosition()
+Position Piece::GetPosition() const
 {
 	return m_position;
 }

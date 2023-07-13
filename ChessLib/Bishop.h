@@ -1,22 +1,21 @@
 #pragma once
+
 #include "Piece.h"
+
 class Bishop : public Piece
 {
-	public:
-		Bishop(
-			int row = 0,
-			int column = 0,
-			Color color = Color::NONE
-		);
+public:
+	// Constructor
+	Bishop(
+		int row = 0,
+		int column = 0,
+		Color color = Color::NONE
+	);
 
-		
-
-		// Inherited via Piece
-		virtual void move(Position destination, Matrix& board) override;
-
-		virtual bool isValid(Position destination, const Matrix& board) override;
-
-		virtual PositionList createPattern(const Matrix& board) override;
+	// PieceInterface implemented methods
+	virtual void Move(Position destination, Matrix& board) override;
+	virtual bool IsValid(Position destination, const Matrix& board) const override;
+	virtual PositionList CreatePattern(const Matrix& board) const override;
 
 };
 
