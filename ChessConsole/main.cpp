@@ -14,7 +14,7 @@ int main()
 	}
 
 	
-	game.GetElement(1, 0)->Move({ 2, 0 }, game.GetGameboard());
+	game.GetElement(1, 0)->Move({ 3, 0 }, game.GetGameboard());
 	std::cout << "--------------------------------------------------------------------\n";
 	for (int row = 0; row < 8; row++)
 	{

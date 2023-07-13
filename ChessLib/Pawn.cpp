@@ -45,9 +45,11 @@ PositionList Pawn::CreatePattern(const Matrix& board) const
 		{
 			Position pos = { row + nextPos, column };
 			positions.emplace_back(pos);
-			if (!Piece::IsOutOfBounds(pos.first + nextPos, pos.second))
+			pos = { pos.first + nextPos, pos.second };
+			if (!Piece::IsOutOfBounds(pos.first, pos.second))
 			{
-				auto elem = board[pos.first + nextPos][pos.second];
+				auto elem = board[pos.first][pos.second];
+				
 				if (isFirstMove && !elem)
 					positions.emplace_back(pos);
 			}
