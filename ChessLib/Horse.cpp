@@ -21,7 +21,18 @@ bool Horse::IsValid(Position destination, const Matrix& board) const
 
 PositionList Horse::CreatePattern(const Matrix& board) const
 {
-	return PositionList();
+	PositionList positions;
+	int row = m_position.first, column = m_position.second;
+
+	for (int index = 0; index < 4; index++) 
+	{
+		// TODO: add a method to return the color of a piece at position...
+		Position pos = { row + index % 4, row + index / 4 };
+		if (!Piece::IsOutOfBounds(pos.first, pos.second))
+			positions.emplace_back(pos.first, pos.second);
+		if (!Piece::IsOutOfBounds(pos.second, pos.first))
+			positions.emplace_back(pos.second, pos.first);
+	}
 }
 
 
