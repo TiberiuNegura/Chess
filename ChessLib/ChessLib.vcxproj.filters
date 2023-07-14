@@ -84,9 +84,6 @@
     <ClInclude Include="IGame.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="IChessException.h">
-      <Filter>Header Files\Exception</Filter>
-    </ClInclude>
     <ClInclude Include="OutOfBoundsException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
@@ -94,6 +91,9 @@
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
     <ClInclude Include="EmptyPositionException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="IChessException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
   </ItemGroup>

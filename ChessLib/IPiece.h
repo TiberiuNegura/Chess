@@ -42,6 +42,9 @@ public:
 	virtual Type GetType() const = 0; 
 	virtual Position GetPosition() const = 0;
 
+	// Setters
+	virtual void SetPosition(Position position) = 0;
+
 	// Destructor
 	virtual ~IPiece() = default;
 };

@@ -29,8 +29,9 @@ Position Piece::GetPosition() const
 {
 	return m_position;
 }
-bool Piece::IsOutOfBounds(int row, int column)
+
+// Setters
+void Piece::SetPosition(Position position)
 {
-	return !(0 <= row && row < 8 && 0 <= column && column < 8);
+	m_position = position;
 }
-;

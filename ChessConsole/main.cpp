@@ -3,27 +3,30 @@
 #include <memory>
 #include <iostream>
 
+void DisplayMatrix(Matrix& b)
+{
+	for (int row = 0; row < 8; row++)
+	{
+		for (int column = 0; column < 8; column++)
+		{
+			auto tile = b[row][column];
+			if (tile)
+				std::cout << b[row][column]->GetName() << " ";
+			else std::cout << "* ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
 int main()
 {
-	Board board;
-	for (int row = 0; row < 8; row++)
-	{
-		for (int column = 0; column < 8; column++) {
-			board.GetGameBoard()[row][column] == nullptr ? std::cout<<"* " : std::cout << board.GetGameBoard()[row][column]->GetName() << " ";
-		}
-		std::cout << std::endl;
-	}
+	std::shared_ptr<IGame> game = std::make_shared<Game>();
+	DisplayMatrix(game->GetBoard());
+	game->MovePiece({ 4, 4 }, {8, 8});
+	DisplayMatrix(game->GetBoard());
 
 	
-	board.GetGameBoard()[1][0]->Move({ 3, 0 }, board.GetGameBoard());
-	std::cout << "--------------------------------------------------------------------\n";
-	for (int row = 0; row < 8; row++)
-	{
-		for (int column = 0; column < 8; column++) {
-			board.GetGameBoard()[row][column] == nullptr ? std::cout << "* " : std::cout << board.GetGameBoard()[row][column]->GetName() << " ";
-		}
-		std::cout << std::endl;
-	}
 
 	return 0;
 

@@ -12,13 +12,13 @@ std::vector<PositionList> Rook::CreatePattern() const
 {
 	PositionList positionsLeft, positionsRight, positionsUp, positionsDown;
 	int row = m_position.first, column = m_position.second;
-	for (int index = column; index >= 0; index--)
+	for (int index = column-1; index >= 0; index--)
 		positionsLeft.emplace_back(row, index);
-	for (int index = column; index < 8; index++)
+	for (int index = column+1; index < 8; index++)
 		positionsRight.emplace_back(row, index);
-	for (int index = row; index >= 0; row--)
+	for (int index = row-1; index >= 0; index--)
 		positionsUp.emplace_back(index, column);
-	for (int index = row; index < 8; row++)
+	for (int index = row+1; index < 8; index++)
 		positionsDown.emplace_back(index, column);
 	return {
 		positionsLeft,

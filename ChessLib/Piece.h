@@ -23,8 +23,8 @@ public:
 	Type GetType() const override;
 	Position GetPosition() const override;
 
-	// Validation static method
-	static bool IsOutOfBounds(int row, int column);
+	// Setters
+	void SetPosition(Position position);
 protected:
 	char m_name;
 	Position m_position;
