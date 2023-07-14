@@ -84,7 +84,7 @@
     <ClInclude Include="IGame.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="IException.h">
+    <ClInclude Include="IChessException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
     <ClInclude Include="OutOfBoundsException.h">
