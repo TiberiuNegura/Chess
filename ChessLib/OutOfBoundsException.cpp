@@ -1,6 +1,6 @@
 #include "OutOfBoundsException.h"
 
-OutOfBoundsException::OutOfBoundsException() : message("Matrix indices are out of bounds.")
+OutOfBoundsException::OutOfBoundsException() : message("[Out Of Bounds] Matrix indices are out of bounds.")
 {
 }
 

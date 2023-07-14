@@ -1,5 +1,5 @@
 #pragma once
-#include "IException.h"
+#include "IChessException.h"
 class IllegalMoveException : public IChessException
 {
 public:

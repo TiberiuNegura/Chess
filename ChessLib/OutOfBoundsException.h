@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IException.h"
+#include "IChessException.h"
 #include <string>
 
 class OutOfBoundsException : public IChessException

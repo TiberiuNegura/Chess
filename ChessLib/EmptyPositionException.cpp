@@ -1,6 +1,6 @@
 #include "EmptyPositionException.h"
 
-EmptyPositionException::EmptyPositionException(): message("The input provided is an empty position.")
+EmptyPositionException::EmptyPositionException(): message("[Empty Position] The input provided is an empty position.")
 {
 }
 

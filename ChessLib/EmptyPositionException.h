@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IException.h"
+#include "IChessException.h"
 
 class EmptyPositionException : public IChessException
 {
