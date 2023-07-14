@@ -2,26 +2,31 @@
 
 // Constructor
 Bishop::Bishop(
-    int row,
-    int column,
-    Color color
+	int row,
+	int column,
+	Color color
 ) : Piece('B', row, column, color, Type::BISHOP)
 { }
 
-
-// PieceInterface implemented methods
-void Bishop::Move(Position destination, Matrix& board)
+std::vector<PositionList> Bishop::CreatePattern() const
 {
+	PositionList leftDown, leftUp, rightDown, rightUp; //diagonal path to board corners
+	int row = m_position.first, column = m_position.second;
 
+	for (int index = 1; column - index >= 0 && row - index >= 0; index++)
+		leftUp.emplace_back(row - index, column - index);
+	for (int index = 1; column - index >= 0 && row + index < 8; index++)
+		leftDown.emplace_back(row + index, column - index);
+	for (int index = 1; column + index < 8 && row + index < 8; index++)
+		rightDown.emplace_back(row + index, column + index);
+	for (int index = 1; column + index < 8 && row - index >= 0; index++)
+		rightUp.emplace_back(row - index, column + index);
+	return {
+		leftUp,
+		leftDown,
+		rightDown,
+		rightUp
+	};
 }
 
-bool Bishop::IsValid(Position destination, const Matrix& board) const
-{
-    return false;
-}
-
-PositionList Bishop::CreatePattern(const Matrix& board) const
-{
-    return PositionList();
-}
 

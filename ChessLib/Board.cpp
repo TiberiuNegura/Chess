@@ -50,6 +50,33 @@ Matrix& Board::GetGameBoard()
 
 void Board::MoveOnBoard(Position start, Position destination)
 {
-	m_board[start.first][start.second]->Move(destination, m_board);
 	//TODO: implement exception
+}
+
+PositionList Board::PatternValidation(std::vector<PositionList> positions)
+{
+	Type type = m_board[2][2]->GetType();
+	switch (type)
+	{
+	case Type::PAWN:
+
+		break;
+	case Type::BISHOP:
+		break;
+	case Type::HORSE:
+		break;
+	case Type::KING:
+		break;
+	case Type::QUEEN:
+		break;
+	case Type::ROOK:
+		break;
+	}
+	if (m_board[2][2]->GetType() == Type::BISHOP) {}
+	return PositionList();
+}
+
+bool Board::IsValid(Position start, Position end)
+{
+	throw std::logic_error("The method or operation is not implemented.");
 }

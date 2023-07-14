@@ -9,8 +9,10 @@ public:
 	Board();
 
 	// Inherited via BoardInterface
-	virtual Matrix& GetGameBoard() override;
-	virtual void MoveOnBoard(Position start, Position destination) override;
+	Matrix& GetGameBoard() override;
+	void MoveOnBoard(Position start, Position destination) override;
+	PositionList PatternValidation(Position start, std::vector<PositionList> positions) override;
+	bool IsValid(Position start, Position end) override;
 
 private:
 	Matrix m_board;

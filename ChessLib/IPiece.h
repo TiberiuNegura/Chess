@@ -34,9 +34,7 @@ enum class Type {
 class IPiece
 {
 public:
-	virtual void Move(Position destination, Matrix& board) = 0;
-	virtual bool IsValid(Position destination, const Matrix& board) const = 0;
-	virtual PositionList CreatePattern(const Matrix& board) const = 0;
+	virtual std::vector<PositionList> CreatePattern() const = 0;
 	
 	// Getters
 	virtual char GetName() const = 0;

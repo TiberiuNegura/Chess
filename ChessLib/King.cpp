@@ -8,19 +8,15 @@ King::King(
 ) : Piece('K', row, column, color, Type::KING)
 { }
 
-// PieceInterface implemented methods
-void King::Move(Position destination, Matrix& board)
+std::vector<PositionList> King::CreatePattern() const
 {
+	PositionList positions;
+	int row = m_position.first, column = m_position.second;
+	for (int rowIndex = row - 1; rowIndex < row + 1; rowIndex++)
+		for (int columnIndex = column - 1; columnIndex < column + 1; columnIndex++)
+			if (rowIndex != row && columnIndex != column)
+				positions.emplace_back(rowIndex, columnIndex);
 
-}
-
-bool King::IsValid(Position destination, const Matrix& board) const
-{
-	return false;
-}
-
-PositionList King::CreatePattern(const Matrix& board) const
-{
-	return PositionList();
+	return {positions};
 }
 
