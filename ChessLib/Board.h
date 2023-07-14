@@ -16,5 +16,9 @@ public:
 
 private:
 	Matrix m_board;
+
+	PositionList PawnPattern(Position start, std::vector<PositionList> pawnMoves);
+	PositionList HorsePattern(Position start, std::vector<PositionList> horseMoves);
+	PositionList KingPattern(Position start, std::vector<PositionList> kingMoves);
 };
 

@@ -5,6 +5,7 @@
 #include "Horse.h"
 #include "Queen.h"
 #include "King.h"
+#include "Piece.h"
 
 Board::Board()
 {
@@ -53,7 +54,7 @@ void Board::MoveOnBoard(Position start, Position destination)
 	//TODO: implement exception
 }
 
-PositionList Board::PatternValidation(std::vector<PositionList> positions)
+PositionList Board::PatternValidation(Position start, std::vector<PositionList> positions)
 {
 	Type type = m_board[2][2]->GetType();
 	switch (type)
@@ -79,4 +80,42 @@ PositionList Board::PatternValidation(std::vector<PositionList> positions)
 bool Board::IsValid(Position start, Position end)
 {
 	throw std::logic_error("The method or operation is not implemented.");
+}
+
+PositionList Board::PawnPattern(Position start, std::vector<PositionList> pawnMoves)
+{
+	PositionList pattern;
+	auto pawn = m_board[start.first][start.second];
+	int row = start.first, column = start.second;
+	int nextPos = (pawn->GetColor() == Color::WHITE) ? -1 : 1;
+	for (auto positions : pawnMoves)
+	{
+		for (auto position : positions)
+		{
+			if (!m_board[position.first][position.second])
+				pattern.push_back(position);
+		}
+	}
+	if (!Piece::IsOutOfBounds(row + nextPos, column))
+	{
+		/*auto elem = board[row + nextPos][column + pow(-1, sign)];
+					if (elem && elem->GetColor() != GetColor())
+					{
+						Position pos = { row + nextPos, column + pow(-1, sign) };
+						positions.emplace_back(pos);
+					}*/
+
+	}
+
+	return pattern;
+}
+
+PositionList Board::HorsePattern(Position start, std::vector<PositionList> horseMoves)
+{
+	return PositionList();
+}
+
+PositionList Board::KingPattern(Position start, std::vector<PositionList> kingMoves)
+{
+	return PositionList();
 }

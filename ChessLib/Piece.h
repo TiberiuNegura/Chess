@@ -23,13 +23,13 @@ public:
 	Type GetType() const override;
 	Position GetPosition() const override;
 
+	// Validation static method
+	static bool IsOutOfBounds(int row, int column);
 protected:
 	char m_name;
 	Position m_position;
 	Color m_color;
 	Type m_type;
 
-	// Validation static method
-	static bool IsOutOfBounds(int row, int column);
 };
 
