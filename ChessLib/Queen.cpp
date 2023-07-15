@@ -1,4 +1,6 @@
 #include "Queen.h"
+#include "Rook.h"
+#include "Bishop.h"
 
 // Constructor
 Queen::Queen(
@@ -8,39 +10,14 @@ Queen::Queen(
 ): Piece('Q', row, column, color, Type::QUEEN)
 { }
 
-std::vector<PositionList> Queen::CreatePattern() const
+std::vector<PositionList> Queen::CreatePattern() const 
 {
-	// this is soon to be refactored, it`s just a try
-	PositionList leftDown, leftUp, rightDown, rightUp, positionsLeft, positionsRight, positionsUp, positionsDown;
-	int row = m_position.first, column = m_position.second;
-	// bishop code
-	for (int index = 1; column - index >= 0 && row - index >= 0; index++)
-		leftUp.emplace_back(row - index, column - index);
-	for (int index = 1; column - index >= 0 && row + index < 8; index++)
-		leftDown.emplace_back(row + index, column - index);
-	for (int index = 1; column + index < 8 && row + index < 8; index++)
-		rightDown.emplace_back(row + index, column + index);
-	for (int index = 1; column + index < 8 && row - index >= 0; index++)
-		rightUp.emplace_back(row - index, column + index);
-	// rook code
-	for (int index = column; index >= 0; index--)
-		positionsLeft.emplace_back(row, index);
-	for (int index = column; index < 8; index++)
-		positionsRight.emplace_back(row, index);
-	for (int index = row; index >= 0; row--)
-		positionsUp.emplace_back(index, column);
-	for (int index = row; index < 8; row++)
-		positionsDown.emplace_back(index, column);
-	return {
-		leftUp,
-		leftDown,
-		rightDown,
-		rightUp,
-		positionsLeft,
-		positionsRight,
-		positionsUp,
-		positionsDown
-	};
+	std::unique_ptr<Bishop> b = std::make_unique<Bishop>(m_position.first, m_position.second);
+	std::unique_ptr<Rook> r = std::make_unique<Rook>(m_position.first, m_position.second);
+	std::vector<PositionList> bishopPattern = b->CreatePattern();
+	std::vector<PositionList> rookPattern = r->CreatePattern();
+	bishopPattern.insert(bishopPattern.end(), rookPattern.begin(), rookPattern.end()); // concatenates rook pattern into bishop's pattern, resulting the queen's pattern
+	return bishopPattern; 
 }
 
 

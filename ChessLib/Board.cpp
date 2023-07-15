@@ -46,7 +46,7 @@ Board::Board()
 	m_board[7][4] = std::make_shared<King>(7, 4, Color::WHITE);
 
 	// Testing pieces
-	m_board[4][4] = std::make_shared<Bishop>(4, 4, Color::BLACK);
+	m_board[4][4] = std::make_shared<King>(4, 4, Color::BLACK);
 }
 
 Matrix& Board::GetGameBoard()
@@ -64,25 +64,6 @@ void Board::MoveOnBoard(Position start, Position destination)
 	}
 }
 
-PositionList Board::PatternValidation(Position start, std::vector<PositionList> positions)
-{
-	Type pieceType = m_board[start.first][start.second]->GetType();
-	switch (pieceType)
-	{
-	case Type::PAWN:
-		break;
-	case Type::QUEEN:
-	case Type::ROOK:
-	case Type::BISHOP:
-		return DynamicValidation(start, positions);
-	case Type::HORSE:
-		break;
-	case Type::KING:
-		break;
-	}
-	throw std::exception("i don't know this error yet");
-}
-
 bool Board::IsValid(Position start, Position end)
 {
 	if (IsOutOfBounds(start.first, start.second)) throw OutOfBoundsException();
@@ -94,10 +75,11 @@ bool Board::IsValid(Position start, Position end)
 	throw IllegalMoveException();
 }
 
-PositionList Board::DynamicValidation(Position start, std::vector<PositionList> positions)
+PositionList Board::PatternValidation(Position start, std::vector<PositionList> positions)
 {
 	PositionList validPattern;
 	Color pieceColor = m_board[start.first][start.second]->GetColor();
+	Type pieceType = m_board[start.first][start.second]->GetType();
 	for (int direction = 0; direction < positions.size(); direction++)
 	{
 		for (int tile = 0; tile < positions[direction].size(); tile++)
@@ -107,55 +89,29 @@ PositionList Board::DynamicValidation(Position start, std::vector<PositionList> 
 				continue;
 			auto possiblePosition = m_board[row][column];
 			if (!possiblePosition)
+			{
 				validPattern.emplace_back(row, column);
+				if (pieceType == Type::PAWN) // need changes
+				{
+					validPattern.pop_back();
+					validPattern.pop_back();
+				}
+			}
 			else
 			{
 				Color obstacleColor = possiblePosition->GetColor();
 				if (obstacleColor != pieceColor)
 					validPattern.emplace_back(row, column);
-				break;
+				if (pieceType == Type::HORSE || pieceType == Type::PAWN || pieceType == Type::KING)
+					continue;
+				else
+					break;
 			}
 		}
 	}
+	//for (auto& it : validPattern)
+	//	std::cout << it.first << " " << it.second << std::endl;
 	return validPattern;
-}
-
-PositionList Board::PawnPattern(Position start, std::vector<PositionList> pawnMoves)
-{
-	PositionList pattern;
-	auto pawn = m_board[start.first][start.second];
-	int row = start.first, column = start.second;
-	int nextPos = (pawn->GetColor() == Color::WHITE) ? -1 : 1;
-	for (auto positions : pawnMoves)
-	{
-		for (auto position : positions)
-		{
-			if (!m_board[position.first][position.second])
-				pattern.push_back(position);
-		}
-	}
-	if (!Board::IsOutOfBounds(row + nextPos, column))
-	{
-		/*auto elem = board[row + nextPos][column + pow(-1, sign)];
-					if (elem && elem->GetColor() != GetColor())
-					{
-						Position pos = { row + nextPos, column + pow(-1, sign) };
-						positions.emplace_back(pos);
-					}*/
-
-	}
-
-	return pattern;
-}
-
-PositionList Board::HorsePattern(Position start, std::vector<PositionList> horseMoves)
-{
-	return PositionList();
-}
-
-PositionList Board::KingPattern(Position start, std::vector<PositionList> kingMoves)
-{
-	return PositionList();
 }
 
 bool Board::IsOutOfBounds(int row, int column)

@@ -21,6 +21,7 @@ std::vector<PositionList> Bishop::CreatePattern() const
 		rightDown.emplace_back(row + index, column + index);
 	for (int index = 1; column + index < 8 && row - index >= 0; index++)
 		rightUp.emplace_back(row - index, column + index);
+
 	return {
 		leftUp,
 		leftDown,
