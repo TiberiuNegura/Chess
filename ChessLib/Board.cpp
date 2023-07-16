@@ -45,8 +45,6 @@ Board::Board()
 	m_board[0][4] = std::make_shared<King>(0, 4, Color::BLACK);
 	m_board[7][4] = std::make_shared<King>(7, 4, Color::WHITE);
 
-	// Testing pieces
-	m_board[4][4] = std::make_shared<King>(4, 4, Color::BLACK);
 }
 
 Matrix& Board::GetGameBoard()
@@ -61,6 +59,8 @@ void Board::MoveOnBoard(Position start, Position destination)
 		m_board[destination.first][destination.second] = m_board[start.first][start.second];
 		m_board[start.first][start.second] = nullptr;
 		m_board[destination.first][destination.second]->SetPosition(destination);
+		// disable isFirstMove on Pawn
+
 	}
 }
 
@@ -90,12 +90,9 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			auto possiblePosition = m_board[row][column];
 			if (!possiblePosition)
 			{
+				if (pieceType == Type::PAWN && positions[direction].size() - tile <= 2) 
+					break; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
 				validPattern.emplace_back(row, column);
-				if (pieceType == Type::PAWN) // need changes
-				{
-					validPattern.pop_back();
-					validPattern.pop_back();
-				}
 			}
 			else
 			{
@@ -109,8 +106,6 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			}
 		}
 	}
-	//for (auto& it : validPattern)
-	//	std::cout << it.first << " " << it.second << std::endl;
 	return validPattern;
 }
 
