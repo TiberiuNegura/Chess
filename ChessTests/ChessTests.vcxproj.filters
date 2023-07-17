@@ -27,9 +27,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\gmock\gmock-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PawnTests.cpp">
-      <Filter>Source Files\Pieces</Filter>
-    </ClCompile>
     <ClCompile Include="MoveTests.cpp">
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>

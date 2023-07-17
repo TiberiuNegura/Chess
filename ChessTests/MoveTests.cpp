@@ -105,6 +105,20 @@ TEST(MoveTests, BishopMoveTest)
 
 TEST(MoveTests, HorseMoveTest)
 {
+	Board board;
+	auto horse = board.GetGameBoard()[0][1];
+
+	// move for capture
+	EXPECT_NO_THROW(board.MoveOnBoard(horse->GetPosition(), { 2, 0 }));
+	EXPECT_NO_THROW(board.MoveOnBoard(horse->GetPosition(), { 4, 1 }));
+	EXPECT_NO_THROW(board.MoveOnBoard(horse->GetPosition(), { 6, 0 })); // captures a white pawn
+
+	// get a same color pawn near the horse for the exception test
+	board.MoveOnBoard({ 1,1 }, { 3,1 });
+	board.MoveOnBoard({ 3,1 }, { 4,1 });
+
+	EXPECT_THROW(board.MoveOnBoard(horse->GetPosition(), { 4,1 }), IllegalMoveException);
+	EXPECT_THROW(board.MoveOnBoard(horse->GetPosition(), { -1,8 }), OutOfBoundsException);
 
 }
 

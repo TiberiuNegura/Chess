@@ -109,6 +109,8 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			}
 		}
 	}
+	//for (auto& it : validPattern)
+	//	std::cout << it.first << " " << it.second << std::endl;
 	return validPattern;
 }
 
