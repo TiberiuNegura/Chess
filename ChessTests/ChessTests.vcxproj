@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoveTests.cpp" />
     <ClCompile Include="PawnTests.cpp" />
   </ItemGroup>
   <ItemGroup>
