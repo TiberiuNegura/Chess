@@ -23,7 +23,13 @@ int main()
 {
 	std::shared_ptr<IGame> game = std::make_shared<Game>();
 	DisplayMatrix(game->GetBoard());
-	game->MovePiece({ 6, 2 }, {5, 2});
+	game->MovePiece({ 6, 2 }, {4, 2});
+	std::cout << std::endl;
+	game->MovePiece({ 4, 2 }, {3, 2});
+	std::cout << std::endl;
+	game->MovePiece({ 3, 2 }, { 2, 2 });
+	std::cout << std::endl;
+	game->MovePiece({ 2, 2 }, { 1, 2 });
 	DisplayMatrix(game->GetBoard());
 
 	

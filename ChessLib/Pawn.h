@@ -11,10 +11,6 @@ public:
 		int column = 0,
 		Color color = Color::NONE
 	);
-		
-	
-private:
-	bool isFirstMove;
 
 	// Inherited via Piece
 	std::vector<PositionList> CreatePattern() const override;

@@ -59,7 +59,6 @@ void Board::MoveOnBoard(Position start, Position destination)
 		m_board[destination.first][destination.second] = m_board[start.first][start.second];
 		m_board[start.first][start.second] = nullptr;
 		m_board[destination.first][destination.second]->SetPosition(destination);
-		// disable isFirstMove on Pawn
 
 	}
 }
@@ -106,6 +105,8 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			}
 		}
 	}
+	for (auto& it : validPattern)
+		std::cout << it.first << " " << it.second << std::endl;
 	return validPattern;
 }
 
