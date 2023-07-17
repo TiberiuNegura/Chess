@@ -8,6 +8,7 @@
 #include "Piece.h"
 #include "OutOfBoundsException.h"
 #include "IllegalMoveException.h"
+#include "EmptyPositionException.h"
 
 Board::Board()
 {
@@ -65,6 +66,7 @@ void Board::MoveOnBoard(Position start, Position destination)
 
 bool Board::IsValid(Position start, Position end)
 {
+	if (!m_board[start.first][start.second]) throw EmptyPositionException();
 	if (IsOutOfBounds(start.first, start.second)) throw OutOfBoundsException();
 	if (IsOutOfBounds(end.first, end.second)) throw OutOfBoundsException();
 	PositionList pattern = PatternValidation(start, m_board[start.first][start.second]->CreatePattern()); // creates pattern
