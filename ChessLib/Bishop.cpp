@@ -1,12 +1,11 @@
 #include "Bishop.h"
 
 // Constructor
-Bishop::Bishop(
-	int row,
-	int column,
-	Color color
-) : Piece('B', row, column, color, Type::BISHOP)
-{ }
+Bishop::Bishop( int row, int column, Color color ) 
+	: Piece('B', row, column, color, Type::BISHOP)
+{
+
+}
 
 std::vector<PositionList> Bishop::CreatePattern() const
 {
@@ -21,6 +20,15 @@ std::vector<PositionList> Bishop::CreatePattern() const
 		rightDown.emplace_back(row + index, column + index);
 	for (int index = 1; column + index < 8 && row - index >= 0; index++)
 		rightUp.emplace_back(row - index, column + index);
+
+	for (auto it = leftUp.begin(); it!= leftUp.end(); )
+	{
+		if (it->first % 2 == 0)
+			it = leftUp.erase(it);
+		else
+			++it;
+		
+	}
 
 	return {
 		leftUp,

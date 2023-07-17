@@ -35,6 +35,7 @@ class IPiece
 {
 public:
 	// Getters
+	virtual char GetName() const = 0;
 	virtual Color GetColor() const = 0;
 	virtual Type GetType() const = 0;
 

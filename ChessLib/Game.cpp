@@ -28,8 +28,22 @@ void Game::MovePiece(Position start, Position destination)
 		m_board->UpdatePosition(start, destination);
 }
 
-Matrix& Game::GetBoard()
+class CustomMatrix : public IMatrix
 {
-	return m_board->GetGameBoard();
+public:
+	CustomMatrix(Matrix& mat)
+		: m_board(mat)
+	{ }
+	IPiecePtr GetElement(Position element)
+	{
+		return m_board[element.first][element.second];
+	}
+private:
+	Matrix& m_board;
+};
+
+MatrixPtr Game::GetBoard()
+{
+	return std::make_shared<CustomMatrix>(m_board->GetGameBoard());
 }
 

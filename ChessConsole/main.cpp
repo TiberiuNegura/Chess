@@ -1,17 +1,20 @@
+#include "IGame.h"
+#include "IPiece.h"
+#include <iostream>
+
 #include "Game.h"
 #include "Board.h"
 #include <memory>
-#include <iostream>
 
-void DisplayMatrix(Matrix& b)
+void DisplayMatrix(MatrixPtr b)
 {
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++)
 		{
-			auto tile = b[row][column];
+			auto tile = b->GetElement({ row, column });
 			if (tile)
-				std::cout << b[row][column]->GetName() << " ";
+				std::cout << tile->GetName() << " ";
 			else std::cout << "* ";
 		}
 		std::cout << std::endl;
@@ -22,6 +25,8 @@ void DisplayMatrix(Matrix& b)
 int main()
 {
 	std::shared_ptr<IGame> game = std::make_shared<Game>();
+	DisplayMatrix(game->GetBoard());
+	game->MovePiece({ 1, 0 }, { 3, 0 });
 	DisplayMatrix(game->GetBoard());
 
 	

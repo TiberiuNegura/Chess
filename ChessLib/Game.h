@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "IGame.h"
+#include "IBoard.h"
 
 class Game : public IGame
 {
@@ -15,7 +15,7 @@ public:
 	bool IsCheckmate() override;
 	void MovePiece(Position start, Position destination) override;
 
-	Matrix& GetBoard() override;
+	MatrixPtr GetBoard() override;
 
 private:
 	std::shared_ptr<IBoard> m_board;
