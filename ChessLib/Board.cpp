@@ -96,12 +96,14 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			else
 			{
 				Color obstacleColor = possiblePosition->GetColor();
+				if (pieceType == Type::PAWN && abs(start.first - row)  == 1 && abs(start.second - column) == 0)
+					continue; // pawn can't overtake a frontal piece
 				if (obstacleColor != pieceColor)
 					validPattern.emplace_back(row, column);
 				if (pieceType == Type::HORSE || pieceType == Type::PAWN || pieceType == Type::KING)
-					continue;
+					continue; // if horse, pawn or king, continue to next position
 				else
-					break;
+					break; // if queen, bishop or rook, break the tile loop when adversary piece found
 			}
 		}
 	}
