@@ -1,5 +1,5 @@
 #include "Board.h"
-#include "InteriorIPiece.h"
+#include "IPiece.h"
 #include "OutOfBoundsException.h"
 #include "IllegalMoveException.h"
 #include "EmptyPositionException.h"
@@ -124,10 +124,30 @@ TEST(MoveTests, HorseMoveTest)
 
 TEST(MoveTests, KingMoveTest)
 {
+	Board board;
+	auto king = board.GetGameBoard()[0][4];
 
+	EXPECT_THROW(board.MoveOnBoard(king->GetPosition(), { 1,4 }), IllegalMoveException);// it cannot move
+	board.MoveOnBoard({ 1,4 }, { 3, 4 }); // making room
+	EXPECT_NO_THROW(board.MoveOnBoard(king->GetPosition(), { 1,4 }));
+	EXPECT_NO_THROW(board.MoveOnBoard(king->GetPosition(), { 2,3 }));
+
+	EXPECT_THROW(board.MoveOnBoard(king->GetPosition(), { 5,4 }), IllegalMoveException);
+	EXPECT_EQ(king->GetPosition().first, 2);
+	EXPECT_EQ(king->GetPosition().second, 3);
 }
 
 TEST(MoveTests, QueenMoveTest)
 {
+	Board board;
+	auto queen = board.GetGameBoard()[0][3];
+
+	EXPECT_THROW(board.MoveOnBoard(queen->GetPosition(), { 5,3 }), IllegalMoveException);
+	board.MoveOnBoard({ 1,3 }, { 3,3 });
+	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 2,3 }));
+	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 2,5 }));
+	EXPECT_THROW(board.MoveOnBoard(queen->GetPosition(), { 1,5 }), IllegalMoveException);
+	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 6,5 }));
+	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 4,5 }));
 
 }
