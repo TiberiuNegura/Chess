@@ -13,6 +13,7 @@ public:
 	void MoveOnBoard(Position start, Position destination) override;
 	bool IsValid(Position start, Position end) override;
 	PositionList PatternValidation(Position start, std::vector<PositionList> positions);
+	void UpdatePosition(Position start, Position end);
 
 private:
 	Matrix m_board;

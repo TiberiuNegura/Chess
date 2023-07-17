@@ -1,5 +1,5 @@
 #include "Board.h"
-#include "IPiece.h"
+#include "InteriorIPiece.h"
 #include "OutOfBoundsException.h"
 #include "IllegalMoveException.h"
 #include "EmptyPositionException.h"

@@ -4,7 +4,7 @@
 // Constructor
 Game::Game()
 {
-	board = std::make_shared<Board>();
+	m_board = std::make_shared<Board>();
 }
 
 void Game::StartGame()
@@ -24,11 +24,12 @@ bool Game::IsCheckmate()
 
 void Game::MovePiece(Position start, Position destination)
 {
-	board->MoveOnBoard(start,destination);
+	if (m_board->IsValid(start, destination))
+		m_board->UpdatePosition(start, destination);
 }
 
 Matrix& Game::GetBoard()
 {
-	return board->GetGameBoard();
+	return m_board->GetGameBoard();
 }
 

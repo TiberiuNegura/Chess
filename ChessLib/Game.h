@@ -18,6 +18,6 @@ public:
 	Matrix& GetBoard() override;
 
 private:
-	std::shared_ptr<IBoard> board;
+	std::shared_ptr<IBoard> m_board;
 };
 

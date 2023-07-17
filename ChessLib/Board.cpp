@@ -114,6 +114,13 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 	return validPattern;
 }
 
+void Board::UpdatePosition(Position start, Position end)
+{
+	m_board[end.first][end.second] = m_board[start.first][start.second];
+	m_board[start.first][start.second] = nullptr;
+	m_board[end.first][end.second]->SetPosition(end);
+}
+
 bool Board::IsOutOfBounds(int row, int column)
 {
 	return !(0 <= row && row < 8 && 0 <= column && column < 8);

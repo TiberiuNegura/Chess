@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IPiece.h"
+#include "InteriorIPiece.h"
 
-class Piece : public IPiece
+class Piece : public InteriorIPiece
 {
 public:
 	// Constructor

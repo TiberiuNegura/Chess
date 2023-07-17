@@ -48,9 +48,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IPiece.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="Bishop.h">
       <Filter>Header Files\Piece\Pieces</Filter>
     </ClInclude>
@@ -78,9 +75,6 @@
     <ClInclude Include="Piece.h">
       <Filter>Header Files\Piece</Filter>
     </ClInclude>
-    <ClInclude Include="IBoard.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="IGame.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
@@ -95,6 +89,15 @@
     </ClInclude>
     <ClInclude Include="IChessException.h">
       <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="InteriorIPiece.h">
+      <Filter>Header Files\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="IBoard.h">
+      <Filter>Header Files\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="IPiece.h">
+      <Filter>Header Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
