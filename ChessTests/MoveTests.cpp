@@ -149,5 +149,5 @@ TEST(MoveTests, QueenMoveTest)
 	EXPECT_THROW(board.MoveOnBoard(queen->GetPosition(), { 1,5 }), IllegalMoveException);
 	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 6,5 }));
 	EXPECT_NO_THROW(board.MoveOnBoard(queen->GetPosition(), { 4,5 }));
-
+	
 }

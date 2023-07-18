@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "Board.h"
+#include "OutOfBoundsException.h"
+#include "PieceNotFoundException.h"
 
 // Constructor
 Game::Game()
@@ -12,15 +14,23 @@ void Game::StartGame()
 	throw std::logic_error("The method or operation is not implemented.");
 }
 
-bool Game::IsCheck(Position pos)
+bool Game::IsCheck(Color color)
 {
-	/*auto king = m_board->GetGameBoard()[pos.first][pos.second];
-	Color oppositeColor = king->GetColor() == Color::BLACK ? Color::WHITE : Color::BLACK;
-	for (int i=0;i<8;i++)
+	Color oppositeColor = color == Color::BLACK ? Color::WHITE : Color::BLACK;
+	auto king = FindKing(color);
+	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board->GetGameBoard()[i][j] != king && )
-		}*/
+			if (m_board->GetGameBoard()[i][j]->GetColor() == oppositeColor)
+			{
+				PositionList list = m_board->PatternValidation({ i,j }, m_board->GetGameBoard()[i][j]->CreatePattern());
+				for (auto position : list)
+				{
+					if (position == king)
+						return true;
+				}
+			}
+		}
 	return false;
 }
 
@@ -52,5 +62,31 @@ private:
 MatrixPtr Game::GetBoard()
 {
 	return std::make_shared<CustomMatrix>(m_board->GetGameBoard());
+}
+
+PositionList Game::GetPattern(Position piecePos)
+{
+	if (Board::IsOutOfBounds(piecePos.first, piecePos.second)) throw OutOfBoundsException();
+	auto piece = m_board->GetGameBoard()[piecePos.first][piecePos.second];
+	if (!piece) throw PieceNotFoundException();
+	PositionList pattern = m_board->PatternValidation(piecePos, piece->CreatePattern());
+	auto king = FindKing(piece->GetColor());
+	for (auto pos : pattern)
+	{
+
+	}
+
+}
+
+Position Game::FindKing(Color color)
+{
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			auto currentPiece = m_board->GetGameBoard()[i][j];
+			if (currentPiece->GetColor() == color && currentPiece->GetType() == Type::KING)
+				return { i, j };
+		}
+	throw PieceNotFoundException();
 }
 

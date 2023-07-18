@@ -99,6 +99,9 @@
     <ClInclude Include="IPiece.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="PieceNotFoundException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pawn.cpp">
@@ -135,6 +138,9 @@
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
     <ClCompile Include="EmptyPositionException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceNotFoundException.cpp">
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
   </ItemGroup>

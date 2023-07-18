@@ -17,10 +17,11 @@ class IGame
 {
 public:
 	virtual void StartGame() = 0;
-	virtual bool IsCheck(Position king) = 0;
+	virtual bool IsCheck(Color color) = 0;
 	virtual bool IsCheckmate() = 0;
 	virtual void MovePiece(Position start, Position destination) = 0;
 	virtual MatrixPtr GetBoard() = 0;
+	virtual PositionList GetPattern(Position piecePos) = 0;
 
 	~IGame() = default;
 };
