@@ -7,7 +7,7 @@ using PiecePtr = std::shared_ptr<class InteriorIPiece>;
 class InteriorIPiece : public IPiece
 {
 public:
-	virtual std::vector<PositionList> CreatePattern() const = 0;
+	virtual std::vector<PositionList> GetDirections() const = 0;
 	
 	// Getters
 	virtual char GetName() const = 0;

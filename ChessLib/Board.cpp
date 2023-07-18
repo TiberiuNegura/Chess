@@ -51,7 +51,14 @@ const Matrix& Board::GetGameBoard() const
 	return m_board;
 }
 
-PositionList Board::PatternValidation(Position start, std::vector<PositionList> positions)
+bool Board::IsEmpty(Position p) const
+{
+	if (m_board[p.first][p.second])
+		return true;
+	return false;
+}
+
+PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions)
 {
 	PositionList validPattern;
 	EColor pieceColor = m_board[start.first][start.second]->GetColor();
@@ -60,20 +67,17 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 	{
 		for (int tile = 0; tile < positions[direction].size(); tile++)
 		{
-			int row = positions[direction][tile].first, column = positions[direction][tile].second;
-			if (IsOutOfBounds(row, column))
+			int row = positions[direction][tile].first;
+			int column = positions[direction][tile].second;
+
+			if (IsOutOfBounds(positions[direction][tile]))
 				continue;
-			auto possiblePosition = m_board[row][column];
-			if (!possiblePosition)
-			{
-				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
-					continue; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
-				validPattern.emplace_back(row, column);
-			}
-			else
+			
+			
+			if (auto possiblePosition = m_board[row][column])
 			{
 				EColor obstacleColor = possiblePosition->GetColor();
-				if (pieceType == EType::PAWN && abs(start.first - row)  == 1 && abs(start.second - column) == 0)
+				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
 					continue; // pawn can't overtake a frontal piece
 				if (obstacleColor != pieceColor)
 					validPattern.emplace_back(row, column);
@@ -81,6 +85,12 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 					continue; // if horse, pawn or king, continue to next position
 				else
 					break; // if queen, bishop or rook, break the tile loop when adversary piece found
+			}
+			else
+			{
+				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
+					continue; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
+				validPattern.emplace_back(row, column);
 			}
 		}
 	}
@@ -90,7 +100,7 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 void Board::UpdatePosition(Position start, Position end)
 {
 	m_board[end.first][end.second] = m_board[start.first][start.second];
-	m_board[start.first][start.second] = nullptr;
+	m_board[start.first][start.second] = {};
 	m_board[end.first][end.second]->SetPosition(end);
 }
 
@@ -103,7 +113,7 @@ void Board::RevertPosition(PiecePtr toRevert)
 	}
 }
 
-bool Board::IsOutOfBounds(int row, int column)
+bool Board::IsOutOfBounds(Position p)
 {
-	return !(0 <= row && row < 8 && 0 <= column && column < 8);
+	return !(0 <= p.first && p.first < 8 && 0 <= p.second && p.second < 8);
 }

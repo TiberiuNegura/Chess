@@ -9,7 +9,7 @@ Horse::Horse(
 { }
 
 
-std::vector<PositionList> Horse::CreatePattern() const
+std::vector<PositionList> Horse::GetDirections() const
 {
 	PositionList positions;
 	int row = m_position.first, column = m_position.second;

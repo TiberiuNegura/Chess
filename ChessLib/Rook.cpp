@@ -8,7 +8,7 @@ Rook::Rook(
 ) : Piece('R', row, column, color, EType::ROOK)
 { }
 
-std::vector<PositionList> Rook::CreatePattern() const
+std::vector<PositionList> Rook::GetDirections() const
 {
 	PositionList positionsLeft, positionsRight, positionsUp, positionsDown;
 	int row = m_position.first, column = m_position.second;

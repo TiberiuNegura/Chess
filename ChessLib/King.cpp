@@ -8,7 +8,7 @@ King::King(
 ) : Piece('K', row, column, color, EType::KING)
 { }
 
-std::vector<PositionList> King::CreatePattern() const
+std::vector<PositionList> King::GetDirections() const
 {
 	PositionList positions;
 	int row = m_position.first, column = m_position.second;

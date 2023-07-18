@@ -18,14 +18,14 @@ using MatrixPtr = std::shared_ptr<IMatrix>;
 class IGame
 {
 public:
-	static IGamePtr StartGame(); // factory
+	static IGamePtr Produce(); // factory
 
 	virtual bool IsCheck(EColor color) const = 0;
 	virtual bool IsCheckmate(EColor color) const = 0;
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
 	virtual MatrixPtr GetBoard() const = 0;
-	virtual PositionList GetPattern(Position piecePos) const = 0;
+	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual EColor GetTurn() const = 0;
 
 	// TODO: player`s turn 

@@ -11,10 +11,13 @@ public:
 
 	// Inherited via BoardInterface
 	const Matrix& GetGameBoard() const override;
-	PositionList PatternValidation(Position start, std::vector<PositionList> positions);
+
+	bool IsEmpty(Position p) const override;
+
+	PositionList ComputePositionList(Position start, std::vector<PositionList> positions);
 	void UpdatePosition(Position start, Position end);
 	void RevertPosition(PiecePtr toRevert) override;
-	static bool IsOutOfBounds(int row, int column);
+	static bool IsOutOfBounds(Position p);
 
 private:
 	Matrix m_board;

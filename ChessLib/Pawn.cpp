@@ -8,7 +8,7 @@ Pawn::Pawn(
 ) : Piece('P', row, column, color, EType::PAWN)
 { }
 
-std::vector<PositionList> Pawn::CreatePattern() const
+std::vector<PositionList> Pawn::GetDirections() const
 {
 	PositionList positions;
 	int row = m_position.first, column = m_position.second;

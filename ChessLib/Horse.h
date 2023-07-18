@@ -14,7 +14,7 @@ public:
 
 	
 
-	std::vector<PositionList> CreatePattern() const override;
+	std::vector<PositionList> GetDirections() const override;
 
 };
 

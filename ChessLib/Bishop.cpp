@@ -7,7 +7,7 @@ Bishop::Bishop( int row, int column, EColor color )
 
 }
 
-std::vector<PositionList> Bishop::CreatePattern() const
+std::vector<PositionList> Bishop::GetDirections() const
 {
 	PositionList leftDown, leftUp, rightDown, rightUp; //diagonal path to board corners
 	int row = m_position.first, column = m_position.second;
