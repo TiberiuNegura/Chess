@@ -11,7 +11,7 @@ public:
 
 
 	void StartGame() override;
-	bool IsCheck() override;
+	bool IsCheck(Position king) override;
 	bool IsCheckmate() override;
 	void MovePiece(Position start, Position destination) override;
 

@@ -12,9 +12,16 @@ void Game::StartGame()
 	throw std::logic_error("The method or operation is not implemented.");
 }
 
-bool Game::IsCheck()
+bool Game::IsCheck(Position pos)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	/*auto king = m_board->GetGameBoard()[pos.first][pos.second];
+	Color oppositeColor = king->GetColor() == Color::BLACK ? Color::WHITE : Color::BLACK;
+	for (int i=0;i<8;i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board->GetGameBoard()[i][j] != king && )
+		}*/
+	return false;
 }
 
 bool Game::IsCheckmate()
