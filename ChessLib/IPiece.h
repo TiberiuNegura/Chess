@@ -38,6 +38,7 @@ public:
 	virtual char GetName() const = 0;
 	virtual Color GetColor() const = 0;
 	virtual Type GetType() const = 0;
+	virtual Position GetPosition() const = 0;
 
 
 	// Destructor

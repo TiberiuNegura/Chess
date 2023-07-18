@@ -13,7 +13,7 @@ void DisplayMatrix(MatrixPtr b)
 		for (int column = 0; column < 8; column++)
 		{
 			auto tile = b->GetElement({ row, column });
-			if (tile)
+			if (tile != nullptr)
 				std::cout << tile->GetName() << " ";
 			else std::cout << "* ";
 		}
@@ -26,7 +26,7 @@ int main()
 {
 	std::shared_ptr<IGame> game = std::make_shared<Game>();
 	DisplayMatrix(game->GetBoard());
-	game->MovePiece({ 3, 7 }, { 2, 6 });
+	game->MovePiece({ 3, 4 }, { 4, 5 });
 	DisplayMatrix(game->GetBoard());
 
 	

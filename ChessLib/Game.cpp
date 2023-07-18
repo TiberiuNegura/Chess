@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "Board.h"
-#include "OutOfBoundsException.h"
 #include "PieceNotFoundException.h"
+#include "OutOfBoundsException.h"
+#include "IllegalMoveException.h"
+#include "EmptyPositionException.h"
 
 // Constructor
 Game::Game()
@@ -21,27 +23,42 @@ bool Game::IsCheck(Color color)
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board->GetGameBoard()[i][j]->GetColor() == oppositeColor)
+			auto piece = m_board->GetGameBoard()[i][j];
+			if (piece) 
 			{
-				PositionList list = m_board->PatternValidation({ i,j }, m_board->GetGameBoard()[i][j]->CreatePattern());
-				for (auto position : list)
+				if (piece->GetColor() == oppositeColor)
 				{
-					if (position == king)
-						return true;
+					PositionList list = m_board->PatternValidation({ i,j }, m_board->GetGameBoard()[i][j]->CreatePattern());
+					for (auto position : list)
+					{
+						if (position == king)
+							return true;
+					}
 				}
 			}
 		}
 	return false;
 }
 
-bool Game::IsCheckmate()
+bool Game::IsCheckmate(Color color)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	if (!IsCheck(color)) return false;
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			auto piece = m_board->GetGameBoard()[i][j];
+			if (!piece) continue;
+			if (piece->GetColor() != color) continue;
+			PositionList list = GetPattern({ i,j });
+			if (!list.empty())
+				return false;
+		}
+	return true;
 }
 
 void Game::MovePiece(Position start, Position destination)
 {
-	if (m_board->IsValid(start, destination))
+	if (IsValid(start, destination))
 		m_board->UpdatePosition(start, destination);
 }
 
@@ -71,11 +88,33 @@ PositionList Game::GetPattern(Position piecePos)
 	if (!piece) throw PieceNotFoundException();
 	PositionList pattern = m_board->PatternValidation(piecePos, piece->CreatePattern());
 	auto king = FindKing(piece->GetColor());
-	for (auto pos : pattern)
+	for (auto it = pattern.begin(); it != pattern.end();)
 	{
-
+		Position current = *it;
+		auto aux = m_board->GetGameBoard()[current.first][current.second];
+		m_board->UpdatePosition(piecePos, current); // simulate the move
+		if (IsCheck(piece->GetColor()))
+			it = pattern.erase(it);
+		else
+			++it;
+		m_board->UpdatePosition(current, piecePos); // rollback to initial position
+		m_board->RevertPosition(aux);
 	}
+	//for (auto& it : pattern)
+	//	std::cout << it.first << " " << it.second << std::endl;
+	return pattern;
+}
 
+bool Game::IsValid(Position start, Position end)
+{
+	if (!m_board->GetGameBoard()[start.first][start.second]) throw EmptyPositionException();
+	if (Board::IsOutOfBounds(start.first, start.second)) throw OutOfBoundsException();
+	if (Board::IsOutOfBounds(end.first, end.second)) throw OutOfBoundsException();
+	PositionList pattern = GetPattern(start); // creates pattern
+	for (auto& position : pattern)
+		if (position == end)
+			return true;
+	throw IllegalMoveException();
 }
 
 Position Game::FindKing(Color color)
@@ -84,8 +123,11 @@ Position Game::FindKing(Color color)
 		for (int j = 0; j < 8; j++)
 		{
 			auto currentPiece = m_board->GetGameBoard()[i][j];
-			if (currentPiece->GetColor() == color && currentPiece->GetType() == Type::KING)
-				return { i, j };
+			if (currentPiece)
+			{
+				if (currentPiece->GetColor() == color && currentPiece->GetType() == Type::KING)
+					return { i, j };
+			}
 		}
 	throw PieceNotFoundException();
 }

@@ -7,7 +7,7 @@ using IPiecePtr = std::shared_ptr<IPiece>;
 class IMatrix
 {
 public:
-	virtual IPiecePtr GetElement(Position element) = 0;
+	virtual IPiecePtr GetElement(Position element) = 0;	
 };
 
 
@@ -18,7 +18,7 @@ class IGame
 public:
 	virtual void StartGame() = 0;
 	virtual bool IsCheck(Color color) = 0;
-	virtual bool IsCheckmate() = 0;
+	virtual bool IsCheckmate(Color color) = 0;
 	virtual void MovePiece(Position start, Position destination) = 0;
 	virtual MatrixPtr GetBoard() = 0;
 	virtual PositionList GetPattern(Position piecePos) = 0;

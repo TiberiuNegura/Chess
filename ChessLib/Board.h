@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IBoard.h"
+#include "IGame.h"
 
 class Board : public IBoard
 {
@@ -10,10 +11,9 @@ public:
 
 	// Inherited via BoardInterface
 	Matrix& GetGameBoard() override;
-	void MoveOnBoard(Position start, Position destination) override;
-	bool IsValid(Position start, Position end) override;
 	PositionList PatternValidation(Position start, std::vector<PositionList> positions);
 	void UpdatePosition(Position start, Position end);
+	void RevertPosition(PiecePtr toRevert) override;
 	static bool IsOutOfBounds(int row, int column);
 
 private:

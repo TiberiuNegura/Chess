@@ -6,9 +6,7 @@
 #include "Queen.h"
 #include "King.h"
 #include "Piece.h"
-#include "OutOfBoundsException.h"
-#include "IllegalMoveException.h"
-#include "EmptyPositionException.h"
+
 
 Board::Board()
 {
@@ -46,35 +44,11 @@ Board::Board()
 	m_board[0][4] = std::make_shared<King>(0, 4, Color::BLACK);
 	m_board[7][4] = std::make_shared<King>(7, 4, Color::WHITE);
 
-
 }
 
 Matrix& Board::GetGameBoard()
 {
 	return m_board;
-}
-
-void Board::MoveOnBoard(Position start, Position destination)
-{
-	if (IsValid(start, destination))
-	{
-		m_board[destination.first][destination.second] = m_board[start.first][start.second];
-		m_board[start.first][start.second] = nullptr;
-		m_board[destination.first][destination.second]->SetPosition(destination);
-
-	}
-}
-
-bool Board::IsValid(Position start, Position end)
-{
-	if (!m_board[start.first][start.second]) throw EmptyPositionException();
-	if (IsOutOfBounds(start.first, start.second)) throw OutOfBoundsException();
-	if (IsOutOfBounds(end.first, end.second)) throw OutOfBoundsException();
-	PositionList pattern = PatternValidation(start, m_board[start.first][start.second]->CreatePattern()); // creates pattern
-	for (auto& position : pattern)
-		if (position == end)
-			return true;
-	throw IllegalMoveException();
 }
 
 PositionList Board::PatternValidation(Position start, std::vector<PositionList> positions)
@@ -110,8 +84,6 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			}
 		}
 	}
-	//for (auto& it : validPattern)
-	//	std::cout << it.first << " " << it.second << std::endl;
 	return validPattern;
 }
 
@@ -120,6 +92,15 @@ void Board::UpdatePosition(Position start, Position end)
 	m_board[end.first][end.second] = m_board[start.first][start.second];
 	m_board[start.first][start.second] = nullptr;
 	m_board[end.first][end.second]->SetPosition(end);
+}
+
+void Board::RevertPosition(PiecePtr toRevert)
+{
+	if (toRevert)
+	{
+		auto pos = toRevert->GetPosition();
+		m_board[pos.first][pos.second] = toRevert;
+	}
 }
 
 bool Board::IsOutOfBounds(int row, int column)
