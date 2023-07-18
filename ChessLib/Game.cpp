@@ -14,13 +14,13 @@ IGamePtr IGame::StartGame()
 Game::Game()
 {
 	m_board = std::make_shared<Board>();
-	m_turn = Color::WHITE;
+	m_turn = EColor::WHITE;
 }
 
 
-bool Game::IsCheck(Color color)
+bool Game::IsCheck(EColor color) const
 {
-	Color oppositeColor = color == Color::BLACK ? Color::WHITE : Color::BLACK;
+	EColor oppositeColor = color == EColor::BLACK ? EColor::WHITE : EColor::BLACK;
 	auto king = FindKing(color);
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
@@ -42,7 +42,7 @@ bool Game::IsCheck(Color color)
 	return false;
 }
 
-bool Game::IsCheckmate(Color color)
+bool Game::IsCheckmate(EColor color) const
 {
 	if (!IsCheck(color)) return false;
 	for (int i = 0; i < 8; i++)
@@ -58,16 +58,15 @@ bool Game::IsCheckmate(Color color)
 	return true;
 }
 
-#include <iostream>
 void Game::MovePiece(Position start, Position destination)
 {
 	if (IsValid(start, destination))
 	{
 		m_board->UpdatePosition(start, destination);
-		if (m_turn == Color::WHITE)
-			m_turn = Color::BLACK;
+		if (m_turn == EColor::WHITE)
+			m_turn = EColor::BLACK;
 		else
-			m_turn = Color::WHITE;
+			m_turn = EColor::WHITE;
 		//m_turn == Color::WHITE ? Color::BLACK : Color::WHITE;
 	}
 }
@@ -75,7 +74,7 @@ void Game::MovePiece(Position start, Position destination)
 class CustomMatrix : public IMatrix
 {
 public:
-	CustomMatrix(Matrix& mat)
+	CustomMatrix(const Matrix& mat)
 		: m_board(mat)
 	{ }
 	IPiecePtr GetElement(Position element)
@@ -83,15 +82,15 @@ public:
 		return m_board[element.first][element.second];
 	}
 private:
-	Matrix& m_board;
+	const Matrix& m_board;
 };
 
-MatrixPtr Game::GetBoard()
+MatrixPtr Game::GetBoard() const
 {
 	return std::make_shared<CustomMatrix>(m_board->GetGameBoard());
 }
 
-PositionList Game::GetPattern(Position piecePos)
+PositionList Game::GetPattern(Position piecePos) const
 {
 	if (Board::IsOutOfBounds(piecePos.first, piecePos.second)) throw OutOfBoundsException();
 	auto piece = m_board->GetGameBoard()[piecePos.first][piecePos.second];
@@ -115,7 +114,7 @@ PositionList Game::GetPattern(Position piecePos)
 	return pattern;
 }
 
-bool Game::IsValid(Position start, Position end)
+bool Game::IsValid(Position start, Position end) const
 {
 	if (!m_board->GetGameBoard()[start.first][start.second]) throw EmptyPositionException();
 	if (Board::IsOutOfBounds(start.first, start.second)) throw OutOfBoundsException();
@@ -127,12 +126,12 @@ bool Game::IsValid(Position start, Position end)
 	throw IllegalMoveException();
 }
 
-Color Game::GetTurn()
+EColor Game::GetTurn() const
 {
 	return m_turn;
 }
 
-Position Game::FindKing(Color color)
+Position Game::FindKing(EColor color) const
 {
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
@@ -140,7 +139,7 @@ Position Game::FindKing(Color color)
 			auto currentPiece = m_board->GetGameBoard()[i][j];
 			if (currentPiece)
 			{
-				if (currentPiece->GetColor() == color && currentPiece->GetType() == Type::KING)
+				if (currentPiece->GetColor() == color && currentPiece->GetType() == EType::KING)
 					return { i, j };
 			}
 		}

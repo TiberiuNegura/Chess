@@ -4,8 +4,8 @@
 Rook::Rook(
 	int row,
 	int column,
-	Color color
-) : Piece('R', row, column, color, Type::ROOK)
+	EColor color
+) : Piece('R', row, column, color, EType::ROOK)
 { }
 
 std::vector<PositionList> Rook::CreatePattern() const

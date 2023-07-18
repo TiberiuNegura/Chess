@@ -4,8 +4,8 @@
 King::King(
 	int row,
 	int column,
-	Color color
-) : Piece('K', row, column, color, Type::KING)
+	EColor color
+) : Piece('K', row, column, color, EType::KING)
 { }
 
 std::vector<PositionList> King::CreatePattern() const

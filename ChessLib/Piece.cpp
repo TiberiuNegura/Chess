@@ -5,8 +5,8 @@ Piece::Piece(
 	char name,
 	int row,
 	int column,
-	Color color,
-	Type type
+	EColor color,
+	EType type
 ) : m_name(name), m_position({row, column}), m_color(color), m_type(type)
 { }
 
@@ -16,11 +16,11 @@ char Piece::GetName() const
 	return m_name;
 }
 
-Color Piece::GetColor() const
+EColor Piece::GetColor() const
 {
 	return m_color;
 }
-Type Piece::GetType() const
+EType Piece::GetType() const
 {
 	return m_type;
 }

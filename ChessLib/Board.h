@@ -10,7 +10,7 @@ public:
 	Board();
 
 	// Inherited via BoardInterface
-	Matrix& GetGameBoard() override;
+	const Matrix& GetGameBoard() const override;
 	PositionList PatternValidation(Position start, std::vector<PositionList> positions);
 	void UpdatePosition(Position start, Position end);
 	void RevertPosition(PiecePtr toRevert) override;

@@ -6,8 +6,8 @@
 Queen::Queen(
 	int row,
 	int column,
-	Color color
-): Piece('Q', row, column, color, Type::QUEEN)
+	EColor color
+): Piece('Q', row, column, color, EType::QUEEN)
 { }
 
 std::vector<PositionList> Queen::CreatePattern() const 

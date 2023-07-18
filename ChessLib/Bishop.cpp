@@ -1,8 +1,8 @@
 #include "Bishop.h"
 
 // Constructor
-Bishop::Bishop( int row, int column, Color color ) 
-	: Piece('B', row, column, color, Type::BISHOP)
+Bishop::Bishop( int row, int column, EColor color ) 
+	: Piece('B', row, column, color, EType::BISHOP)
 {
 
 }

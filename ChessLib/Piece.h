@@ -10,8 +10,8 @@ public:
 		char name = '*',
 		int row = 0,
 		int column = 0,
-		Color color = Color::NONE,
-		Type type = Type::EMPTY
+		EColor color = EColor::NONE,
+		EType type = EType::EMPTY
 	);
 	
 	// Destructor
@@ -19,8 +19,8 @@ public:
 
 	// Getters
 	char GetName() const override;
-	Color GetColor() const override;
-	Type GetType() const override;
+	EColor GetColor() const override;
+	EType GetType() const override;
 	Position GetPosition() const override;
 
 	// Setters
@@ -28,8 +28,8 @@ public:
 protected:
 	char m_name;
 	Position m_position;
-	Color m_color;
-	Type m_type;
+	EColor m_color;
+	EType m_type;
 
 };
 

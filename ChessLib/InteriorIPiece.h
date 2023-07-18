@@ -2,6 +2,8 @@
 
 #include "IPiece.h"
 
+using PiecePtr = std::shared_ptr<class InteriorIPiece>;
+
 class InteriorIPiece : public IPiece
 {
 public:
@@ -9,8 +11,8 @@ public:
 	
 	// Getters
 	virtual char GetName() const = 0;
-	virtual Color GetColor() const override = 0;
-	virtual Type GetType() const override = 0; 
+	virtual EColor GetColor() const override = 0;
+	virtual EType GetType() const override = 0; 
 	virtual Position GetPosition() const = 0;
 
 	// Setters

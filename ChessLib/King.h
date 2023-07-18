@@ -9,7 +9,7 @@ public:
 	King(
 		int row = 0,
 		int column = 0,
-		Color color = Color::NONE
+		EColor color = EColor::NONE
 	);
 
 	

@@ -9,7 +9,7 @@ public:
 	Pawn(
 		int row = 0,
 		int column = 0,
-		Color color = Color::NONE
+		EColor color = EColor::NONE
 	);
 
 	// Inherited via Piece

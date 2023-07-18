@@ -4,8 +4,8 @@
 Horse::Horse(
 	int row,
 	int column,
-	Color color
-) : Piece('H', row, column, color, Type::HORSE)
+	EColor color
+) : Piece('H', row, column, color, EType::HORSE)
 { }
 
 

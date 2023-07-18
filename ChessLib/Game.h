@@ -9,17 +9,21 @@ public:
 	// Constructor
 	Game();
 
-	bool IsCheck(Color color) override;
-	bool IsCheckmate(Color color) override;
+	// IGame methods
+	bool IsCheck(EColor color) const override;
+	bool IsCheckmate(EColor color) const override;
 	void MovePiece(Position start, Position destination) override;
-	MatrixPtr GetBoard() override;
-	PositionList GetPattern(Position piecePos) override;
-	bool IsValid(Position start, Position end);
-	Color GetTurn() override;
+	
+	MatrixPtr GetBoard() const override;
+	PositionList GetPattern(Position piecePos) const override;
+	EColor GetTurn() const override;
+
+	// other methods
+	bool IsValid(Position start, Position end) const;
 
 private:
-	std::shared_ptr<IBoard> m_board;
-	Color m_turn;
-	Position FindKing(Color color);
+	IBoardPtr m_board;
+	EColor m_turn;
+	Position FindKing(EColor color) const ;
 };
 
