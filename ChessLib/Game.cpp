@@ -58,12 +58,17 @@ bool Game::IsCheckmate(Color color)
 	return true;
 }
 
+#include <iostream>
 void Game::MovePiece(Position start, Position destination)
 {
 	if (IsValid(start, destination))
 	{
 		m_board->UpdatePosition(start, destination);
-		m_turn == Color::WHITE ? Color::BLACK : Color::WHITE;
+		if (m_turn == Color::WHITE)
+			m_turn = Color::BLACK;
+		else
+			m_turn = Color::WHITE;
+		//m_turn == Color::WHITE ? Color::BLACK : Color::WHITE;
 	}
 }
 

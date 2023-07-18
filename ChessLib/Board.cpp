@@ -66,8 +66,8 @@ PositionList Board::PatternValidation(Position start, std::vector<PositionList> 
 			auto possiblePosition = m_board[row][column];
 			if (!possiblePosition)
 			{
-				if (pieceType == Type::PAWN && positions[direction].size() - tile <= 2) 
-					break; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
+				if (pieceType == Type::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
+					continue; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
 				validPattern.emplace_back(row, column);
 			}
 			else
