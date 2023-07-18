@@ -5,16 +5,18 @@
 #include "IllegalMoveException.h"
 #include "EmptyPositionException.h"
 
+IGamePtr IGame::StartGame()
+{
+	return std::make_shared<Game>();
+}
+
 // Constructor
 Game::Game()
 {
 	m_board = std::make_shared<Board>();
+	m_turn = Color::WHITE;
 }
 
-void Game::StartGame()
-{
-	throw std::logic_error("The method or operation is not implemented.");
-}
 
 bool Game::IsCheck(Color color)
 {
@@ -59,7 +61,10 @@ bool Game::IsCheckmate(Color color)
 void Game::MovePiece(Position start, Position destination)
 {
 	if (IsValid(start, destination))
+	{
 		m_board->UpdatePosition(start, destination);
+		m_turn == Color::WHITE ? Color::BLACK : Color::WHITE;
+	}
 }
 
 class CustomMatrix : public IMatrix
@@ -86,6 +91,8 @@ PositionList Game::GetPattern(Position piecePos)
 	if (Board::IsOutOfBounds(piecePos.first, piecePos.second)) throw OutOfBoundsException();
 	auto piece = m_board->GetGameBoard()[piecePos.first][piecePos.second];
 	if (!piece) throw PieceNotFoundException();
+	if (piece->GetColor() != m_turn)
+		return PositionList(); // or throw, it needs to be discussed (possible NotYourTurn exception)
 	PositionList pattern = m_board->PatternValidation(piecePos, piece->CreatePattern());
 	auto king = FindKing(piece->GetColor());
 	for (auto it = pattern.begin(); it != pattern.end();)
@@ -100,8 +107,6 @@ PositionList Game::GetPattern(Position piecePos)
 		m_board->UpdatePosition(current, piecePos); // rollback to initial position
 		m_board->RevertPosition(aux);
 	}
-	//for (auto& it : pattern)
-	//	std::cout << it.first << " " << it.second << std::endl;
 	return pattern;
 }
 
@@ -115,6 +120,11 @@ bool Game::IsValid(Position start, Position end)
 		if (position == end)
 			return true;
 	throw IllegalMoveException();
+}
+
+Color Game::GetTurn()
+{
+	return m_turn;
 }
 
 Position Game::FindKing(Color color)
