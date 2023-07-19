@@ -51,7 +51,7 @@ int main()
 		std::cin.getline(move, 6);
 		try
 		{
-			game->MovePiece({move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
+			game->MovePiece({move[0] - '0', move[1] - '0' }, { move[3] - '0', move[4] - '0' });
 			DisplayMatrix(game->GetBoard());
 		}
 		catch (...)
@@ -60,7 +60,7 @@ int main()
 		}
 
 
-	} while (!game->IsCheckmate(EColor::BLACK) && !game->IsCheckmate(EColor::WHITE));
+	} while (true);
 	
 	
 

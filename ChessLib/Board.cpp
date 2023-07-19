@@ -163,7 +163,8 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	if (Board::IsOutOfBounds(piecePos))
 		throw OutOfBoundsException();
 
-	auto piece = m_board[piecePos.first][piecePos.second];
+	auto boardClone = Clone();
+	auto piece = boardClone->GetGameBoard()[piecePos.first][piecePos.second];
 
 	if (!piece || piece->GetColor() != turn)
 		return PositionList();
@@ -173,7 +174,6 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 	auto king = FindKing(turn);
 
-	auto boardClone = Clone();
 
 	//auto boardClone = std::make_shared<Matrix>(m_board);
 
@@ -186,7 +186,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 		boardClone->MovePiece(piecePos, currentPos); // simulate the move
 
-		if (IsCheck(piece->GetColor()))
+		if (boardClone->IsCheck(piece->GetColor()))
 			it = positions.erase(it);
 		else
 			++it;
@@ -194,7 +194,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 		boardClone->MovePiece(currentPos, piecePos); // rollback to initial position
 		boardClone->SetPosition(aux, currentPos);
 	}
-
+	
 	return positions;
 }
 

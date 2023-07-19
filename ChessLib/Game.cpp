@@ -35,6 +35,7 @@ bool Game::IsCheckmate(EColor color) const
 		}
 	return true;
 }
+
 void Game::MovePiece(Position start, Position destination)
 {
 	if (m_board.IsEmpty(start))
@@ -44,6 +45,7 @@ void Game::MovePiece(Position start, Position destination)
 		throw OutOfBoundsException();
 
 	PositionList positions = m_board.GetMoves(start, m_turn); // creates pattern
+
 	for (auto& position : positions)
 		if (position == destination)
 		{
