@@ -50,7 +50,7 @@ int main()
 			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
 		else 
 			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
-		char move[5];
+		char move[10];
 		std::cin.getline(move, 6);
 		system("cls");
 		try
