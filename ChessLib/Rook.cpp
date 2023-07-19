@@ -27,3 +27,8 @@ std::vector<PositionList> Rook::GetDirections(Position pos) const
 	};
 }
 
+PiecePtr Rook::Produce(EColor color)
+{
+	return std::make_shared<Rook>(color);
+}
+

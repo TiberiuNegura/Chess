@@ -19,6 +19,7 @@ public:
 
 	bool Is(EType type, EColor color) const override;
 
+
 protected:
 	char m_name;
 	EColor m_color;

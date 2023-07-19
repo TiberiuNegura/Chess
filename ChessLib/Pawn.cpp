@@ -19,3 +19,8 @@ std::vector<PositionList> Pawn::GetDirections(Position pos) const
 	positions.emplace_back(row + nextPos, column - 1);
 	return {positions};
 }
+
+PiecePtr Pawn::Produce(EColor color)
+{
+	return std::make_shared<Pawn>(color);
+}

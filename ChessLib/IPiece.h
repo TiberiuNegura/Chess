@@ -40,6 +40,7 @@ public:
 	virtual bool Is(EType type, EColor color) const = 0;
 
 
+
 	// Destructor
 	virtual ~IPiece() = default;
 };

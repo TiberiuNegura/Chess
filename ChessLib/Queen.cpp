@@ -19,4 +19,9 @@ std::vector<PositionList> Queen::GetDirections(Position pos) const
 	return bishopPattern; 
 }
 
+PiecePtr Queen::Produce(EColor color)
+{
+	return std::make_shared<Queen>(color);
+}
+
 

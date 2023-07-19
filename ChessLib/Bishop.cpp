@@ -30,5 +30,9 @@ std::vector<PositionList> Bishop::GetDirections(Position pos) const
 	};
 }
 
+PiecePtr Bishop::Produce(EColor color)
+{
+	return std::make_shared<Bishop>(color);
+}
 
 

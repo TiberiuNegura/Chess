@@ -26,3 +26,7 @@ std::vector<PositionList> Horse::GetDirections(Position pos) const
 	return { positions };
 }
 
+PiecePtr Horse::Produce(EColor color)
+{
+	return std::make_shared<Horse>(color);
+}

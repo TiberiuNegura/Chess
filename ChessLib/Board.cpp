@@ -16,35 +16,35 @@ Board::Board()
 
 	// Pawns
 	for (int column = 0; column < 8; column++) {
-		m_board[1][column] = std::make_shared<Pawn>(EColor::BLACK);
-		m_board[6][column] = std::make_shared<Pawn>(EColor::WHITE);
+		m_board[1][column] = Pawn::Produce(EColor::BLACK);
+		m_board[6][column] = Pawn::Produce(EColor::WHITE);
 	}
 
 	// Rooks
-	m_board[0][0] = std::make_shared<Rook>(EColor::BLACK);
-	m_board[0][7] = std::make_shared<Rook>(EColor::BLACK);
-	m_board[7][0] = std::make_shared<Rook>(EColor::WHITE);
-	m_board[7][7] = std::make_shared<Rook>(EColor::WHITE);
+	m_board[0][0] = Rook::Produce(EColor::BLACK);
+	m_board[0][7] = Rook::Produce(EColor::BLACK);
+	m_board[7][0] = Rook::Produce(EColor::WHITE);
+	m_board[7][7] = Rook::Produce(EColor::WHITE);
 
 	// Horses
-	m_board[0][1] = std::make_shared<Horse>(EColor::BLACK);
-	m_board[0][6] = std::make_shared<Horse>(EColor::BLACK);
-	m_board[7][1] = std::make_shared<Horse>(EColor::WHITE);
-	m_board[7][6] = std::make_shared<Horse>(EColor::WHITE);
+	m_board[0][1] = Horse::Produce(EColor::BLACK);
+	m_board[0][6] = Horse::Produce(EColor::BLACK);
+	m_board[7][1] = Horse::Produce(EColor::WHITE);
+	m_board[7][6] = Horse::Produce(EColor::WHITE);
 
 	// Bishops
-	m_board[0][2] = std::make_shared<Bishop>(EColor::BLACK);
-	m_board[0][5] = std::make_shared<Bishop>(EColor::BLACK);
-	m_board[7][2] = std::make_shared<Bishop>(EColor::WHITE);
-	m_board[7][5] = std::make_shared<Bishop>(EColor::WHITE);
+	m_board[0][2] = Bishop::Produce(EColor::BLACK);
+	m_board[0][5] = Bishop::Produce(EColor::BLACK);
+	m_board[7][2] = Bishop::Produce(EColor::WHITE);
+	m_board[7][5] = Bishop::Produce(EColor::WHITE);
 
 	// Queens
-	m_board[0][3] = std::make_shared<Queen>(EColor::BLACK);
-	m_board[7][3] = std::make_shared<Queen>(EColor::WHITE);
+	m_board[0][3] = Queen::Produce(EColor::BLACK);
+	m_board[7][3] = Queen::Produce(EColor::WHITE);
 
 	// Kings
-	m_board[0][4] = std::make_shared<King>(EColor::BLACK);
-	m_board[7][4] = std::make_shared<King>(EColor::WHITE);
+	m_board[0][4] = King::Produce(EColor::BLACK);
+	m_board[7][4] = King::Produce(EColor::WHITE);
 
 }
 

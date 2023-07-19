@@ -51,10 +51,10 @@ int main()
 			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
 		char move[5];
 		std::cin.getline(move, 6);
+		system("cls");
 		try
 		{
 			game->MovePiece({move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
-			DisplayMatrix(game->GetBoard());
 		}
 		catch (OutOfBoundsException e)
 		{
@@ -72,6 +72,7 @@ int main()
 		{
 			std::cout << dye::red_on_black(e.what()) << std::endl;
 		}
+		DisplayMatrix(game->GetBoard());
 
 
 	} while (true);
