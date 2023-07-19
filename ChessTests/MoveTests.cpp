@@ -143,32 +143,39 @@ TEST(MoveTests, HorseMoveTest)
 
 }
 
-//TEST(MoveTests, KingMoveTest)
-//{
-//	Game game;
-//	auto king = game.GetBoard()->GetElement({ 0,4 });
-//
-//	EXPECT_THROW(game.MovePiece(king, { 1,4 }), IllegalMoveException);// it cannot move
-//	game.MovePiece({ 1,4 }, { 3, 4 }); // making room
-//	EXPECT_NO_THROW(game.MovePiece(king, { 1,4 }));
-//	EXPECT_NO_THROW(game.MovePiece(king, { 2,3 }));
-//
-//	EXPECT_THROW(game.MovePiece(king, { 5,4 }), IllegalMoveException);
-//	EXPECT_EQ(king.first, 2);
-//	EXPECT_EQ(king.second, 3);
-//}
-//
-//TEST(MoveTests, QueenMoveTest)
-//{
-//	Game game;
-//	auto queen = game.GetBoard()->GetElement({ 0,3 });
-//
-//	EXPECT_THROW(game.MovePiece(queen, { 5,3 }), IllegalMoveException);
-//	game.MovePiece({ 1,3 }, { 3,3 });
-//	EXPECT_NO_THROW(game.MovePiece(queen, { 2,3 }));
-//	EXPECT_NO_THROW(game.MovePiece(queen, { 2,5 }));
-//	EXPECT_THROW(game.MovePiece(queen, { 1,5 }), IllegalMoveException);
-//	EXPECT_NO_THROW(game.MovePiece(queen, { 6,5 }));
-//	EXPECT_NO_THROW(game.MovePiece(queen, { 4,5 }));
-//	
-//}
+TEST(MoveTests, KingMoveTest)
+{
+	Game game;
+	Position king = { 0,4 };
+
+	EXPECT_THROW(game.MovePiece(king, { 1,4 }), IllegalMoveException);// it cannot move
+	game.MovePiece({ 6,7 }, { 5, 7 }); // making room
+	game.MovePiece({ 1,4 }, { 3, 4 });
+	game.MovePiece({ 6,5 }, { 5, 5 });
+	EXPECT_NO_THROW(game.MovePiece(king, { 1,4 }));
+	game.MovePiece({ 5,7 }, { 4, 7 });
+	EXPECT_NO_THROW(game.MovePiece({ 1,4 }, { 2,3 }));
+
+	game.MovePiece({ 4,7 }, { 3, 7 });
+
+	EXPECT_THROW(game.MovePiece({ 2,3 }, { 5,4 }), IllegalMoveException);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 2,3 })->GetType(), EType::KING);
+}
+
+TEST(MoveTests, QueenMoveTest)
+{
+	Game game;
+	Position queen = { 7,3 };
+
+	EXPECT_THROW(game.MovePiece(queen, { 5,3 }), IllegalMoveException);
+	game.MovePiece({ 6,3 }, { 4,3 });
+	game.MovePiece({ 1,3 }, { 3,3 });
+	EXPECT_NO_THROW(game.MovePiece(queen, { 5,3 }));
+	EXPECT_NO_THROW(game.MovePiece({ 0,3 }, { 2,3 }));
+	EXPECT_THROW(game.MovePiece({ 5,3 }, { 1,5 }), IllegalMoveException);
+	EXPECT_NO_THROW(game.MovePiece({ 5,3 }, { 5,0 }));
+	EXPECT_NO_THROW(game.MovePiece({ 2,3 }, { 5,0 }));
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 5,0 })->GetColor(), EColor::BLACK);
+	
+}
