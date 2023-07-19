@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPiece.h"
+#include "IChessException.h"
 
 using IGamePtr = std::shared_ptr<class IGame>;
 

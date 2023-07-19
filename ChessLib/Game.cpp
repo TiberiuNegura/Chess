@@ -28,7 +28,7 @@ bool Game::IsCheck(EColor color) const
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (auto piece = m_board->GetGameBoard()[i][j])
+			if (auto piece = m_board->Get(i,j))
 			{
 				if (piece->GetColor() == oppositeColor)
 				{
@@ -78,7 +78,7 @@ void Game::MovePiece(Position start, Position destination)
 	for (auto& position : positions)
 		if (position == destination)
 		{
-			m_board->UpdatePosition(start, destination);
+			m_board->MovePiece(start, destination);
 			m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
 			return;
 		}
@@ -121,15 +121,20 @@ PositionList Game::GetMoves(Position piecePos) const
 
 	for (auto it = positions.begin(); it != positions.end();)
 	{
-		Position current = *it;
-		auto aux = m_board->GetGameBoard()[current.first][current.second];
-		m_board->UpdatePosition(piecePos, current); // simulate the move
+		Position currentPos = *it;
+
+		// auto aux = m_board->Get(currentPos);
+		auto aux = (*m_board)[currentPos];
+		
+		m_board->MovePiece(piecePos, currentPos); // simulate the move
+		
 		if (IsCheck(piece->GetColor()))
 			it = positions.erase(it);
 		else
 			++it;
-		m_board->UpdatePosition(current, piecePos); // rollback to initial position
-		m_board->RevertPosition(aux, current);
+		
+		m_board->MovePiece(currentPos, piecePos); // rollback to initial position
+		m_board->SetPosition(aux, currentPos);
 	}
 
 	return positions;

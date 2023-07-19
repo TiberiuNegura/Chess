@@ -57,6 +57,17 @@ bool Board::IsEmpty(Position p) const
 		return true;
 	return false;
 }
+
+PiecePtr Board::Get(int i, int j) const
+{
+	return m_board[i][j];
+}
+
+PiecePtr Board::Get(Position pos) const
+{
+	return Get(pos.first, pos.second);
+}
+
 PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions) const
 {
 	PositionList validPattern;
@@ -95,13 +106,13 @@ PositionList Board::ComputePositionList(Position start, std::vector<PositionList
 	return validPattern;
 }
 
-void Board::UpdatePosition(Position start, Position end)
+void Board::MovePiece(Position start, Position end)
 {
 	m_board[end.first][end.second] = m_board[start.first][start.second];
 	m_board[start.first][start.second] = {};
 }
 
-void Board::RevertPosition(PiecePtr toRevert, Position pos)
+void Board::SetPosition(PiecePtr toRevert, Position pos)
 {
 	if (toRevert)
 		m_board[pos.first][pos.second] = toRevert;
@@ -111,4 +122,9 @@ void Board::RevertPosition(PiecePtr toRevert, Position pos)
 bool Board::IsOutOfBounds(Position p)
 {
 	return !(0 <= p.first && p.first < 8 && 0 <= p.second && p.second < 8);
+}
+
+PiecePtr Board::operator[](Position pos)
+{
+	return m_board[pos.first][pos.second];
 }

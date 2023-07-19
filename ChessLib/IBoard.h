@@ -13,9 +13,14 @@ public:
 
 	virtual bool IsEmpty(Position p) const = 0;
 
+	virtual PiecePtr Get(int i, int j) const = 0;
+	virtual PiecePtr Get(Position pos) const = 0;
+
 	virtual PositionList ComputePositionList(Position start, std::vector<PositionList> positions) const = 0 ;
-	virtual void RevertPosition(PiecePtr toRevert, Position pos) = 0;
-	virtual void UpdatePosition(Position start, Position end) = 0;
+	virtual void SetPosition(PiecePtr toRevert, Position pos) = 0;
+	virtual void MovePiece(Position start, Position end) = 0;
+
+    virtual PiecePtr operator[](Position pos) = 0;
 
 	~IBoard() = default;
 };
