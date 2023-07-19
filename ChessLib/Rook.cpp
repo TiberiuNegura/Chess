@@ -7,7 +7,7 @@ Rook::Rook(EColor color)
 
 }
 
-std::vector<PositionList> Rook::GetDirections(Position pos) const
+Directions Rook::GetDirections(Position pos) const
 {
 	PositionList positionsLeft, positionsRight, positionsUp, positionsDown;
 	int row = pos.first, column = pos.second;
@@ -26,9 +26,3 @@ std::vector<PositionList> Rook::GetDirections(Position pos) const
 		positionsDown
 	};
 }
-
-PiecePtr Rook::Produce(EColor color)
-{
-	return std::make_shared<Rook>(color);
-}
-

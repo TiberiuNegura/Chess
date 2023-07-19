@@ -8,6 +8,7 @@
 using IPiecePtr = std::shared_ptr<class IPiece>;
 using Position = std::pair<int, int>;
 using PositionList = std::vector<Position>;
+using Directions = std::vector<PositionList>;
 
 
 // Color enum

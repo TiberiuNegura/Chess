@@ -7,7 +7,7 @@ Bishop::Bishop(EColor color )
 
 }
 
-std::vector<PositionList> Bishop::GetDirections(Position pos) const
+Directions Bishop::GetDirections(Position pos) const
 {
 	PositionList leftDown, leftUp, rightDown, rightUp; //diagonal path to board corners
 	int row = pos.first, column = pos.second;
@@ -30,9 +30,6 @@ std::vector<PositionList> Bishop::GetDirections(Position pos) const
 	};
 }
 
-PiecePtr Bishop::Produce(EColor color)
-{
-	return std::make_shared<Bishop>(color);
-}
+
 
 

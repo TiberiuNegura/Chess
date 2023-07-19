@@ -2,17 +2,18 @@
 
 #include "IPiece.h"
 
+using PiecePtr = std::shared_ptr<class Piece>;
+
 class Piece : public IPiece
 {
 public:
 	// Constructor
 	Piece(char name = '*', EColor color = EColor::NONE, EType type = EType::EMPTY);
-	
-	// Destructor
-	virtual ~Piece() = default;
+
+	static PiecePtr Produce(EType type, EColor color);
 
 	// Getters
-	virtual std::vector<PositionList> GetDirections(Position pos) const = 0;
+	virtual Directions GetDirections(Position pos) const = 0;
 	char GetName() const override;
 	EColor GetColor() const override;
 	EType GetType() const override;
@@ -26,6 +27,4 @@ protected:
 	EType m_type;
 
 };
-
-using PiecePtr = std::shared_ptr<Piece>;
 

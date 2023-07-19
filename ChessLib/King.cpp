@@ -7,7 +7,7 @@ King::King(EColor color)
 
 }
 
-std::vector<PositionList> King::GetDirections(Position pos) const
+Directions King::GetDirections(Position pos) const
 {
 	PositionList positions;
 	int row = pos.first, column = pos.second;
@@ -18,9 +18,3 @@ std::vector<PositionList> King::GetDirections(Position pos) const
 
 	return {positions};
 }
-
-PiecePtr King::Produce(EColor color)
-{
-	return std::make_shared<King>(color);
-}
-

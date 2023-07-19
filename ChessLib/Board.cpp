@@ -1,51 +1,27 @@
 #include "Board.h"
-#include "Pawn.h"
-#include "Rook.h"
-#include "Bishop.h"
-#include "Horse.h"
-#include "Queen.h"
-#include "King.h"
 #include "Piece.h"
 
 #include "PieceNotFoundException.h"
-
 
 Board::Board()
 {
 	// Board initialize
 
 	// Pawns
-	for (int column = 0; column < 8; column++) {
-		m_board[1][column] = Pawn::Produce(EColor::BLACK);
-		m_board[6][column] = Pawn::Produce(EColor::WHITE);
+	for (int column = 0; column < 8; column++) 
+	{
+		m_board[1][column] = Piece::Produce(EType::PAWN, EColor::BLACK);
+		m_board[6][column] = Piece::Produce(EType::PAWN, EColor::WHITE);
 	}
 
-	// Rooks
-	m_board[0][0] = Rook::Produce(EColor::BLACK);
-	m_board[0][7] = Rook::Produce(EColor::BLACK);
-	m_board[7][0] = Rook::Produce(EColor::WHITE);
-	m_board[7][7] = Rook::Produce(EColor::WHITE);
+	// other pieces
+	const std::vector<EType> TYPES = {EType::ROOK, EType::HORSE, EType::BISHOP, EType::QUEEN, EType::KING, EType::BISHOP, EType::HORSE, EType::ROOK };
 
-	// Horses
-	m_board[0][1] = Horse::Produce(EColor::BLACK);
-	m_board[0][6] = Horse::Produce(EColor::BLACK);
-	m_board[7][1] = Horse::Produce(EColor::WHITE);
-	m_board[7][6] = Horse::Produce(EColor::WHITE);
-
-	// Bishops
-	m_board[0][2] = Bishop::Produce(EColor::BLACK);
-	m_board[0][5] = Bishop::Produce(EColor::BLACK);
-	m_board[7][2] = Bishop::Produce(EColor::WHITE);
-	m_board[7][5] = Bishop::Produce(EColor::WHITE);
-
-	// Queens
-	m_board[0][3] = Queen::Produce(EColor::BLACK);
-	m_board[7][3] = Queen::Produce(EColor::WHITE);
-
-	// Kings
-	m_board[0][4] = King::Produce(EColor::BLACK);
-	m_board[7][4] = King::Produce(EColor::WHITE);
-
+	for (int i = 0; i < TYPES.size(); i++)
+	{
+		m_board[0][i] = Piece::Produce(TYPES[i], EColor::BLACK);
+		m_board[7][i] = Piece::Produce(TYPES[i], EColor::WHITE);
+	}
 }
 
 Board::Board(const Matrix& mat)
@@ -53,12 +29,12 @@ Board::Board(const Matrix& mat)
 	m_board = mat;
 }
 
-const Matrix& Board::GetGameBoard() const
+const Matrix& Board::GetMatrix() const
 {
 	return m_board;
 }
 
-bool Board::IsEmpty(Position p) const
+bool Board::IsEmptyPosition(Position p) const
 {
 	if (!m_board[p.first][p.second])
 		return true;
@@ -75,11 +51,14 @@ PiecePtr Board::Get(Position pos) const
 	return Get(pos.first, pos.second);
 }
 
-PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions) const
+PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 {
 	PositionList validPattern;
+
+	Directions positions = piece->GetDirections(start);
 	EColor pieceColor = m_board[start.first][start.second]->GetColor();
 	EType pieceType = m_board[start.first][start.second]->GetType();
+	
 	for (int direction = 0; direction < positions.size(); direction++)
 	{
 		for (int tile = 0; tile < positions[direction].size(); tile++)
@@ -90,10 +69,10 @@ PositionList Board::ComputePositionList(Position start, std::vector<PositionList
 			if (IsOutOfBounds(positions[direction][tile]))
 				continue;
 			
-			if (auto possiblePosition = m_board[row][column])
+			if (auto possiblePiece = m_board[row][column])
 			{
-				EColor obstacleColor = possiblePosition->GetColor();
-				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
+				EColor obstacleColor = possiblePiece->GetColor();
+				if (pieceType == EType::PAWN && abs(start.first - row) >= 1 && abs(start.second - column) == 0)
 					continue; // pawn can't overtake a frontal piece
 				if (obstacleColor != pieceColor)
 					validPattern.emplace_back(row, column);
@@ -141,16 +120,15 @@ bool Board::IsCheck(EColor color) const
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (auto piece = m_board[i][j])
+			auto piece = m_board[i][j];
+
+			if (piece && piece->GetColor() == oppositeColor)
 			{
-				if (piece->GetColor() == oppositeColor)
+				PositionList list = ComputePositionList({ i,j }, piece);
+				for (auto position : list)
 				{
-					PositionList list = ComputePositionList({ i,j }, piece->GetDirections({ i, j }));
-					for (auto position : list)
-					{
-						if (position == kingPos)
-							return true;
-					}
+					if (position == kingPos)
+						return true;
 				}
 			}
 		}
@@ -164,18 +142,15 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 		throw OutOfBoundsException();
 
 	auto boardClone = Clone();
-	auto piece = boardClone->GetGameBoard()[piecePos.first][piecePos.second];
+	auto piece = boardClone->GetMatrix()[piecePos.first][piecePos.second];
 
 	if (!piece || piece->GetColor() != turn)
 		return PositionList();
 
 
-	PositionList positions = ComputePositionList(piecePos, piece->GetDirections(piecePos));
+	PositionList positions = ComputePositionList(piecePos, piece);
 
 	auto king = FindKing(turn);
-
-
-	//auto boardClone = std::make_shared<Matrix>(m_board);
 
 	for (auto it = positions.begin(); it != positions.end();)
 	{
@@ -183,7 +158,6 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 		auto aux = Get(currentPos);
 		
-
 		boardClone->MovePiece(piecePos, currentPos); // simulate the move
 
 		if (boardClone->IsCheck(piece->GetColor()))
@@ -192,7 +166,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 			++it;
 
 		boardClone->MovePiece(currentPos, piecePos); // rollback to initial position
-		boardClone->SetPosition(aux, currentPos);
+		boardClone->SetPosition(aux, currentPos); 
 	}
 	
 	return positions;
@@ -203,21 +177,33 @@ Position Board::FindKing(EColor color) const
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (auto currentPiece = m_board[i][j])
-			{
-				if (currentPiece->Is(EType::KING, color))
-					return { i, j };
-			}
+			if (m_board[i][j] && m_board[i][j]->Is(EType::KING, color))
+				return { i, j };
 		}
 	throw PieceNotFoundException();
 }
 
-std::shared_ptr<Board> Board::Clone() const
+BoardPtr Board::Clone() const
 {
 	return std::make_shared<Board>(m_board);
 }
 
-PiecePtr Board::operator[](Position pos) const
+bool Board::IsCheckmate(EColor color) const
 {
-	return m_board[pos.first][pos.second];
+	if (!IsCheck(color))
+		return false;
+
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			auto piece = GetMatrix()[i][j];
+
+			if (!piece || piece->GetColor() != color)
+				continue;
+
+			PositionList list = GetMoves({ i,j }, color);
+			if (!list.empty())
+				return false;
+		}
+	return true;
 }

@@ -10,11 +10,13 @@ public:
 	Game();
 
 	// IGame methods
-	bool IsCheckmate(EColor color) const override;
 	void MovePiece(Position start, Position destination) override;
 	
 	MatrixPtr GetBoard() const override;
 	EColor GetTurn() const override;
+	PositionList GetMoves(Position piecePos) const override;
+
+	bool IsGameOver() const override;
 
 private:
 	Board m_board;

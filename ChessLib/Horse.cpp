@@ -8,7 +8,7 @@ Horse::Horse(EColor color)
 }
 
 
-std::vector<PositionList> Horse::GetDirections(Position pos) const
+Directions Horse::GetDirections(Position pos) const
 {
 	PositionList positions;
 	int row = pos.first, column = pos.second;
@@ -24,9 +24,4 @@ std::vector<PositionList> Horse::GetDirections(Position pos) const
 	//for (auto& it : positions)
 	//	std::cout << it.first << " " << it.second << std::endl;
 	return { positions };
-}
-
-PiecePtr Horse::Produce(EColor color)
-{
-	return std::make_shared<Horse>(color);
 }

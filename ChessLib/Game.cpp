@@ -13,38 +13,16 @@ Game::Game()
 	
 }
 
-bool Game::IsCheckmate(EColor color) const
-{
-	if (!m_board.IsCheck(color))
-		return false;
-
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			auto piece = m_board.GetGameBoard()[i][j];
-			
-			if (!piece) 
-				continue;
-			
-			if (piece->GetColor() != color)
-				continue;
-			
-			PositionList list = m_board.GetMoves({ i,j }, m_turn);
-			if (!list.empty())
-				return false;
-		}
-	return true;
-}
-
 void Game::MovePiece(Position start, Position destination)
 {
-	if (m_board.IsEmpty(start))
+	
+	if (m_board.IsEmptyPosition(start))
 		throw EmptyPositionException();
 
 	if (Board::IsOutOfBounds(start) || Board::IsOutOfBounds(destination))
 		throw OutOfBoundsException();
 
-	PositionList positions = m_board.GetMoves(start, m_turn); // creates pattern
+	PositionList positions = GetMoves(start); // creates pattern
 
 	for (auto& position : positions)
 		if (position == destination)
@@ -55,6 +33,7 @@ void Game::MovePiece(Position start, Position destination)
 		}
 
 	throw IllegalMoveException();
+
 }
 
 class CustomMatrix : public IMatrix
@@ -73,12 +52,22 @@ private:
 
 MatrixPtr Game::GetBoard() const
 {
-	return std::make_shared<CustomMatrix>(m_board.GetGameBoard());
+	return std::make_shared<CustomMatrix>(m_board.GetMatrix());
 }
 
 
 EColor Game::GetTurn() const
 {
 	return m_turn;
+}
+
+PositionList Game::GetMoves(Position piecePos) const
+{
+	return m_board.GetMoves(piecePos, m_turn);
+}
+
+bool Game::IsGameOver() const
+{
+	return (m_board.IsCheckmate(EColor::WHITE) || m_board.IsCheckmate(EColor::BLACK));
 }
 

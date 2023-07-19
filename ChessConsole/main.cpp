@@ -30,7 +30,7 @@ void DisplayMatrix(MatrixPtr b)
 			else
 			{
 				//SetConsoleTextAttribute(consoleColor, 2);
-				std::cout << dye::light_aqua("*") << " | ";
+				std::cout << dye::light_aqua(" ") << " | ";
 			}
 		}
 		std::cout << std::endl;
@@ -38,6 +38,7 @@ void DisplayMatrix(MatrixPtr b)
 	}
 	std::cout << std::endl;
 }
+
 
 int main()
 {
@@ -75,7 +76,7 @@ int main()
 		DisplayMatrix(game->GetBoard());
 
 
-	} while (true);
+	} while (!game->IsGameOver());
 	
 	
 
