@@ -136,7 +136,7 @@ TEST(MoveTests, HorseMoveTest)
 	game.MovePiece({ 1,1 }, { 3,1 });
 	game.MovePiece({ 2,7 }, { 1,6 });
 	game.MovePiece({ 3,1 }, { 4,1 });
-	game.MovePiece({ 6,6 }, { 6,5 });
+	game.MovePiece({ 6,6 }, { 5,6 });
 
 	EXPECT_THROW(game.MovePiece({ 6,0 }, { 4,1 }), IllegalMoveException);
 	EXPECT_THROW(game.MovePiece({ 6,0 }, { -1,8 }), OutOfBoundsException);
