@@ -6,16 +6,12 @@ class Rook : public Piece
 {
 public:
 	// Constructor
-	Rook(
-		int row = 0,
-		int column = 0,
-		EColor color = EColor::NONE
-	);
+	Rook(EColor color = EColor::NONE);
 
 	
 
 	// Inherited via Piece
-	std::vector<PositionList> GetDirections() const override;
+	std::vector<PositionList> GetDirections(Position pos) const override;
 
 };
 

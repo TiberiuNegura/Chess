@@ -152,7 +152,6 @@
     <ClInclude Include="King.h" />
     <ClInclude Include="OutOfBoundsException.h" />
     <ClInclude Include="Pawn.h" />
-    <ClInclude Include="InteriorIPiece.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="PieceNotFoundException.h" />
     <ClInclude Include="Queen.h" />

@@ -14,35 +14,35 @@ Board::Board()
 
 	// Pawns
 	for (int column = 0; column < 8; column++) {
-		m_board[1][column] = std::make_shared<Pawn>(1, column, EColor::BLACK);
-		m_board[6][column] = std::make_shared<Pawn>(6, column, EColor::WHITE);
+		m_board[1][column] = std::make_shared<Pawn>(EColor::BLACK);
+		m_board[6][column] = std::make_shared<Pawn>(EColor::WHITE);
 	}
 
 	// Rooks
-	m_board[0][0] = std::make_shared<Rook>(0, 0, EColor::BLACK);
-	m_board[0][7] = std::make_shared<Rook>(0, 7, EColor::BLACK);
-	m_board[7][0] = std::make_shared<Rook>(7, 0, EColor::WHITE);
-	m_board[7][7] = std::make_shared<Rook>(7, 7, EColor::WHITE);
+	m_board[0][0] = std::make_shared<Rook>(EColor::BLACK);
+	m_board[0][7] = std::make_shared<Rook>(EColor::BLACK);
+	m_board[7][0] = std::make_shared<Rook>(EColor::WHITE);
+	m_board[7][7] = std::make_shared<Rook>(EColor::WHITE);
 
 	// Horses
-	m_board[0][1] = std::make_shared<Horse>(0, 1, EColor::BLACK);
-	m_board[0][6] = std::make_shared<Horse>(0, 6, EColor::BLACK);
-	m_board[7][1] = std::make_shared<Horse>(7, 1, EColor::WHITE);
-	m_board[7][6] = std::make_shared<Horse>(7, 6, EColor::WHITE);
+	m_board[0][1] = std::make_shared<Horse>(EColor::BLACK);
+	m_board[0][6] = std::make_shared<Horse>(EColor::BLACK);
+	m_board[7][1] = std::make_shared<Horse>(EColor::WHITE);
+	m_board[7][6] = std::make_shared<Horse>(EColor::WHITE);
 
 	// Bishops
-	m_board[0][2] = std::make_shared<Bishop>(0, 2, EColor::BLACK);
-	m_board[0][5] = std::make_shared<Bishop>(0, 5, EColor::BLACK);
-	m_board[7][2] = std::make_shared<Bishop>(7, 2, EColor::WHITE);
-	m_board[7][5] = std::make_shared<Bishop>(7, 5, EColor::WHITE);
+	m_board[0][2] = std::make_shared<Bishop>(EColor::BLACK);
+	m_board[0][5] = std::make_shared<Bishop>(EColor::BLACK);
+	m_board[7][2] = std::make_shared<Bishop>(EColor::WHITE);
+	m_board[7][5] = std::make_shared<Bishop>(EColor::WHITE);
 
 	// Queens
-	m_board[0][3] = std::make_shared<Queen>(0, 3, EColor::BLACK);
-	m_board[7][3] = std::make_shared<Queen>(7, 3, EColor::WHITE);
+	m_board[0][3] = std::make_shared<Queen>(EColor::BLACK);
+	m_board[7][3] = std::make_shared<Queen>(EColor::WHITE);
 
 	// Kings
-	m_board[0][4] = std::make_shared<King>(0, 4, EColor::BLACK);
-	m_board[7][4] = std::make_shared<King>(7, 4, EColor::WHITE);
+	m_board[0][4] = std::make_shared<King>(EColor::BLACK);
+	m_board[7][4] = std::make_shared<King>(EColor::WHITE);
 
 }
 
@@ -57,7 +57,7 @@ bool Board::IsEmpty(Position p) const
 		return true;
 	return false;
 }
-PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions)
+PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions) const
 {
 	PositionList validPattern;
 	EColor pieceColor = m_board[start.first][start.second]->GetColor();
@@ -99,17 +99,14 @@ void Board::UpdatePosition(Position start, Position end)
 {
 	m_board[end.first][end.second] = m_board[start.first][start.second];
 	m_board[start.first][start.second] = {};
-	m_board[end.first][end.second]->SetPosition(end);
 }
 
-void Board::RevertPosition(PiecePtr toRevert)
+void Board::RevertPosition(PiecePtr toRevert, Position pos)
 {
 	if (toRevert)
-	{
-		auto pos = toRevert->GetPosition();
 		m_board[pos.first][pos.second] = toRevert;
-	}
 }
+
 
 bool Board::IsOutOfBounds(Position p)
 {

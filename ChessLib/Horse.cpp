@@ -1,18 +1,17 @@
 #include "Horse.h"
 
 // Constructor
-Horse::Horse(
-	int row,
-	int column,
-	EColor color
-) : Piece('H', row, column, color, EType::HORSE)
-{ }
+Horse::Horse(EColor color)
+	: Piece('H', color, EType::HORSE)
+{ 
+
+}
 
 
-std::vector<PositionList> Horse::GetDirections() const
+std::vector<PositionList> Horse::GetDirections(Position pos) const
 {
 	PositionList positions;
-	int row = m_position.first, column = m_position.second;
+	int row = pos.first, column = pos.second;
 	for (int index = 0; index < 4; index++)
 	{
 		Position pos1 = { row + pow(-1, index/2), column + 2 * pow(-1, index%2)};

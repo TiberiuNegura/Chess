@@ -6,12 +6,8 @@ class Pawn : public Piece
 {
 public:
 	// Constructor
-	Pawn(
-		int row = 0,
-		int column = 0,
-		EColor color = EColor::NONE
-	);
+	Pawn(EColor color = EColor::NONE);
 
 	// Inherited via Piece
-	std::vector<PositionList> GetDirections() const override;
+	std::vector<PositionList> GetDirections(Position pos) const override;
 };

@@ -34,11 +34,8 @@ class IPiece
 public:
 	// Getters
 	virtual char GetName() const = 0;
-	
 	virtual EColor GetColor() const = 0;
 	virtual EType GetType() const = 0;
-	
-	virtual Position GetPosition() const = 0;
 
 
 	// Destructor

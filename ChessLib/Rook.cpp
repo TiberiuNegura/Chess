@@ -1,17 +1,16 @@
 #include "Rook.h"
 
 // Constructor
-Rook::Rook(
-	int row,
-	int column,
-	EColor color
-) : Piece('R', row, column, color, EType::ROOK)
-{ }
+Rook::Rook(EColor color) 
+	: Piece('R', color, EType::ROOK)
+{
 
-std::vector<PositionList> Rook::GetDirections() const
+}
+
+std::vector<PositionList> Rook::GetDirections(Position pos) const
 {
 	PositionList positionsLeft, positionsRight, positionsUp, positionsDown;
-	int row = m_position.first, column = m_position.second;
+	int row = pos.first, column = pos.second;
 	for (int index = column-1; index >= 0; index--)
 		positionsLeft.emplace_back(row, index);
 	for (int index = column+1; index < 8; index++)

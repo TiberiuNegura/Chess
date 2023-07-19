@@ -14,9 +14,9 @@ public:
 
 	bool IsEmpty(Position p) const override;
 
-	PositionList ComputePositionList(Position start, std::vector<PositionList> positions);
+	PositionList ComputePositionList(Position start, std::vector<PositionList> positions) const;
 	void UpdatePosition(Position start, Position end);
-	void RevertPosition(PiecePtr toRevert) override;
+	void RevertPosition(PiecePtr toRevert, Position pos) override;
 	static bool IsOutOfBounds(Position p);
 
 private:

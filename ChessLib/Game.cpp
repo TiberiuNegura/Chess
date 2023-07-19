@@ -1,5 +1,4 @@
 #include "Game.h"
-
 #include "Board.h"
 #include "PieceNotFoundException.h"
 #include "OutOfBoundsException.h"
@@ -33,7 +32,7 @@ bool Game::IsCheck(EColor color) const
 			{
 				if (piece->GetColor() == oppositeColor)
 				{
-					PositionList list = m_board->ComputePositionList({ i,j }, piece->GetDirections());
+					PositionList list = m_board->ComputePositionList({ i,j }, piece->GetDirections({ i, j }));
 					for (auto position : list)
 					{
 						if (position == kingPos)
@@ -116,7 +115,7 @@ PositionList Game::GetMoves(Position piecePos) const
 	if (!piece || piece->GetColor() != m_turn)
 		return PositionList();
 
-	PositionList positions = m_board->ComputePositionList(piecePos, piece->GetDirections());
+	PositionList positions = m_board->ComputePositionList(piecePos, piece->GetDirections(piecePos));
 
 	auto king = FindKing(m_turn);
 
@@ -130,7 +129,7 @@ PositionList Game::GetMoves(Position piecePos) const
 		else
 			++it;
 		m_board->UpdatePosition(current, piecePos); // rollback to initial position
-		m_board->RevertPosition(aux);
+		m_board->RevertPosition(aux, current);
 	}
 
 	return positions;

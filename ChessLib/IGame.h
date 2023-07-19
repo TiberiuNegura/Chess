@@ -18,7 +18,7 @@ using MatrixPtr = std::shared_ptr<IMatrix>;
 class IGame
 {
 public:
-	static IGamePtr Produce(); // factory
+	static IGamePtr Produce(); 
 
 	virtual bool IsCheck(EColor color) const = 0;
 	virtual bool IsCheckmate(EColor color) const = 0;
@@ -27,8 +27,6 @@ public:
 	virtual MatrixPtr GetBoard() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual EColor GetTurn() const = 0;
-
-	// TODO: player`s turn 
 
 	~IGame() = default;
 };

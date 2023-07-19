@@ -6,17 +6,12 @@ class Bishop : public Piece
 {
 public:
 	// Constructor
-	Bishop(
-		int row = 0,
-		int column = 0,
-		EColor color = EColor::NONE
-	);
-
-	
-
+	Bishop(EColor color = EColor::NONE);
 
 	// Inherited via Piece
-	std::vector<PositionList> GetDirections() const override;
+	std::vector<PositionList> GetDirections(Position pos) const override;
+
+
 
 };
 
