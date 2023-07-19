@@ -1,21 +1,29 @@
 #include "IGame.h"
 #include "IPiece.h"
-#include <iostream>
 
-#include "Game.h"
-#include "Board.h"
-#include <memory>
+#include "color.hpp"
+
+
 
 void DisplayMatrix(MatrixPtr b)
 {
+	HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++)
 		{
 			auto tile = b->GetElement({ row, column });
 			if (tile != nullptr)
-				std::cout << tile->GetName() << " ";
-			else std::cout << "* ";
+			{
+				if (tile->GetColor() == EColor::BLACK)
+					std::cout << dye::aqua_on_black(tile->GetName()) << " ";
+				else std::cout << dye::white_on_grey(tile->GetName()) << " ";
+			}
+			else
+			{
+				//SetConsoleTextAttribute(consoleColor, 2);
+				std::cout << "* ";
+			}
 		}
 		std::cout << std::endl;
 	}
@@ -24,13 +32,12 @@ void DisplayMatrix(MatrixPtr b)
 
 int main()
 {
-	std::shared_ptr<IGame> game = std::make_shared<Game>();
-	DisplayMatrix(game->GetBoard());
-	game->MovePiece({ 6, 1 }, { 5, 1 });
-	game->MovePiece({ 1, 0 }, { 2, 0 });
-	game->MovePiece({ 6, 4 }, { 4, 4 });
-	DisplayMatrix(game->GetBoard());
+	std::shared_ptr<IGame> game = IGame::Produce();
 
+	DisplayMatrix(game->GetBoard());
+	game->MovePiece({ 6, 0 }, { 4, 0 });
+	DisplayMatrix(game->GetBoard());
+	
 	
 
 	return 0;
