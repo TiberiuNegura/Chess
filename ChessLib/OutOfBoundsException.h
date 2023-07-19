@@ -1,14 +1,10 @@
 #pragma once
 
-#include "IChessException.h"
+#include "ChessException.h"
 
-class OutOfBoundsException : public IChessException
+class OutOfBoundsException : public ChessException
 {
 public:
 	OutOfBoundsException();
-	// Inherited via Exception
-	virtual std::string GetMessage() const override;
-private:
-	std::string message;
 };
 
