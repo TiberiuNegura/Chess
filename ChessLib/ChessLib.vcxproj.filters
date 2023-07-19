@@ -90,9 +90,6 @@
     <ClInclude Include="IChessException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
-    <ClInclude Include="IBoard.h">
-      <Filter>Header Files\Board</Filter>
-    </ClInclude>
     <ClInclude Include="IPiece.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>

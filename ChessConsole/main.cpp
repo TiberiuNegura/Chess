@@ -7,23 +7,23 @@
 
 void DisplayMatrix(MatrixPtr b)
 {
-	HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+	std::cout << "  ";
 	for (int index = 0; index < 8; index++)
 	{
 		char letter = 'A' + index;
-		std::cout << letter << " ";
+		std::cout << dye::yellow_on_black(letter) << " ";
 	}
 	std::cout << std::endl;
 	for (int row = 0; row < 8; row++)
 	{
-		std::cout << "row ";
+		std::cout << dye::yellow_on_black(row+1) << " ";
 		for (int column = 0; column < 8; column++)
 		{
 			auto tile = b->GetElement({ row, column });
 			if (tile != nullptr)
 			{
 				if (tile->GetColor() == EColor::BLACK)
-					std::cout << dye::yellow_on_black(tile->GetName()) << " ";
+					std::cout << dye::grey_on_black(tile->GetName()) << " ";
 				else std::cout << dye::white_on_black(tile->GetName()) << " ";
 			}
 			else
@@ -46,17 +46,17 @@ int main()
 		if (game->GetTurn() == EColor::WHITE)
 			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
 		else 
-			std::cout << dye::yellow_on_black("BLACK'S TURN\nInsert move: ");
+			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
 		char move[5];
-		std::cin >> move;
+		std::cin.getline(move, 6);
 		try
 		{
-			game->MovePiece({move[0]-'A', move[1] - '0'}, { move[3] - 'A', move[4] - '1' });
+			game->MovePiece({move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
 			DisplayMatrix(game->GetBoard());
 		}
 		catch (...)
 		{
-			std::cout << "Invalid move. Try again";
+			std::cout << dye::red_on_black("Invalid move. Try again\n");
 		}
 
 

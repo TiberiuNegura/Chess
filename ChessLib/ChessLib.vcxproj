@@ -142,7 +142,6 @@
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="EmptyPositionException.h" />
-    <ClInclude Include="IBoard.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IChessException.h" />
     <ClInclude Include="IGame.h" />

@@ -7,6 +7,8 @@
 #include "King.h"
 #include "Piece.h"
 
+#include "PieceNotFoundException.h"
+
 
 Board::Board()
 {
@@ -44,6 +46,11 @@ Board::Board()
 	m_board[0][4] = std::make_shared<King>(EColor::BLACK);
 	m_board[7][4] = std::make_shared<King>(EColor::WHITE);
 
+}
+
+Board::Board(const Matrix& mat)
+{
+	m_board = mat;
 }
 
 const Matrix& Board::GetGameBoard() const
@@ -106,6 +113,7 @@ PositionList Board::ComputePositionList(Position start, std::vector<PositionList
 	return validPattern;
 }
 
+
 void Board::MovePiece(Position start, Position end)
 {
 	m_board[end.first][end.second] = m_board[start.first][start.second];
@@ -124,7 +132,92 @@ bool Board::IsOutOfBounds(Position p)
 	return !(0 <= p.first && p.first < 8 && 0 <= p.second && p.second < 8);
 }
 
-PiecePtr Board::operator[](Position pos)
+bool Board::IsCheck(EColor color) const
+{
+	EColor oppositeColor = color == EColor::BLACK ? EColor::WHITE : EColor::BLACK;
+
+	auto kingPos = FindKing(color);
+
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (auto piece = m_board[i][j])
+			{
+				if (piece->GetColor() == oppositeColor)
+				{
+					PositionList list = ComputePositionList({ i,j }, piece->GetDirections({ i, j }));
+					for (auto position : list)
+					{
+						if (position == kingPos)
+							return true;
+					}
+				}
+			}
+		}
+
+	return false;
+}
+
+PositionList Board::GetMoves(Position piecePos, EColor turn) const
+{
+	if (Board::IsOutOfBounds(piecePos))
+		throw OutOfBoundsException();
+
+	auto piece = m_board[piecePos.first][piecePos.second];
+
+	if (!piece || piece->GetColor() != turn)
+		return PositionList();
+
+
+	PositionList positions = ComputePositionList(piecePos, piece->GetDirections(piecePos));
+
+	auto king = FindKing(turn);
+
+	auto boardClone = Clone();
+
+	//auto boardClone = std::make_shared<Matrix>(m_board);
+
+	for (auto it = positions.begin(); it != positions.end();)
+	{
+		Position currentPos = *it;
+
+		auto aux = Get(currentPos);
+		
+
+		boardClone->MovePiece(piecePos, currentPos); // simulate the move
+
+		if (IsCheck(piece->GetColor()))
+			it = positions.erase(it);
+		else
+			++it;
+
+		boardClone->MovePiece(currentPos, piecePos); // rollback to initial position
+		boardClone->SetPosition(aux, currentPos);
+	}
+
+	return positions;
+}
+
+Position Board::FindKing(EColor color) const
+{
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (auto currentPiece = m_board[i][j])
+			{
+				if (currentPiece->Is(EType::KING, color))
+					return { i, j };
+			}
+		}
+	throw PieceNotFoundException();
+}
+
+std::shared_ptr<Board> Board::Clone() const
+{
+	return std::make_shared<Board>(m_board);
+}
+
+PiecePtr Board::operator[](Position pos) const
 {
 	return m_board[pos.first][pos.second];
 }

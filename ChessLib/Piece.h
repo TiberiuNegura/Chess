@@ -16,10 +16,15 @@ public:
 	char GetName() const override;
 	EColor GetColor() const override;
 	EType GetType() const override;
+
+	bool Is(EType type, EColor color) const override;
+
 protected:
 	char m_name;
 	EColor m_color;
 	EType m_type;
 
 };
+
+using PiecePtr = std::shared_ptr<Piece>;
 

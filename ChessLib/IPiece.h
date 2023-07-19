@@ -37,6 +37,8 @@ public:
 	virtual EColor GetColor() const = 0;
 	virtual EType GetType() const = 0;
 
+	virtual bool Is(EType type, EColor color) const = 0;
+
 
 	// Destructor
 	virtual ~IPiece() = default;

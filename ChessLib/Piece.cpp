@@ -22,3 +22,8 @@ EType Piece::GetType() const
 {
 	return m_type;
 }
+
+bool Piece::Is(EType type, EColor color) const
+{
+	return m_type == type && m_color == color;
+}

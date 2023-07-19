@@ -1,28 +1,39 @@
 #pragma once
 
-#include "IBoard.h"
 #include "IGame.h"
+#include "Piece.h"
 
-class Board : public IBoard
+using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
+
+class Board
 {
 public:
 
 	Board();
+	Board(const Matrix& mat);
 
 	// Inherited via BoardInterface
-	const Matrix& GetGameBoard() const override;
+	const Matrix& GetGameBoard() const;
 
-	bool IsEmpty(Position p) const override;
+	bool IsEmpty(Position p) const;
 
-	PiecePtr Get(int i, int j) const override;
-	PiecePtr Get(Position pos) const override;
+	PiecePtr Get(int i, int j) const;
+	PiecePtr Get(Position pos) const;
 
 	PositionList ComputePositionList(Position start, std::vector<PositionList> positions) const;
 	void MovePiece(Position start, Position end);
-	void SetPosition(PiecePtr toRevert, Position pos) override;
+	void SetPosition(PiecePtr toRevert, Position pos);
 	static bool IsOutOfBounds(Position p);
 
-	PiecePtr operator[](Position pos) override;
+	bool IsCheck(EColor color) const;
+
+	PositionList GetMoves(Position piecePos, EColor turn) const;
+
+	Position FindKing(EColor color) const;
+
+	std::shared_ptr<Board> Clone() const;
+
+	PiecePtr operator[](Position pos) const;
 
 private:
 	Matrix m_board;
