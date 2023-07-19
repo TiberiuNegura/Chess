@@ -53,11 +53,10 @@ const Matrix& Board::GetGameBoard() const
 
 bool Board::IsEmpty(Position p) const
 {
-	if (m_board[p.first][p.second])
+	if (!m_board[p.first][p.second])
 		return true;
 	return false;
 }
-
 PositionList Board::ComputePositionList(Position start, std::vector<PositionList> positions)
 {
 	PositionList validPattern;
@@ -73,7 +72,6 @@ PositionList Board::ComputePositionList(Position start, std::vector<PositionList
 			if (IsOutOfBounds(positions[direction][tile]))
 				continue;
 			
-			
 			if (auto possiblePosition = m_board[row][column])
 			{
 				EColor obstacleColor = possiblePosition->GetColor();
@@ -88,7 +86,7 @@ PositionList Board::ComputePositionList(Position start, std::vector<PositionList
 			}
 			else
 			{
-				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 0)
+				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 1)
 					continue; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
 				validPattern.emplace_back(row, column);
 			}

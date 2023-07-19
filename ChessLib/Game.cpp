@@ -67,7 +67,6 @@ bool Game::IsCheckmate(EColor color) const
 		}
 	return true;
 }
-
 void Game::MovePiece(Position start, Position destination)
 {
 	if (m_board->IsEmpty(start))
@@ -81,8 +80,8 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board->UpdatePosition(start, destination);
-
 			m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
+			return;
 		}
 
 	throw IllegalMoveException();

@@ -27,7 +27,7 @@ TEST(MoveTests, PawnMoveTest)
 	EXPECT_THROW(game.MovePiece(whitePawn1->GetPosition(), { 6, 1 }), IllegalMoveException);
 	EXPECT_THROW(game.MovePiece(blackPawn1->GetPosition(), { 5,0 }), IllegalMoveException);
 
-	EXPECT_EQ(game.GetTurn(), Color::WHITE);
+	EXPECT_EQ(game.GetTurn(), EColor::WHITE);
 
 	// test if the positions are placed properly
 	EXPECT_EQ(blackPawn1->GetPosition().first, 3);
@@ -38,7 +38,7 @@ TEST(MoveTests, PawnMoveTest)
 
 	//white pawn captures the black pawn
 	EXPECT_NO_THROW(game.MovePiece(whitePawn1->GetPosition(), { 3, 0 }));
-	EXPECT_EQ(game.GetBoard()->GetElement({ 4, 1 })->GetColor(), Color::WHITE);
+	//EXPECT_EQ(game.GetBoard()->GetElement({ 4, 1 })->GetColor(), EColor::WHITE);
 
 	// illegal move
 	EXPECT_THROW(game.MovePiece(blackPawn2->GetPosition(), { 4, 4 }), IllegalMoveException);
@@ -101,7 +101,7 @@ TEST(MoveTests, PawnMoveTest)
 //	EXPECT_NO_THROW(game.MovePiece(bishop->GetPosition(), { 2, 6 }));
 //	EXPECT_NO_THROW(game.MovePiece(bishop->GetPosition(), { 6, 2 }));
 //
-//	EXPECT_EQ(game.GetBoard()->GetElement({ 6,2 })->GetColor(), Color::BLACK);
+//	EXPECT_EQ(game.GetBoard()->GetElement({ 6,2 })->GetColor(), EColor::BLACK);
 //}
 //
 //TEST(MoveTests, HorseMoveTest)
