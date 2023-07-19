@@ -1,14 +1,11 @@
 #pragma once
 
-#include "IChessException.h"
+#include "ChessException.h"
 
-class IllegalMoveException : public IChessException
+class IllegalMoveException : public ChessException
 {
 public:
 	IllegalMoveException();
-	// Inherited via Exception
-	virtual std::string GetMessage() const override;
-private:
-	std::string message;
+
 };
 

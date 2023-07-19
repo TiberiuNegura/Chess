@@ -1,14 +1,10 @@
 #pragma once
 
-#include "IChessException.h"
+#include "ChessException.h"
 
-class EmptyPositionException : public IChessException
+class EmptyPositionException : public ChessException
 {
 public:
 	EmptyPositionException();
-	// Inherited via Exception
-	virtual std::string GetMessage() const override;
-private:
-	std::string message;
 };
 

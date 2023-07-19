@@ -1,14 +1,10 @@
 #pragma once
 
-#include "IChessException.h"
+#include "ChessException.h"
 
-class PieceNotFoundException : public IChessException
+class PieceNotFoundException : public ChessException
 {
 public:
 	PieceNotFoundException();
-	// Inherited via Exception
-	virtual std::string GetMessage() const override;
-private:
-	std::string message;
 };
 
