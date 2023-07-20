@@ -133,6 +133,16 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 				validPattern.emplace_back(row, column);
 			}
 		}
+		// Castling pattern 
+		if (pieceType == EType::KING)
+		{
+			int row = (pieceColor == EColor::BLACK ? 0 : 1);
+			if (IsCastlingPossible("left", pieceColor))
+				validPattern.emplace_back(row, 2);
+			if (IsCastlingPossible("right", pieceColor))
+				validPattern.emplace_back(row, 6);
+		}
+
 	}
 	return validPattern;
 }
@@ -144,6 +154,8 @@ void Board::MovePiece(Position start, Position end)
 	m_board[start.first][start.second] = {};
 }
 
+
+// needs to be deleted and moved to IsCastlingPossible
 void Board::Castling(EColor color, std::string where)
 {
 	int row = (color == EColor::BLACK ? 0 : 7);
@@ -167,19 +179,27 @@ void Board::Castling(EColor color, std::string where)
 bool Board::IsCastlingPossible(std::string where, EColor color) const
 {
 	int row = (color == EColor::BLACK ? 0 : 7);
-	if (where == "left")
+	auto leftRook = Get(row, 0);
+	auto rightRook = Get(row, 7);
+	auto king = Get(row, 4);
+	
+	if (!king && !king->Is(EType::KING, color)) return false;
+
+	if (where == "left" && leftRook && leftRook->Is(EType::ROOK, color))
 	{
 		for (int i = 3; i > 0; i--)
 			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
 				return false;
+		return true;
 	}
-	else
+	else if (where == "right" && rightRook && rightRook->Is(EType::ROOK, color))
 	{
 		for (int i = 5; i < 7; i++)
 			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
 				return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 
 void Board::SetPosition(PiecePtr toRevert, Position pos)

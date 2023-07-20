@@ -4,7 +4,6 @@
 #include "color.hpp"
 
 
-
 void DisplayMatrix(MatrixPtr b)
 {
 	std::cout << " -------------------------------------\n |   | ";
@@ -50,8 +49,8 @@ int main()
 			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
 		else
 			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
-		char move[10];
-		std::cin.getline(move, 6);
+		char move[100];
+		std::cin.getline(move, 101);
 		system("cls");
 		try
 		{

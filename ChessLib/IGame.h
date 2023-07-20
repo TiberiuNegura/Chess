@@ -35,18 +35,24 @@ public:
 	virtual void MovePiece(Position start, Position destination) = 0;
 	virtual void MakeCastling(std::string where) = 0;
 	
+	// Getters
 	virtual MatrixPtr GetBoard() const = 0;
 	virtual EColor GetTurn() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 
+	// tie invitation
 	virtual void MakeTieRequest() = 0;
+	virtual bool IsTieRequest() const = 0;
 	virtual void TieRequestResponse(bool answer) = 0;
 
+	// pawn evolving
+	virtual bool IsPawnEvolving() const = 0;
+	virtual void EvolvePawn(char pieceName) = 0;
+
+	// Game over states
 	virtual bool IsTie() const = 0;
 	virtual bool BlackWon() const = 0;
 	virtual bool WhiteWon() const = 0;
-	virtual bool IsTieRequest() const = 0;
-	virtual bool IsPawnEvolving() const = 0;
 	virtual bool IsGameOver() const = 0;
 
 

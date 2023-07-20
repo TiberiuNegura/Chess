@@ -33,14 +33,17 @@ public:
 	
 	// tie invitation
 	void MakeTieRequest() override;
+	bool IsTieRequest() const override;
 	void TieRequestResponse(bool answer) override;
 
-	// game states
+	// pawn evolve
+	bool IsPawnEvolving() const override;
+	void EvolvePawn(char pieceName) override;
+
+	// game over states
 	bool IsTie() const override;
 	bool BlackWon() const override;
 	bool WhiteWon() const override;
-	bool IsTieRequest() const override;
-	bool IsPawnEvolving() const override;
 	bool IsGameOver() const override;
 
 
