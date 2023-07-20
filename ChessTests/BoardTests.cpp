@@ -1,8 +1,11 @@
 #include "Game.h"
 #include "IPiece.h"
+
 #include "OutOfBoundsException.h"
 #include "IllegalMoveException.h"
 #include "EmptyPositionException.h"
+#include "CheckException.h"
+
 #include "gtest/gtest.h"
 
 TEST(MoveTests, PawnMoveTest)
@@ -183,8 +186,6 @@ TEST(MoveTests, QueenMoveTest)
 
 TEST(CastlingTest, WhiteLeftTest)
 {
-	//std::array<std::array<char, 8>, 8> mat = 
-	//Board board();
 	Game game({
 		' ', ' ',' ',' ',' ',' ','k',' ',
 		' ', ' ',' ',' ',' ',' ',' ',' ',
@@ -195,17 +196,347 @@ TEST(CastlingTest, WhiteLeftTest)
 		' ', ' ',' ',' ',' ',' ',' ',' ',
 		'R',' ',' ',' ','K',' ',' ','R'
 		}, EColor::WHITE);
-	/*EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
-	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);*/
+	
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);
 	EXPECT_EQ(game.GetTurn(), EColor::WHITE);
-	//EXPECT_NO_THROW(game.MakeCastling("left"));
+
 	EXPECT_NO_THROW(game.MakeCastling("left"));
+	
 	EXPECT_EQ(game.GetTurn(), EColor::BLACK);
-	/*EXPECT_EQ(game.GetBoard()->GetElement({ 7,2 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,2 })->GetType(), EType::KING);
 	EXPECT_EQ(game.GetBoard()->GetElement({ 7,2 })->GetColor(), EColor::WHITE);
 	EXPECT_EQ(game.GetBoard()->GetElement({ 7,3 })->GetType(), EType::ROOK);
-	EXPECT_EQ(game.GetBoard()->GetElement({ 7,3 })->GetColor(), EColor::WHITE);*/
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,3 })->GetColor(), EColor::WHITE);
+}
 
+TEST(CastlingTest, WhiteLeftTest2)
+{
+	Game game({
+		' ', ' ',' ',' ',' ',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ','Q',' ','K',' ',' ','R'
+		}, EColor::WHITE);
 
+	EXPECT_THROW(game.MakeCastling("left"), IllegalMoveException);
 
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteLeftTest3)
+{
+	Game game({
+		' ', ' ','q',' ',' ',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+
+	EXPECT_THROW(game.MakeCastling("left"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteLeftTest4)
+{
+	Game game({
+		' ', ' ',' ',' ','q',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+
+	EXPECT_THROW(game.MakeCastling("left"), CheckException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteRightTest)
+{
+	Game game({
+		' ', ' ','q',' ',' ',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+
+	EXPECT_NO_THROW(game.MakeCastling("right"));
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,6 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,6 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,5 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,5 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteRightTest2)
+{
+	Game game({
+		' ', ' ','q',' ',' ','r','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+
+	EXPECT_THROW(game.MakeCastling("right"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteRightTest3)
+{
+	Game game({
+		' ', ' ',' ',' ',' ',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ','Q','R'
+		}, EColor::WHITE);
+
+	EXPECT_THROW(game.MakeCastling("right"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, WhiteRightTest4)
+{
+	Game game({
+		' ', ' ','q',' ','r',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+
+	EXPECT_THROW(game.MakeCastling("right"), CheckException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,4 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,7 })->GetColor(), EColor::WHITE);
+}
+
+TEST(CastlingTest, BlackLeftTest)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_NO_THROW(game.MakeCastling("left"));
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,2 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,2 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,3 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,3 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackLeftTest2)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'Q',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_NO_THROW(game.MakeCastling("left"));
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,2 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,2 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,3 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,3 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackLeftTest3)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ','Q',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("left"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,0 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackLeftTest4)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ','Q',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("left"), CheckException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,0 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackLeftTest5)
+{
+	Game game({
+		'r', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ','k',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("left"), IllegalMoveException);
+}
+
+TEST(CastlingTest, BlackRightTest)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ','r',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_NO_THROW(game.MakeCastling("right"));
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,6 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,6 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,5 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,5 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackRightTest2)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ','b','r',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("right"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackRightTest3)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ',' ','r',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ','Q',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("right"), IllegalMoveException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetColor(), EColor::BLACK);
+}
+
+TEST(CastlingTest, BlackRightTest4)
+{
+	Game game({
+		'r', ' ',' ',' ','k',' ','b','r',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ','Q',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ',' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK);
+
+	EXPECT_THROW(game.MakeCastling("right"), CheckException);
+
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,4 })->GetColor(), EColor::BLACK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 0,7 })->GetColor(), EColor::BLACK);
 }

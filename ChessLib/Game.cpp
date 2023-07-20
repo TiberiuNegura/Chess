@@ -36,7 +36,7 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
-			ChangeTurn();
+			UpdateTurn();
 			return;
 		}
 
@@ -44,7 +44,7 @@ void Game::MovePiece(Position start, Position destination)
 }
 
 
-void Game::ChangeTurn()
+void Game::UpdateTurn()
 {
 	m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
 }
@@ -92,6 +92,6 @@ void Game::MakeCastling(std::string where)
 		throw InvalidOptionException();
 
 	m_board.Castling(m_turn, where);
-	ChangeTurn();
+	UpdateTurn();
 }
 

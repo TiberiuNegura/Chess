@@ -13,7 +13,7 @@ public:
 	// IGame methods
 	void MovePiece(Position start, Position destination) override;
 	void MakeCastling(std::string where) override;
-	void ChangeTurn();
+	void UpdateTurn();
 	
 	MatrixPtr GetBoard() const override;
 	EColor GetTurn() const override;

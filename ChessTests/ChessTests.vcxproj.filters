@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Pieces">
+    <Filter Include="Source Files\Board">
       <UniqueIdentifier>{60d5ba63-a1b9-4865-81b5-cf1f6b06637f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -28,7 +28,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoardTests.cpp">
-      <Filter>Source Files\Pieces</Filter>
+      <Filter>Source Files\Board</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
