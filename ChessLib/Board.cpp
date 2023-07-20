@@ -272,8 +272,8 @@ BoardPtr Board::Clone() const
 
 bool Board::IsCheckmate(EColor color) const
 {
-	if (!IsCheck(color))
-		return false;
+	//if (!IsCheck(color))    commented to test if i can make draw statement
+		//return false;
 
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
@@ -303,4 +303,11 @@ bool Board::CanBeCaptured(Position pos, EColor color) const
 						return true;
 			}
 	return false;
+}
+
+bool Board::CanPawnEvolve(Position pos) const
+{
+	auto piece = Get(pos);
+	int row = (piece->GetColor() == EColor::BLACK ? 7 : 0);
+	return (piece->GetType() == EType::PAWN && pos.first == row);
 }

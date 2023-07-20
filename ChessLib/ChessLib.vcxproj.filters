@@ -102,6 +102,15 @@
     <ClInclude Include="InvalidOptionException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
+    <ClInclude Include="GameOverException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="TieRequestException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="PawnEvolveException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pawn.cpp">
@@ -150,6 +159,15 @@
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
     <ClCompile Include="InvalidOptionException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="TieRequestException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="PawnEvolveException.cpp">
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
   </ItemGroup>

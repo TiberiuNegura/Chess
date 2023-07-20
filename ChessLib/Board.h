@@ -34,6 +34,7 @@ public:
 	bool IsCheck(EColor color) const;
 	bool IsCheckmate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
+	bool CanPawnEvolve(Position pos) const;
 
 private:
 	Position FindKing(EColor color) const;

@@ -77,6 +77,13 @@ int main()
 
 
 	} while (!game->IsGameOver());
+
+	if (game->BlackWon())
+		std::cout << "Black won the game!";
+	else if (game->WhiteWon())
+		std::cout << "White won the game!";
+	else if (game->IsTie())
+		std::cout << "Tie!";
 	
 	
 

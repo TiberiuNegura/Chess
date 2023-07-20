@@ -12,6 +12,7 @@ IGamePtr IGame::Produce()
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
+	, m_state(EGameState::Playing)
 {
 	
 }
@@ -19,11 +20,21 @@ Game::Game()
 Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn)
 	: m_board(mat)
 	, m_turn(turn)
+	, m_state(EGameState::Playing)
 {
 }
 
 void Game::MovePiece(Position start, Position destination)
 {
+	if (IsGameOver())
+		throw GameOverException();
+
+	if (IsTieRequest())
+		throw TieRequestException();
+
+	if (IsPawnEvolving())
+		throw PawnEvolveException();
+
 	if (m_board.IsEmptyPosition(start))
 		throw EmptyPositionException();
 
@@ -36,7 +47,16 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
-			UpdateTurn();
+			if (m_board.CanPawnEvolve(destination))
+				UpdateState(EGameState::PawnEvolving);
+			else
+			{
+				UpdateTurn();
+				if (m_board.IsCheckmate(m_turn) && !m_board.IsCheck(m_turn))
+					UpdateState(EGameState::Tie);
+				else if (m_board.IsCheckmate(m_turn))
+					m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+			}
 			return;
 		}
 
@@ -47,6 +67,11 @@ void Game::MovePiece(Position start, Position destination)
 void Game::UpdateTurn()
 {
 	m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
+}
+
+void Game::UpdateState(EGameState state)
+{
+	m_state = state;
 }
 
 class CustomMatrix : public IMatrix
@@ -73,14 +98,54 @@ EColor Game::GetTurn() const
 	return m_turn;
 }
 
+EGameState Game::GetState() const
+{
+	return m_state;
+}
+
 PositionList Game::GetMoves(Position piecePos) const
 {
 	return m_board.GetMoves(piecePos, m_turn);
 }
 
+void Game::MakeTieRequest()
+{
+	UpdateState(EGameState::TieRequest);
+}
+
+void Game::TieRequestResponse(bool answer)
+{
+	return answer ? UpdateState(EGameState::Tie) : UpdateState(EGameState::Playing);
+}
+
+bool Game::IsTie() const
+{
+	return m_state == EGameState::Tie;
+}
+
+bool Game::BlackWon() const
+{
+	return m_state == EGameState::BlackWon;
+}
+
+bool Game::WhiteWon() const
+{
+	return m_state == EGameState::WhiteWon;
+}
+
+bool Game::IsTieRequest() const
+{
+	return m_state == EGameState::TieRequest;
+}
+
+bool Game::IsPawnEvolving() const
+{
+	return m_state == EGameState::PawnEvolving;
+}
+
 bool Game::IsGameOver() const
 {
-	return (m_board.IsCheckmate(EColor::WHITE) || m_board.IsCheckmate(EColor::BLACK));
+	return (WhiteWon() || IsTie() || BlackWon());
 }
 
 void Game::MakeCastling(std::string where)
