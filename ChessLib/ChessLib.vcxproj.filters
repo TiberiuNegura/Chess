@@ -40,11 +40,11 @@
     <Filter Include="Source Files\Piece\Pieces">
       <UniqueIdentifier>{4ddb92c4-45f0-4df0-8891-dbc49d7ec2f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Exception">
-      <UniqueIdentifier>{babb8ce1-3eff-4e2b-b89a-12636d9d3a73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Exception">
       <UniqueIdentifier>{17f38fc0-0f58-47f0-8944-ea6f6ebec7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exception">
+      <UniqueIdentifier>{babb8ce1-3eff-4e2b-b89a-12636d9d3a73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +96,12 @@
     <ClInclude Include="PieceNotFoundException.h">
       <Filter>Header Files\Exception</Filter>
     </ClInclude>
+    <ClInclude Include="CheckException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidOptionException.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pawn.cpp">
@@ -138,6 +144,12 @@
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
     <ClCompile Include="ChessException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckException.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidOptionException.cpp">
       <Filter>Source Files\Exception</Filter>
     </ClCompile>
   </ItemGroup>

@@ -166,6 +166,7 @@ TEST(MoveTests, QueenMoveTest)
 {
 	Game game;
 	Position queen = { 7,3 };
+	
 
 	EXPECT_THROW(game.MovePiece(queen, { 5,3 }), IllegalMoveException);
 	game.MovePiece({ 6,3 }, { 4,3 });
@@ -178,4 +179,33 @@ TEST(MoveTests, QueenMoveTest)
 
 	EXPECT_EQ(game.GetBoard()->GetElement({ 5,0 })->GetColor(), EColor::BLACK);
 	
+}
+
+TEST(CastlingTest, WhiteLeftTest)
+{
+	//std::array<std::array<char, 8>, 8> mat = 
+	//Board board();
+	Game game({
+		' ', ' ',' ',' ',' ',' ','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		'R',' ',' ',' ','K',' ',' ','R'
+		}, EColor::WHITE);
+	/*EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,0 })->GetColor(), EColor::WHITE);*/
+	EXPECT_EQ(game.GetTurn(), EColor::WHITE);
+	//EXPECT_NO_THROW(game.MakeCastling("left"));
+	EXPECT_NO_THROW(game.MakeCastling("left"));
+	EXPECT_EQ(game.GetTurn(), EColor::BLACK);
+	/*EXPECT_EQ(game.GetBoard()->GetElement({ 7,2 })->GetType(), EType::KING);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,2 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,3 })->GetType(), EType::ROOK);
+	EXPECT_EQ(game.GetBoard()->GetElement({ 7,3 })->GetColor(), EColor::WHITE);*/
+
+
+
 }

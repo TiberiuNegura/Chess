@@ -25,6 +25,7 @@ public:
 	static IGamePtr Produce(); 
 
 	virtual void MovePiece(Position start, Position destination) = 0;
+	virtual void MakeCastling(std::string where) = 0;
 	
 	virtual MatrixPtr GetBoard() const = 0;
 	virtual EColor GetTurn() const = 0;

@@ -152,7 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MoveTests.cpp" />
+    <ClCompile Include="BoardTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

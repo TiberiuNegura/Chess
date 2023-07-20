@@ -48,14 +48,14 @@ int main()
 	{
 		if (game->GetTurn() == EColor::WHITE)
 			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
-		else 
+		else
 			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
 		char move[10];
 		std::cin.getline(move, 6);
 		system("cls");
 		try
 		{
-			game->MovePiece({move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
+			game->MovePiece({ move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
 		}
 		catch (OutOfBoundsException e)
 		{

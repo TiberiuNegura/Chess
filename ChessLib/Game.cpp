@@ -1,6 +1,9 @@
 #include "Game.h"
 #include "Board.h"
 
+#include "CheckException.h"
+#include "InvalidOptionException.h"
+
 IGamePtr IGame::Produce()
 {
 	return std::make_shared<Game>();
@@ -13,9 +16,14 @@ Game::Game()
 	
 }
 
+Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn)
+	: m_board(mat)
+	, m_turn(turn)
+{
+}
+
 void Game::MovePiece(Position start, Position destination)
 {
-	
 	if (m_board.IsEmptyPosition(start))
 		throw EmptyPositionException();
 
@@ -28,12 +36,17 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
-			m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
+			ChangeTurn();
 			return;
 		}
 
 	throw IllegalMoveException();
+}
 
+
+void Game::ChangeTurn()
+{
+	m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
 }
 
 class CustomMatrix : public IMatrix
@@ -55,7 +68,6 @@ MatrixPtr Game::GetBoard() const
 	return std::make_shared<CustomMatrix>(m_board.GetMatrix());
 }
 
-
 EColor Game::GetTurn() const
 {
 	return m_turn;
@@ -69,5 +81,17 @@ PositionList Game::GetMoves(Position piecePos) const
 bool Game::IsGameOver() const
 {
 	return (m_board.IsCheckmate(EColor::WHITE) || m_board.IsCheckmate(EColor::BLACK));
+}
+
+void Game::MakeCastling(std::string where)
+{
+	if (m_board.IsCheck(m_turn))
+		throw CheckException();
+	
+	if (where != "left" && where != "right")
+		throw InvalidOptionException();
+
+	m_board.Castling(m_turn, where);
+	ChangeTurn();
 }
 

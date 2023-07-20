@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="CheckException.h" />
     <ClInclude Include="EmptyPositionException.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ChessException.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="Horse.h" />
     <ClInclude Include="IllegalMoveException.h" />
+    <ClInclude Include="InvalidOptionException.h" />
     <ClInclude Include="IPiece.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="OutOfBoundsException.h" />
@@ -159,11 +161,13 @@
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="CheckException.cpp" />
     <ClCompile Include="EmptyPositionException.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Horse.cpp" />
     <ClCompile Include="ChessException.cpp" />
     <ClCompile Include="IllegalMoveException.cpp" />
+    <ClCompile Include="InvalidOptionException.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="OutOfBoundsException.cpp" />
     <ClCompile Include="Pawn.cpp" />

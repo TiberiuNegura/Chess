@@ -1,3 +1,6 @@
+#include <unordered_set>
+
+
 #include "Board.h"
 #include "Piece.h"
 
@@ -21,6 +24,48 @@ Board::Board()
 	{
 		m_board[0][i] = Piece::Produce(TYPES[i], EColor::BLACK);
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::WHITE);
+	}
+}
+
+EColor Board::CharToColor(char c) const
+{
+	return (islower(c) ? EColor::BLACK : EColor::WHITE);
+}
+
+EType Board::CharToType(char c) const
+{
+	switch (tolower(c))
+	{
+	case 'r':
+		return EType::ROOK;
+	case 'h':
+		return EType::HORSE;
+	case 'b':
+		return EType::BISHOP;
+	case 'q':
+		return EType::QUEEN;
+	case 'k':
+		return EType::KING;
+	case 'p':
+		return EType::PAWN;
+	}
+}
+
+Board::Board(std::array<std::array<char, 8>, 8> alternateMat)
+{
+	// UPPERCASE - WHITE, lowercase - black
+	for (int row = 0; row < 8; row++)
+	{
+		for (int column = 0; column < 8; column++)
+		{
+			if (alternateMat[row][column] == ' ') 
+				continue;
+
+			auto color = CharToColor(alternateMat[row][column]);
+			auto type = CharToType(alternateMat[row][column]);
+
+			m_board[row][column] = Piece::Produce(type, color);
+		}
 	}
 }
 
@@ -99,6 +144,44 @@ void Board::MovePiece(Position start, Position end)
 	m_board[start.first][start.second] = {};
 }
 
+void Board::Castling(EColor color, std::string where)
+{
+	int row = (color == EColor::BLACK ? 0 : 7);
+	Position kingDestination = (where == "left" ? std::make_pair(row, 2) : std::make_pair(row, 6));
+	Position rookPos = (where == "left" ? std::make_pair(row, 0) : std::make_pair(row, 7));
+	Position rookDestination = (where == "left" ? std::make_pair(row, 3) : std::make_pair(row, 5));
+
+	if (!m_board[rookPos.first][rookPos.second] || !m_board[row][4])
+		throw IllegalMoveException();
+
+	if (!Get({ row,4 })->Is(EType::KING, color) || !Get(rookPos)->Is(EType::ROOK, color))
+		throw IllegalMoveException();
+
+	if (!IsCastlingPossible(where, color))
+		throw IllegalMoveException();
+
+	MovePiece({ row,4 }, kingDestination);
+	MovePiece(rookPos, rookDestination);
+}
+
+bool Board::IsCastlingPossible(std::string where, EColor color) const
+{
+	int row = (color == EColor::BLACK ? 0 : 7);
+	if (where == "left")
+	{
+		for (int i = 3; i > 0; i--)
+			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
+				return false;
+	}
+	else
+	{
+		for (int i = 5; i < 7; i++)
+			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
+				return false;
+	}
+	return true;
+}
+
 void Board::SetPosition(PiecePtr toRevert, Position pos)
 {
 	if (toRevert)
@@ -113,7 +196,7 @@ bool Board::IsOutOfBounds(Position p)
 
 bool Board::IsCheck(EColor color) const
 {
-	EColor oppositeColor = color == EColor::BLACK ? EColor::WHITE : EColor::BLACK;
+	EColor oppositeColor = (color == EColor::BLACK ? EColor::WHITE : EColor::BLACK);
 
 	auto kingPos = FindKing(color);
 
@@ -132,7 +215,6 @@ bool Board::IsCheck(EColor color) const
 				}
 			}
 		}
-
 	return false;
 }
 
@@ -206,4 +288,19 @@ bool Board::IsCheckmate(EColor color) const
 				return false;
 		}
 	return true;
+}
+
+bool Board::CanBeCaptured(Position pos, EColor color) const
+{
+	EColor oppositeColor = (color == EColor::BLACK ? EColor::WHITE : EColor::BLACK);
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+			if (m_board[i][j] && m_board[i][j]->GetColor() == oppositeColor)
+			{
+				auto moves = GetMoves({ i,j }, oppositeColor);
+				for (auto move : moves)
+					if (move == pos)
+						return true;
+			}
+	return false;
 }
