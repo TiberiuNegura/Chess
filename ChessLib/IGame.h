@@ -33,7 +33,7 @@ public:
 	static IGamePtr Produce(); 
 
 	virtual void MovePiece(Position start, Position destination) = 0;
-	virtual void MakeCastling(std::string where) = 0;
+	//virtual void MakeCastling(std::string where) = 0;
 	
 	// Getters
 	virtual MatrixPtr GetBoard() const = 0;

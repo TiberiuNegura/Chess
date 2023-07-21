@@ -47,6 +47,7 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
+			// Castling condition
 			if (m_board.Get(destination)->GetType() == EType::KING)
 			{
 				if (start.second - destination.second == 2)
@@ -190,15 +191,15 @@ bool Game::IsGameOver() const
 	return (WhiteWon() || IsTie() || BlackWon());
 }
 
-void Game::MakeCastling(std::string where)
-{
-	if (m_board.IsCheck(m_turn))
-		throw CheckException();
-	
-	if (where != "left" && where != "right")
-		throw InvalidOptionException();
-
-	m_board.Castling(m_turn, where);
-	UpdateTurn();
-}
+//void Game::MakeCastling(std::string where)
+//{
+//	if (m_board.IsCheck(m_turn))
+//		throw CheckException();
+//	
+//	if (where != "left" && where != "right")
+//		throw InvalidOptionException();
+//
+//	m_board.Castling(m_turn, where);
+//	UpdateTurn();
+//}
 

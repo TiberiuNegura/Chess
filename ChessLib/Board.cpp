@@ -156,25 +156,25 @@ void Board::MovePiece(Position start, Position end)
 
 
 // needs to be deleted and moved to IsCastlingPossible
-void Board::Castling(EColor color, std::string where)
-{
-	int row = (color == EColor::BLACK ? 0 : 7);
-	Position kingDestination = (where == "left" ? std::make_pair(row, 2) : std::make_pair(row, 6));
-	Position rookPos = (where == "left" ? std::make_pair(row, 0) : std::make_pair(row, 7));
-	Position rookDestination = (where == "left" ? std::make_pair(row, 3) : std::make_pair(row, 5));
-
-	if (!m_board[rookPos.first][rookPos.second] || !m_board[row][4])
-		throw IllegalMoveException();
-
-	if (!Get({ row,4 })->Is(EType::KING, color) || !Get(rookPos)->Is(EType::ROOK, color))
-		throw IllegalMoveException();
-
-	if (!IsCastlingPossible(where, color))
-		throw IllegalMoveException();
-
-	MovePiece({ row,4 }, kingDestination);
-	MovePiece(rookPos, rookDestination);
-}
+//void Board::Castling(EColor color, std::string where)
+//{
+//	int row = (color == EColor::BLACK ? 0 : 7);
+//	Position kingDestination = (where == "left" ? std::make_pair(row, 2) : std::make_pair(row, 6));
+//	Position rookPos = (where == "left" ? std::make_pair(row, 0) : std::make_pair(row, 7));
+//	Position rookDestination = (where == "left" ? std::make_pair(row, 3) : std::make_pair(row, 5));
+//
+//	if (!m_board[rookPos.first][rookPos.second] || !m_board[row][4])
+//		throw IllegalMoveException();
+//
+//	if (!Get({ row,4 })->Is(EType::KING, color) || !Get(rookPos)->Is(EType::ROOK, color))
+//		throw IllegalMoveException();
+//
+//	if (!IsCastlingPossible(where, color))
+//		throw IllegalMoveException();
+//
+//	MovePiece({ row,4 }, kingDestination);
+//	MovePiece(rookPos, rookDestination);
+//}
 
 bool Board::IsCastlingPossible(std::string where, EColor color) const
 {
@@ -183,7 +183,7 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 	auto rightRook = Get(row, 7);
 	auto king = Get(row, 4);
 	
-	if (!king && !king->Is(EType::KING, color)) return false;
+	if (!king || !king->Is(EType::KING, color)) return false;
 
 	if (where == "left" && leftRook && leftRook->Is(EType::ROOK, color))
 	{

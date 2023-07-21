@@ -25,7 +25,7 @@ public:
 	BoardPtr Clone() const;
 
 	void MovePiece(Position start, Position end);
-	void Castling(EColor color, std::string where);
+	/*void Castling(EColor color, std::string where);*/
 	void SetPosition(PiecePtr toRevert, Position pos);
 
 	bool IsCastlingPossible(std::string where, EColor color) const;

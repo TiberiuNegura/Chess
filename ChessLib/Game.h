@@ -21,7 +21,7 @@ public:
 	Game(std::array<std::array<char, 8>, 8> mat, EColor turn);
 
 	void MovePiece(Position start, Position destination) override;
-	void MakeCastling(std::string where) override;
+	//void MakeCastling(std::string where) override;
 	void UpdateTurn();
 	void UpdateState(EGameState state);
 
