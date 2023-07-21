@@ -15,7 +15,7 @@ public:
 	void updatePiece();
 	void updateBackgroundColor();
 
-	void setPiece(std::pair<PieceType, PieceColor> newPiece);
+	void setPiece(IPiecePtr newPiece);
 	void setHighlighted(bool highlighted);
 	void setSelected(bool selected);
 

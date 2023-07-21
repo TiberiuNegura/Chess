@@ -27,7 +27,7 @@ public:
     //Modify if necessary with your history representation
     void UpdateHistory();
     //Modify if necessary with your board representation
-    void UpdateBoard(const std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8>& newBoard);
+    void UpdateBoard(const MatrixPtr& newBoard);
     //Modify if necessary with your possible moves representation
     void HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
     //Modify or delete

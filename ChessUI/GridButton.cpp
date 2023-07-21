@@ -1,4 +1,5 @@
 #include "GridButton.h"
+#include "IPiece.h"
 
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -77,10 +78,10 @@ void GridButton::updateBackgroundColor()
 	setStyleSheet("background-color: " + backColor + "; border: none;");
 }
 
-void GridButton::setPiece(std::pair<PieceType, PieceColor> newPiece)
+void GridButton::setPiece(IPiecePtr newPiece)
 {
-	m_PieceType = newPiece.first;
-	m_PieceColor = newPiece.second;
+	m_PieceType = newPiece->GetType();
+	m_PieceColor = newPiece->GetColor();
 
 	updatePiece();
 }

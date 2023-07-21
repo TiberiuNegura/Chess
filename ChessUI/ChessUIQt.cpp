@@ -123,9 +123,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
     if (m_selectedCell.has_value()) {
         //TODO COMPLETE ME...
         // game.MakeMove(...);
-        Position start;
-        start.first = m_selectedCell->first;
-        start.second = m_selectedCell->second;
+        Position start({ m_selectedCell->first , m_selectedCell->second });
         m_game->MovePiece(start, position);
 
         //Unselect prev. pressed button
@@ -189,11 +187,11 @@ void ChessUIQt::UpdateHistory()
     }
 }
 
-void ChessUIQt::UpdateBoard(const std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8>& newBoard)
+void ChessUIQt::UpdateBoard(const MatrixPtr& newBoard)
 {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            m_grid[i][j]->setPiece(newBoard[i][j]);
+            m_grid[i][j]->setPiece(newBoard->GetElement({ i, j }));
             m_grid[i][j]->setSelected(false);
             m_grid[i][j]->setHighlighted(false);
         }
@@ -211,7 +209,7 @@ void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& p
 void ChessUIQt::StartGame()
 {
     //TODO MODIFY ME OR DELETE ME
-    UpdateBoard(Helper::getDefaultBoard());
+    UpdateBoard(m_game->GetBoard());
 }
 
 void ChessUIQt::ShowPromoteOptions()
