@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessTests", "ChessTests\Ch
 		{A3DAC306-A130-418D-83A3-63E5F6DCC2FC} = {A3DAC306-A130-418D-83A3-63E5F6DCC2FC}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessUI", "ChessUI\ChessUI.vcxproj", "{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A3DAC306-A130-418D-83A3-63E5F6DCC2FC} = {A3DAC306-A130-418D-83A3-63E5F6DCC2FC}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +52,12 @@ Global
 		{0636EA52-6771-4AF3-BB6B-8DC4180D53A3}.Release|x64.Build.0 = Release|x64
 		{0636EA52-6771-4AF3-BB6B-8DC4180D53A3}.Release|x86.ActiveCfg = Release|Win32
 		{0636EA52-6771-4AF3-BB6B-8DC4180D53A3}.Release|x86.Build.0 = Release|Win32
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Debug|x64.ActiveCfg = Debug|x64
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Debug|x64.Build.0 = Debug|x64
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Debug|x86.ActiveCfg = Debug|x64
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Release|x64.ActiveCfg = Release|x64
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Release|x64.Build.0 = Release|x64
+		{D86D3605-40A0-4F38-A88F-CB24CA6F12A1}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
