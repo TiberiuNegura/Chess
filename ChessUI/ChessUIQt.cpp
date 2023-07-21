@@ -20,6 +20,8 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
+
+    m_game = IGame::Produce();
 }
 
 ChessUIQt::~ChessUIQt()
@@ -121,6 +123,10 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
     if (m_selectedCell.has_value()) {
         //TODO COMPLETE ME...
         // game.MakeMove(...);
+        Position start;
+        start.first = m_selectedCell->first;
+        start.second = m_selectedCell->second;
+        m_game->MovePiece(start, position);
 
         //Unselect prev. pressed button
         m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);

@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QListWidget>
 
+#include "IGame.h"
+#include "IPiece.h"
+
 class ChessUIQt : public QMainWindow
 {
     Q_OBJECT
@@ -50,6 +53,7 @@ private:
     QLabel* m_MessageLabel;
     QListWidget* m_MovesList;
     QLabel* m_BlackTimer, *m_WhiteTimer;
+    IGamePtr m_game;
 };
 
 //TODO REMOVE THIS AFTER IMPLEMENTATION
