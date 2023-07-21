@@ -17,10 +17,10 @@ Game::Game()
 	
 }
 
-Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn)
+Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn, EGameState state)
 	: m_board(mat)
 	, m_turn(turn)
-	, m_state(EGameState::Playing)
+	, m_state(state)
 {
 }
 
@@ -41,9 +41,11 @@ void Game::MovePiece(Position start, Position destination)
 	if (Board::IsOutOfBounds(start) || Board::IsOutOfBounds(destination))
 		throw OutOfBoundsException();
 
+
 	PositionList positions = GetMoves(start); // creates pattern
 
 	for (auto& position : positions)
+	{
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
@@ -60,14 +62,21 @@ void Game::MovePiece(Position start, Position destination)
 			else
 			{
 				UpdateTurn();
-				if (m_board.IsCheckmate(m_turn) && !m_board.IsCheck(m_turn))
+				bool opponentInCheck = m_board.IsCheck(m_turn);
+				bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
+				if (opponentInCheck)
+					UpdateState(EGameState::Check);
+				if (opponentInCheckmate && !opponentInCheck)
 					UpdateState(EGameState::Tie);
-				else if (m_board.IsCheckmate(m_turn))
+				else if (opponentInCheckmate)
 					m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 			}
 			return;
 		}
+	}
 
+	if (IsCheck())
+		throw CheckException();
 	throw IllegalMoveException();
 }
 
@@ -184,6 +193,11 @@ void Game::EvolvePawn(char pieceName)
 	else if (m_board.IsCheckmate(m_turn))
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 
+}
+
+bool Game::IsCheck() const
+{
+	return m_state == EGameState::Check;
 }
 
 bool Game::IsGameOver() const

@@ -50,6 +50,7 @@ public:
 	virtual void EvolvePawn(char pieceName) = 0;
 
 	// Game over states
+	virtual bool IsCheck() const = 0;
 	virtual bool IsTie() const = 0;
 	virtual bool BlackWon() const = 0;
 	virtual bool WhiteWon() const = 0;

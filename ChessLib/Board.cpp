@@ -133,15 +133,6 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 				validPattern.emplace_back(row, column);
 			}
 		}
-		// Castling pattern 
-		if (pieceType == EType::KING)
-		{
-			int row = (pieceColor == EColor::BLACK ? 0 : 1);
-			if (IsCastlingPossible("left", pieceColor))
-				validPattern.emplace_back(row, 2);
-			if (IsCastlingPossible("right", pieceColor))
-				validPattern.emplace_back(row, 6);
-		}
 
 	}
 	return validPattern;
@@ -183,23 +174,26 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 	auto rightRook = Get(row, 7);
 	auto king = Get(row, 4);
 	
-	if (!king || !king->Is(EType::KING, color)) return false;
+	if (!king || !king->Is(EType::KING, color))
+		return false;
+
+	if (where != "left" && where != "right") 
+		return false;
 
 	if (where == "left" && leftRook && leftRook->Is(EType::ROOK, color))
 	{
 		for (int i = 3; i > 0; i--)
-			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
+			if (!IsEmptyPosition({ row,i }))
 				return false;
-		return true;
 	}
 	else if (where == "right" && rightRook && rightRook->Is(EType::ROOK, color))
 	{
 		for (int i = 5; i < 7; i++)
-			if (!IsEmptyPosition({ row,i }) || CanBeCaptured({ row,i }, color))
+			if (!IsEmptyPosition({ row,i }))
 				return false;
-		return true;
 	}
-	return false;
+
+	return true;
 }
 
 void Board::SetPosition(PiecePtr toRevert, Position pos)
@@ -252,6 +246,21 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 	PositionList positions = ComputePositionList(piecePos, piece);
 
+
+	// Castling pattern without validation
+	if (piece->GetType() == EType::KING && !IsCheck(piece->GetColor()))
+	{
+		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
+		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
+		if (kingMoveLeft && IsCastlingPossible("left", piece->GetColor()))
+		{
+			positions.emplace_back(row, 2);
+		}
+		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
+		if (kingMoveRight && IsCastlingPossible("right", piece->GetColor()))
+			positions.emplace_back(row, 6);
+	}
+
 	auto king = FindKing(turn);
 
 	for (auto it = positions.begin(); it != positions.end();)
@@ -271,6 +280,25 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 		boardClone->SetPosition(aux, currentPos); 
 	}
 	
+	// Castling validation
+	if (piece->GetType() == EType::KING)
+	{
+		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
+		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
+		auto castlingLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 2));
+
+		if (!kingMoveLeft && castlingLeft != positions.end()) // if King can't move left, castle can't happen
+			positions.erase(castlingLeft);
+
+		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
+		auto castlingRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 6));
+
+		if (!kingMoveRight && castlingRight != positions.end()) // if King can't move right, castle can't happen
+			positions.erase(castlingRight);
+
+	}
+	
+
 	return positions;
 }
 

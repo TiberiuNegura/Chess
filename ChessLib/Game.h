@@ -11,6 +11,7 @@ enum class EGameState
 	PawnEvolving,
 	BlackWon,
 	WhiteWon,
+	Check
 };
 
 class Game : public IGame
@@ -18,7 +19,7 @@ class Game : public IGame
 public:
 	// Constructor
 	Game();
-	Game(std::array<std::array<char, 8>, 8> mat, EColor turn);
+	Game(std::array<std::array<char, 8>, 8> mat, EColor turn, EGameState state);
 
 	void MovePiece(Position start, Position destination) override;
 	//void MakeCastling(std::string where) override;
@@ -41,6 +42,7 @@ public:
 	void EvolvePawn(char pieceName) override;
 
 	// game over states
+	bool IsCheck() const override;
 	bool IsTie() const override;
 	bool BlackWon() const override;
 	bool WhiteWon() const override;
