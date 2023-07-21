@@ -47,7 +47,7 @@ public:
 
 	// pawn evolving
 	virtual bool IsPawnEvolving() const = 0;
-	virtual void EvolvePawn(char pieceName) = 0;
+	virtual void EvolvePawn(const std::string& pieceName) = 0;
 
 	// Game over states
 	virtual bool IsCheck() const = 0;

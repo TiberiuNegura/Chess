@@ -20,6 +20,7 @@ public:
 	const Matrix& GetMatrix() const;
 	PiecePtr Get(int i, int j) const;
 	PiecePtr Get(Position pos) const;
+	void Set(Position pos, PiecePtr newPiece);
 	PositionList GetMoves(Position piecePos, EColor turn) const;
 
 	BoardPtr Clone() const;
@@ -35,6 +36,7 @@ public:
 	bool IsCheckmate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
+	Position FindEvolvingPawn(EColor color);
 
 private:
 	Position FindKing(EColor color) const;

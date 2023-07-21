@@ -42,15 +42,33 @@ void DisplayMatrix(MatrixPtr b)
 int main()
 {
 	std::shared_ptr<IGame> game = IGame::Produce();
+
 	DisplayMatrix(game->GetBoard());
 	do
 	{
+		std::string pieceOption;
+		while (game->IsPawnEvolving())
+		{
+			std::cout << "What?\nYour pawn is evolving, choose a replacer between: queen, bishop, horse, rook.\nThe choice is yours: ";
+			std::cin >> pieceOption; std::cin.ignore();
+			try
+			{
+				game->EvolvePawn(pieceOption);
+			}
+			catch (PieceNotFoundException e)
+			{
+				std::cout << dye::red_on_black(e.what()) << std::endl;
+			}
+			system("cls");
+			DisplayMatrix(game->GetBoard());
+		}
 		if (game->GetTurn() == EColor::WHITE)
 			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
 		else
 			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
 		char move[100];
 		std::cin.getline(move, 101);
+
 		system("cls");
 		try
 		{
@@ -69,6 +87,10 @@ int main()
 			std::cout << dye::red_on_black(e.what()) << std::endl;
 		}
 		catch (IllegalMoveException e)
+		{
+			std::cout << dye::red_on_black(e.what()) << std::endl;
+		}
+		catch (CheckException e)
 		{
 			std::cout << dye::red_on_black(e.what()) << std::endl;
 		}

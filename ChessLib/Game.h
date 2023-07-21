@@ -39,7 +39,7 @@ public:
 
 	// pawn evolve
 	bool IsPawnEvolving() const override;
-	void EvolvePawn(char pieceName) override;
+	void EvolvePawn(const std::string& pieceName) override;
 
 	// game over states
 	bool IsCheck() const override;

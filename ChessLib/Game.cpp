@@ -160,38 +160,29 @@ bool Game::IsPawnEvolving() const
 	return m_state == EGameState::PawnEvolving;
 }
 
-void Game::EvolvePawn(char pieceName)
+#include <iostream>
+
+void Game::EvolvePawn(const std::string& pieceName)
 {
-	IPiecePtr piece;
-	int row = m_turn == EColor::BLACK ? 0 : 7;
-	for (int column = 0; column < 8; column++)
-	{
-		auto aux = GetBoard()->GetElement({ row, column });
-		if (aux->GetType() == EType::PAWN)
-			piece = aux;
-	}
-	switch (tolower(pieceName))
-	{
-	case 'b':
-		piece = Piece::Produce(EType::BISHOP, m_turn);
-		break;
-	case 'q':
-		piece = Piece::Produce(EType::QUEEN, m_turn);
-		break;
-	case 'r':
-		piece = Piece::Produce(EType::ROOK, m_turn);
-		break;
-	case 'h':
-		piece = Piece::Produce(EType::HORSE, m_turn);
-		break;
-	default:
+	Position piecePos = m_board.FindEvolvingPawn(m_turn);
+	if (pieceName == "bishop")
+		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
+	else if (pieceName == "queen")
+		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
+	else if (pieceName == "rook")
+		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
+	else if (pieceName == "horse")
+		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
+	else 
 		throw PieceNotFoundException();
-	}
+
 	UpdateTurn();
 	if (m_board.IsCheckmate(m_turn) && !m_board.IsCheck(m_turn))
 		UpdateState(EGameState::Tie);
 	else if (m_board.IsCheckmate(m_turn))
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+	else
+		UpdateState(EGameState::Playing);
 
 }
 

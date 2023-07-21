@@ -48,6 +48,8 @@ EType Board::CharToType(char c) const
 		return EType::KING;
 	case 'p':
 		return EType::PAWN;
+	default:
+		return EType::EMPTY;
 	}
 }
 
@@ -94,6 +96,11 @@ PiecePtr Board::Get(int i, int j) const
 PiecePtr Board::Get(Position pos) const
 {
 	return Get(pos.first, pos.second);
+}
+
+void Board::Set(Position pos, PiecePtr newPiece) 
+{
+	m_board[pos.first][pos.second] = newPiece;
 }
 
 PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
@@ -358,4 +365,16 @@ bool Board::CanPawnEvolve(Position pos) const
 	auto piece = Get(pos);
 	int row = (piece->GetColor() == EColor::BLACK ? 7 : 0);
 	return (piece->GetType() == EType::PAWN && pos.first == row);
+}
+
+Position Board::FindEvolvingPawn(EColor color)
+{
+	int row = color == EColor::WHITE ? 0 : 7;
+	for (int column = 0; column < 8; column++)
+	{
+		auto piece = Get(row, column);
+		if (piece && piece->GetType() == EType::PAWN)
+			return {row, column};
+	}
+	throw PieceNotFoundException();
 }
