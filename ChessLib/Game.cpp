@@ -51,7 +51,10 @@ void Game::MovePiece(Position start, Position destination)
 		{
 			m_board.MovePiece(start, destination);
 			m_board.Get(destination)->SetHasMoved();
+			
+			
 			// Castling condition
+
 			if (m_board.Get(destination)->GetType() == EType::KING)
 			{
 				if (start.second - destination.second == 2)
@@ -59,20 +62,24 @@ void Game::MovePiece(Position start, Position destination)
 				else if (start.second - destination.second == -2)
 					m_board.MovePiece({ start.first, 7 }, { start.first, 5 });
 			}
+
 			if (m_board.CanPawnEvolve(destination))
-				UpdateState(EGameState::PawnEvolving);
-			else
 			{
-				UpdateTurn();
-				bool opponentInCheck = m_board.IsCheck(m_turn);
-				bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
-				if (opponentInCheck)
-					UpdateState(EGameState::Check);
-				if (opponentInCheckmate && !opponentInCheck)
-					UpdateState(EGameState::Tie);
-				else if (opponentInCheckmate)
-					m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+				UpdateState(EGameState::PawnEvolving);
+				return;
 			}
+
+			UpdateTurn();
+			bool opponentInCheck = m_board.IsCheck(m_turn);
+			bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
+			if (opponentInCheck)
+				UpdateState(EGameState::Check);
+			if (opponentInCheckmate && !opponentInCheck)
+				UpdateState(EGameState::Tie);
+			else if (opponentInCheckmate)
+				m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+			else if (!IsCheck())
+				UpdateState(EGameState::Playing);
 			return;
 		}
 	}

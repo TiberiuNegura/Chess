@@ -101,8 +101,8 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
-	QGridLayout* chessGridLayout;
-	chessGridLayout = new QGridLayout();
+	QGridLayout* chessGridLayout = new QGridLayout();
+
 	QWidget* board = new QWidget();
 
 	for (int i = 0; i < 8; i++) {
@@ -117,14 +117,42 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(board, 1, 1, 1, 1);
 }
 
-void ChessUIQt::OnButtonClicked(const Position& position)
+void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 {
 	//At second click
 	if (m_selectedCell.has_value()) {
 		Position start({ m_selectedCell.value().first , m_selectedCell.value().second });
-		m_game->MovePiece(start, position);
-		UpdateBoard(m_game->GetBoard());
-		m_MessageLabel->setText(m_game->GetTurn() == EColor::BLACK ? "Black turn" : "White turn");
+
+		try
+		{
+			m_game->MovePiece(start, position);
+			m_MessageLabel->setText(GetTurnMessage());
+
+		}
+		catch (OutOfBoundsException e)
+		{
+			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+		}
+		catch (EmptyPositionException e)
+		{
+			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+		}
+		catch (PieceNotFoundException e)
+		{
+			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+		}
+		catch (IllegalMoveException e)
+		{
+			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+		}
+		catch (CheckException e)
+		{
+			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+		}
+		catch (GameOverException e)
+		{
+			m_MessageLabel->setText(e.what());
+		}
 
 		if (m_game->BlackWon())
 			m_MessageLabel->setText("Black won the game!");
@@ -133,7 +161,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		else if (m_game->IsTie())
 			m_MessageLabel->setText("Tie!");
 
-		//Unselect prev. pressed button
+		UpdateBoard(m_game->GetBoard());
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
@@ -160,20 +188,29 @@ void ChessUIQt::OnLoadButtonClicked()
 
 void ChessUIQt::OnRestartButtonClicked()
 {
-	//TODO ...
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::Yes)
+	{
+		m_game = IGame::Produce();
+		UpdateBoard(m_game->GetBoard());
+	}
 }
 
 void ChessUIQt::OnDrawButtonClicked()
 {
-	//TODO MODIFY ME
-
+	m_game->MakeTieRequest();
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
-	if (reply == QMessageBox::Yes) {
-		//TODO ...
-		//game.Draw(...);
+	if (reply == QMessageBox::Yes)
+	{
+		m_game->TieRequestResponse(true);
+		m_MessageLabel->setText("Tie!");
 	}
+	else
+		m_game->TieRequestResponse(false);
+
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
@@ -245,5 +282,10 @@ void ChessUIQt::ShowPromoteOptions()
 		notification.setText("You selected " + item);
 		notification.exec();
 	}
+}
+
+QString ChessUIQt::GetTurnMessage()
+{
+	return m_game->GetTurn() == EColor::BLACK ? "Black turn" : "White turn";
 }
 

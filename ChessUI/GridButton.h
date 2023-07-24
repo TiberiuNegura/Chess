@@ -1,6 +1,6 @@
 #pragma once
 #include <QPushButton>
-#include "IGame.h"
+
 #include "IPiece.h"
 
 class GridButton : public QPushButton

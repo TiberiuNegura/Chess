@@ -1,11 +1,12 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "GridButton.h"
 #include <QtWidgets/qgridlayout.h>
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+
+#include "GridButton.h"
 
 #include "IGame.h"
 #include "IPiece.h"
@@ -33,6 +34,8 @@ public:
     //Modify or delete
     void StartGame();
     void ShowPromoteOptions();
+
+    QString GetTurnMessage();
 
 public slots:
     void OnButtonClicked(const Position& position);
