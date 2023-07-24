@@ -33,8 +33,14 @@
     <ClCompile Include="BoardTests.cpp">
       <Filter>Source Files\Board</Filter>
     </ClCompile>
+    <ClCompile Include="ComputePositionListTests.cpp">
+      <Filter>Source Files\Board</Filter>
+    </ClCompile>
     <ClCompile Include="GameTests.cpp">
       <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="PossibleMovesTests.cpp">
+      <Filter>Source Files\Board</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

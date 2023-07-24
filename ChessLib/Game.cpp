@@ -17,7 +17,7 @@ Game::Game()
 	
 }
 
-Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn, EGameState state)
+Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	: m_board(mat)
 	, m_turn(turn)
 	, m_state(state)
@@ -204,16 +204,4 @@ bool Game::IsGameOver() const
 {
 	return (WhiteWon() || IsTie() || BlackWon());
 }
-
-//void Game::MakeCastling(std::string where)
-//{
-//	if (m_board.IsCheck(m_turn))
-//		throw CheckException();
-//	
-//	if (where != "left" && where != "right")
-//		throw InvalidOptionException();
-//
-//	m_board.Castling(m_turn, where);
-//	UpdateTurn();
-//}
 

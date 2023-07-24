@@ -37,10 +37,10 @@ public:
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
 	Position FindEvolvingPawn(EColor color);
+	PositionList ComputePositionList(Position start, PiecePtr piece) const;
 
 private:
 	Position FindKing(EColor color) const;
-	PositionList ComputePositionList(Position start, PiecePtr piece) const;
 
 private:
 	Matrix m_board;

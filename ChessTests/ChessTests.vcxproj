@@ -154,6 +154,8 @@
     <ClCompile Include="GameTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BoardTests.cpp" />
+    <ClCompile Include="ComputePositionListTests.cpp" />
+    <ClCompile Include="PossibleMovesTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
