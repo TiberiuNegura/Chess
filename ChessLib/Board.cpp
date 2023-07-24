@@ -175,6 +175,8 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 		for (int i = 3; i > 0; i--)
 			if (!IsEmptyPosition({ row,i }))
 				return false;
+
+		return true;
 	}
 	else if (where == "right" && rightRook && rightRook->Is(EType::ROOK, color))
 	{
@@ -184,9 +186,11 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 		for (int i = 5; i < 7; i++)
 			if (!IsEmptyPosition({ row,i }))
 				return false;
+
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void Board::SetPosition(PiecePtr toRevert, Position pos)
