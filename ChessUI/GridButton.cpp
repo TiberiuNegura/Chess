@@ -1,5 +1,6 @@
 #include "GridButton.h"
 #include "IPiece.h"
+#include "IGame.h"
 
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -13,37 +14,37 @@ void GridButton::updatePiece()
 
 	switch (m_PieceColor)
 	{
-	case PieceColor::none:
+	case EColor::NONE:
 		imagePath += "empty";
 		break;
-	case PieceColor::black:
+	case EColor::BLACK:
 		imagePath += "b";
 		break;
-	case PieceColor::white:
+	case EColor::WHITE:
 		imagePath += "w";
 		break;
 	}
 
 	switch (m_PieceType)
 	{
-	case PieceType::none:
+	case EType::EMPTY:
 		break;
-	case PieceType::king:
+	case EType::KING:
 		imagePath += "k";
 		break;
-	case PieceType::rook:
+	case EType::ROOK:
 		imagePath += "r";
 		break;
-	case PieceType::bishop:
+	case EType::BISHOP:
 		imagePath += "b";
 		break;
-	case PieceType::queen:
+	case EType::QUEEN:
 		imagePath += "q";
 		break;
-	case PieceType::knight:
+	case EType::HORSE:
 		imagePath += "h";
 		break;
-	case PieceType::pawn:
+	case EType::PAWN:
 		imagePath += "p";
 		break;
 	default:
@@ -80,8 +81,16 @@ void GridButton::updateBackgroundColor()
 
 void GridButton::setPiece(IPiecePtr newPiece)
 {
-	m_PieceType = newPiece->GetType();
-	m_PieceColor = newPiece->GetColor();
+	if (!newPiece)
+	{
+		m_PieceType = EType::EMPTY;
+		m_PieceColor = EColor::NONE;
+	}
+	else
+	{
+		m_PieceType = newPiece->GetType();
+		m_PieceColor = newPiece->GetColor();
+	}
 
 	updatePiece();
 }
@@ -98,8 +107,12 @@ void GridButton::setSelected(bool selected)
 	updateBackgroundColor();
 }
 
-GridButton::GridButton(const std::pair<int, int>& boardPosition, PieceType pieceType, PieceColor pieceColor, QWidget* parent):
-	m_Position(boardPosition), m_PieceType(pieceType), m_PieceColor(pieceColor), m_Highlighted(false), m_Selected(false)
+GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pieceColor, QWidget* parent)
+	: m_Position(boardPosition)
+	, m_PieceType(pieceType)
+	, m_PieceColor(pieceColor)
+	, m_Highlighted(false)
+	, m_Selected(false)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 

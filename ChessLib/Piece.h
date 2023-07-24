@@ -17,6 +17,10 @@ public:
 	char GetName() const override;
 	EColor GetColor() const override;
 	EType GetType() const override;
+	bool HasMoved() const;
+
+	// Setter
+	void SetHasMoved();
 
 	bool Is(EType type, EColor color) const override;
 
@@ -25,6 +29,7 @@ protected:
 	char m_name;
 	EColor m_color;
 	EType m_type;
+	bool hasMoved;
 
 };
 

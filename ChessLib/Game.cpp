@@ -22,6 +22,7 @@ Game::Game(std::array<std::array<char, 8>, 8> mat, EColor turn, EGameState state
 	, m_turn(turn)
 	, m_state(state)
 {
+
 }
 
 void Game::MovePiece(Position start, Position destination)
@@ -49,6 +50,7 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
+			m_board.Get(destination)->SetHasMoved();
 			// Castling condition
 			if (m_board.Get(destination)->GetType() == EType::KING)
 			{

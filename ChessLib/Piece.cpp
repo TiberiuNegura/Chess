@@ -12,7 +12,7 @@ Piece::Piece(
 	char name,
 	EColor color,
 	EType type
-) : m_name(name), m_color(color), m_type(type)
+) : m_name(name), m_color(color), m_type(type), hasMoved(false)
 {
 
 }
@@ -51,6 +51,16 @@ EColor Piece::GetColor() const
 EType Piece::GetType() const
 {
 	return m_type;
+}
+
+bool Piece::HasMoved() const
+{
+	return hasMoved;
+}
+
+void Piece::SetHasMoved()
+{
+	hasMoved = true;
 }
 
 bool Piece::Is(EType type, EColor color) const
