@@ -3,7 +3,6 @@
 
 #include "color.hpp"
 
-
 void DisplayMatrix(MatrixPtr b)
 {
 	std::cout << " -------------------------------------\n |   | ";
@@ -62,17 +61,41 @@ int main()
 			system("cls");
 			DisplayMatrix(game->GetBoard());
 		}
-		if (game->GetTurn() == EColor::WHITE)
-			std::cout << dye::white_on_black("WHITE'S TURN\nInsert move: ");
+		if (!game->IsTieRequest())
+		{
+			game->GetTurn() == EColor::WHITE ? std::cout << dye::white_on_black("WHITE'S TURN\n") : std::cout << dye::white_on_black("BLACKS'S TURN\n");
+			std::cout << dye::white_on_black("Type `tie` for a tie request\nInsert move: ");
+		}
 		else
-			std::cout << dye::grey_on_black("BLACK'S TURN\nInsert move: ");
-		char move[100];
-		std::cin.getline(move, 101);
+		{
+			game->GetTurn() == EColor::WHITE ? std::cout << dye::white_on_black("WHITE'S TURN\n") : std::cout << dye::white_on_black("BLACKS'S TURN\n");
+			std::cout << dye::white_on_black("A tie request has been sent\nInsert response (y/n): ");
+		}
+		std::string moveOption;
+		std::getline(std::cin, moveOption);
 
 		system("cls");
 		try
 		{
-			game->MovePiece({ move[1] - '1', move[0] - 'A' }, { move[4] - '1', move[3] - 'A' });
+			if (moveOption == "tie" && !game->IsTieRequest())
+			{
+				game->MakeTieRequest();
+				DisplayMatrix(game->GetBoard());
+				continue;
+			}
+			else if (moveOption == "y" && game->IsTieRequest())
+			{
+				game->TieRequestResponse(true);
+				DisplayMatrix(game->GetBoard());
+				continue;
+			}
+			else if (moveOption == "n" && game->IsTieRequest())
+			{
+				game->TieRequestResponse(false);
+				DisplayMatrix(game->GetBoard());
+				continue;
+			}
+			game->MovePiece({ moveOption[1] - '1', moveOption[0] - 'A' }, { moveOption[4] - '1', moveOption[3] - 'A' });
 		}
 		catch (OutOfBoundsException e)
 		{
