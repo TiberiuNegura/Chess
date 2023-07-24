@@ -33,7 +33,6 @@ ChessUIQt::~ChessUIQt()
 void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
 {
 	m_MessageLabel = new QLabel();
-	m_MessageLabel->setText("Waiting for white player");
 	m_MessageLabel->setAlignment(Qt::AlignCenter);
 	m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
 
@@ -160,13 +159,19 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 			m_MessageLabel->setText("White won the game!");
 		else if (m_game->IsTie())
 			m_MessageLabel->setText("Tie!");
+		else if (m_game->IsPawnEvolving())
+		{
+			ShowPromoteOptions();
+			m_MessageLabel->setText(GetTurnMessage());
+		}
 
 		UpdateBoard(m_game->GetBoard());
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
 	//At first click
-	else {
+	else 
+	{
 		m_selectedCell = position;
 		m_grid[position.first][position.second]->setSelected(true);
 
@@ -193,7 +198,7 @@ void ChessUIQt::OnRestartButtonClicked()
 	if (reply == QMessageBox::Yes)
 	{
 		m_game = IGame::Produce();
-		UpdateBoard(m_game->GetBoard());
+		StartGame();
 	}
 }
 
@@ -253,6 +258,7 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 void ChessUIQt::StartGame()
 {
 	//TODO MODIFY ME OR DELETE ME
+	m_MessageLabel->setText(GetTurnMessage());
 	UpdateBoard(m_game->GetBoard());
 }
 
@@ -263,7 +269,7 @@ void ChessUIQt::ShowPromoteOptions()
 	options.append("Rook");
 	options.append("Bishop");
 	options.append("Queen");
-	options.append("Knight");
+	options.append("Horse");
 
 	dialog.setComboBoxItems(options);
 	dialog.setModal(true);
@@ -275,7 +281,7 @@ void ChessUIQt::ShowPromoteOptions()
 	if (ok && !item.isEmpty())
 	{
 		//TODO
-		//game.promotePawn(parseQStringToPieceType(item))
+		m_game->EvolvePawn(item.toStdString());
 
 		//TODO DELETE ME...
 		QMessageBox notification;

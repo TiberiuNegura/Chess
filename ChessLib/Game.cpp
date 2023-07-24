@@ -78,7 +78,7 @@ void Game::MovePiece(Position start, Position destination)
 				UpdateState(EGameState::Tie);
 			else if (opponentInCheckmate)
 				m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
-			else if (!IsCheck())
+			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
 			return;
 		}
@@ -131,6 +131,8 @@ EGameState Game::GetState() const
 
 PositionList Game::GetMoves(Position piecePos) const
 {
+	if (IsGameOver())
+		return PositionList();
 	return m_board.GetMoves(piecePos, m_turn);
 }
 
@@ -169,18 +171,16 @@ bool Game::IsPawnEvolving() const
 	return m_state == EGameState::PawnEvolving;
 }
 
-#include <iostream>
-
 void Game::EvolvePawn(const std::string& pieceName)
 {
 	Position piecePos = m_board.FindEvolvingPawn(m_turn);
-	if (pieceName == "bishop")
+	if (pieceName == "Bishop")
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
-	else if (pieceName == "queen")
+	else if (pieceName == "Queen")
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
-	else if (pieceName == "rook")
+	else if (pieceName == "Rook")
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
-	else if (pieceName == "horse")
+	else if (pieceName == "Horse")
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
 	else 
 		throw PieceNotFoundException();

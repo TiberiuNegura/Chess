@@ -227,7 +227,7 @@ bool Board::IsCheck(EColor color) const
 
 PositionList Board::GetMoves(Position piecePos, EColor turn) const
 {
-	if (Board::IsOutOfBounds(piecePos))
+	if (IsOutOfBounds(piecePos))
 		throw OutOfBoundsException();
 
 	auto boardClone = Clone();
@@ -245,11 +245,12 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	{
 		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
+
 		if (kingMoveLeft && IsCastlingPossible("left", piece->GetColor()))
-		{
 			positions.emplace_back(row, 2);
-		}
+
 		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
+
 		if (kingMoveRight && IsCastlingPossible("right", piece->GetColor()))
 			positions.emplace_back(row, 6);
 	}
