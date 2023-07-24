@@ -56,7 +56,8 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	btnGrid->addWidget(loadButton, 0, 1);
 	btnGrid->addWidget(restartButton, 0, 2);
 	btnGrid->addWidget(drawButton, 0, 3);
-	btnGrid->addWidget(copyButton, 1, 0);
+	btnGrid->addWidget(copyButton, 1, 0, 1, 4);
+	
 
 	connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
 	connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
