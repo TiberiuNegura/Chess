@@ -295,6 +295,8 @@ TEST(CastlingTest, WhiteRightTest)
 
 TEST(CastlingTest, WhiteRightTest2)
 {
+
+
 	Game game({
 		' ', ' ','q',' ',' ','r','k',' ',
 		' ', ' ',' ',' ',' ',' ',' ',' ',
@@ -305,6 +307,7 @@ TEST(CastlingTest, WhiteRightTest2)
 		' ', ' ',' ',' ',' ',' ',' ',' ',
 		'R', ' ',' ',' ','K',' ',' ','R'
 		}, EColor::WHITE, EGameState::Playing);
+
 
 	EXPECT_THROW(game.MovePiece({ 7, 4 }, { 7, 6 }), IllegalMoveException);
 

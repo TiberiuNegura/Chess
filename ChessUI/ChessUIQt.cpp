@@ -56,7 +56,7 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	btnGrid->addWidget(loadButton, 0, 1);
 	btnGrid->addWidget(restartButton, 0, 2);
 	btnGrid->addWidget(drawButton, 0, 3);
-	btnGrid->addWidget(copyButton, 0, 4);
+	btnGrid->addWidget(copyButton, 1, 0);
 
 	connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
 	connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
@@ -225,49 +225,26 @@ void ChessUIQt::OnDrawButtonClicked()
 
 }
 
-char ChessUIQt::PieceToChar(IPiecePtr piece) const
-{
-	char pieceChar;
-	if (!piece) return ' ';
-	switch (piece->GetType())
-	{
-	case EType::ROOK:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'R' : pieceChar = 'r';
-		return pieceChar;
-	case EType::HORSE:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'H' : pieceChar = 'h';
-		return pieceChar;
-	case EType::BISHOP:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'B' : pieceChar = 'b';
-		return pieceChar;
-	case EType::QUEEN:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'Q' : pieceChar = 'q';
-		return pieceChar;
-	case EType::KING:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'K' : pieceChar = 'k';
-		return pieceChar;
-	case EType::PAWN:
-		piece->GetColor() == EColor::WHITE ? pieceChar = 'P' : pieceChar = 'p';
-		return pieceChar;
-	}
-}
-
-
 void ChessUIQt::OnCopyButtonClicked()
 {
 	QClipboard* clipboard = QGuiApplication::clipboard();
-	QString config = "";
+	QString config = "Game game({\n";
 	MatrixPtr board = m_game->GetBoard();
 	for (int row = 0; row < 8; row++)
 	{
+		config += QString("\t");
 		for (int column = 0; column < 8; column++)
 		{
-			config += QString("'") + PieceToChar(board->GetElement({ row, column })) + QString("', ");
+			config += QString("'") + PieceToChar(board->GetElement({ row, column })) + QString("'");
+			if (row != 7 || column != 7) config += ", ";
 		}
 		config += QString("\n");
 	}
+	config = config.removeLast();
+	config += QString("\n}, ");
+	config += GameTurnToString() + ", ";
+	config += GameStateToString() + ");";
 	clipboard->setText(config);
-	qDebug() << config;
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
@@ -347,3 +324,58 @@ QString ChessUIQt::GetTurnMessage()
 	return m_game->GetTurn() == EColor::BLACK ? "Black turn" : "White turn";
 }
 
+QString ChessUIQt::GameTurnToString()
+{
+	QString turn = "EColor::";
+	turn += m_game->GetTurn() == EColor::WHITE ? "WHITE" : "BLACK";
+	return turn;
+}
+
+QString ChessUIQt::GameStateToString()
+{
+	QString state = "EGameState::";
+	if (m_game->IsCheck())
+		state += "Check";
+	else if (m_game->IsTieRequest())
+		state += "TieRequest";
+	else if (m_game->IsPawnEvolving())
+		state += "PawnEvolving";
+	else if (m_game->IsTie())
+		state += "Tie";
+	else if (m_game->BlackWon())
+		state += "BlackWon";
+	else if (m_game->WhiteWon())
+		state += "WhiteWon";
+	else
+		state += "Playing";
+	return state;
+}
+
+char ChessUIQt::PieceToChar(IPiecePtr piece) const
+{
+	char pieceChar;
+	if (!piece) return ' ';
+	switch (piece->GetType())
+	{
+	case EType::ROOK:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'R' : pieceChar = 'r';
+		return pieceChar;
+	case EType::HORSE:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'H' : pieceChar = 'h';
+		return pieceChar;
+	case EType::BISHOP:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'B' : pieceChar = 'b';
+		return pieceChar;
+	case EType::QUEEN:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'Q' : pieceChar = 'q';
+		return pieceChar;
+	case EType::KING:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'K' : pieceChar = 'k';
+		return pieceChar;
+	case EType::PAWN:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'P' : pieceChar = 'p';
+		return pieceChar;
+	default:
+		return ' ';
+	}
+}

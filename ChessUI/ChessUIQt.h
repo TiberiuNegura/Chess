@@ -38,6 +38,8 @@ public:
 
     QString GetTurnMessage();
 
+    QString GameTurnToString();
+    QString GameStateToString();
 public slots:
     void OnButtonClicked(const Position& position);
 
