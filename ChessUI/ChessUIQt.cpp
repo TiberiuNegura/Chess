@@ -2,7 +2,9 @@
 #include "ChessUIQt.h"
 #include <QInputDialog>
 #include <QMessageBox>
-
+#include <QClipboard>
+#include <QtWidgets/QApplication>
+#include <QDebug>
 
 ChessUIQt::ChessUIQt(QWidget *parent)
 	: QMainWindow(parent)
@@ -11,15 +13,14 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	//Widget containing everything
 	QWidget* mainWidget = new QWidget();
 	QGridLayout* mainGridLayout = new QGridLayout();
-	
 	InitializeBoard(mainGridLayout);
 	InitializeMessage(mainGridLayout);
 	InitializeButtons(mainGridLayout);
 	InitializeTimers(mainGridLayout);
 	InitializeHistory(mainGridLayout);
-
 	mainWidget->setLayout(mainGridLayout);
 	this->setCentralWidget(mainWidget);
+
 
 	m_game = IGame::Produce();
 }
@@ -34,7 +35,7 @@ void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
 {
 	m_MessageLabel = new QLabel();
 	m_MessageLabel->setAlignment(Qt::AlignCenter);
-	m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
+	m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold; ");
 
 	mainGridLayout->addWidget(m_MessageLabel, 0, 1, 1, 1);
 }
@@ -45,19 +46,23 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	QPushButton* loadButton = new QPushButton("Load");
 	QPushButton* restartButton = new QPushButton("Restart");
 	QPushButton* drawButton = new QPushButton("Draw");
+	QPushButton* copyButton = new QPushButton("Copy");
 
 	QWidget* buttonContainer = new QWidget();
 	QGridLayout* btnGrid = new QGridLayout();
+
 
 	btnGrid->addWidget(saveButton, 0, 0);
 	btnGrid->addWidget(loadButton, 0, 1);
 	btnGrid->addWidget(restartButton, 0, 2);
 	btnGrid->addWidget(drawButton, 0, 3);
+	btnGrid->addWidget(copyButton, 0, 4);
 
 	connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
 	connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
 	connect(restartButton, &QPushButton::pressed, this, &ChessUIQt::OnRestartButtonClicked);
 	connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
+	connect(copyButton, &QPushButton::pressed, this, &ChessUIQt::OnCopyButtonClicked);
 
 	buttonContainer->setLayout(btnGrid);
 	mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
@@ -108,10 +113,12 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 		for (int j = 0; j < 8; j++) {
 			m_grid[i][j] = new GridButton({ i,j }, EType::EMPTY, EColor::NONE);
 			chessGridLayout->addWidget(m_grid[i][j], i, j, 1, 1);
+			chessGridLayout->setSpacing(0);
 			connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
 		}
 	}
 
+	board->setStyleSheet("border: 1px solid gray;");
 	board->setLayout(chessGridLayout);
 	mainGridLayout->addWidget(board, 1, 1, 1, 1);
 }
@@ -216,6 +223,51 @@ void ChessUIQt::OnDrawButtonClicked()
 	else
 		m_game->TieRequestResponse(false);
 
+}
+
+char ChessUIQt::PieceToChar(IPiecePtr piece) const
+{
+	char pieceChar;
+	if (!piece) return ' ';
+	switch (piece->GetType())
+	{
+	case EType::ROOK:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'R' : pieceChar = 'r';
+		return pieceChar;
+	case EType::HORSE:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'H' : pieceChar = 'h';
+		return pieceChar;
+	case EType::BISHOP:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'B' : pieceChar = 'b';
+		return pieceChar;
+	case EType::QUEEN:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'Q' : pieceChar = 'q';
+		return pieceChar;
+	case EType::KING:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'K' : pieceChar = 'k';
+		return pieceChar;
+	case EType::PAWN:
+		piece->GetColor() == EColor::WHITE ? pieceChar = 'P' : pieceChar = 'p';
+		return pieceChar;
+	}
+}
+
+
+void ChessUIQt::OnCopyButtonClicked()
+{
+	QClipboard* clipboard = QGuiApplication::clipboard();
+	QString config = "";
+	MatrixPtr board = m_game->GetBoard();
+	for (int row = 0; row < 8; row++)
+	{
+		for (int column = 0; column < 8; column++)
+		{
+			config += QString("'") + PieceToChar(board->GetElement({ row, column })) + QString("', ");
+		}
+		config += QString("\n");
+	}
+	clipboard->setText(config);
+	qDebug() << config;
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)

@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include <QClipboard>
 
 #include "GridButton.h"
 
@@ -44,6 +45,8 @@ public slots:
     void OnLoadButtonClicked();
     void OnRestartButtonClicked();
     void OnDrawButtonClicked();
+    char PieceToChar(IPiecePtr piece) const;
+    void OnCopyButtonClicked();
     void OnHistoryClicked(QListWidgetItem* item);
     
 

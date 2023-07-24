@@ -65,18 +65,15 @@ void GridButton::updateBackgroundColor()
 	QString backColor = "";
 
 	if (defaultColorBlack && !m_Highlighted)
-		backColor = "#464e53";
-	if (defaultColorBlack && m_Highlighted)
-		backColor = "#3f4224";
+		backColor = "#769656";
 	if (!defaultColorBlack && !m_Highlighted)
-		backColor = "#d6d6d6";
-	if (!defaultColorBlack && m_Highlighted)
-		backColor = "#f8ff94";
+		backColor = "#efeed2";
 
-	if (m_Selected)
-		backColor = "#ff9494";
+	if (m_Highlighted)
+		backColor = "#9bd184";
 
-	setStyleSheet("background-color: " + backColor + "; border: none;");
+
+	setStyleSheet("background-color: " + backColor + "; border: none; ");
 }
 
 void GridButton::setPiece(IPiecePtr newPiece)
