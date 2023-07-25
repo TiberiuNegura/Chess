@@ -43,7 +43,6 @@ public:
 
 	Position FindEvolvingPawn(EColor color);
 	PositionList ComputePositionList(Position start, PiecePtr piece) const;
-	//int PieceToBinary(PiecePtr piece, Position pos) const;
 	std::bitset<256> GetBoardConfiguration() const;
 
 

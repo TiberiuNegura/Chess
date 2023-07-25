@@ -377,8 +377,6 @@ bool Board::CanPawnEvolve(Position pos) const
 	return (piece->GetType() == EType::PAWN && pos.first == row);
 }
 
-#include <iostream>
-
 bool Board::IsThreeFold(std::vector<std::bitset<256>> boardConfigs, std::bitset<256> config) const
 {
 	return (std::count(boardConfigs.begin(), boardConfigs.end(), config) >= 3);
