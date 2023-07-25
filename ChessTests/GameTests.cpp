@@ -156,3 +156,35 @@ TEST(StalemateTest, TieCase)
 
 	EXPECT_EQ(game.GetState(), EGameState::Tie);
 }
+
+TEST(ThreeFoldRepetitionTest, Test)
+{
+	Game game({
+		' ', 'r',' ',' ',' ','r','k',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ','q',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', ' ',' ',' ','K',' ',' ',' '
+		}, EColor::BLACK, EGameState::Playing);
+	
+	game.MovePiece({ 4,3 }, { 4,4 });
+	game.MovePiece({ 7,4 }, { 7,3 });
+	
+	game.MovePiece({ 4,4 }, { 4,3 });
+	game.MovePiece({ 7,3 }, { 7,4 });
+	
+	game.MovePiece({ 4,3 }, { 4,4 });
+	game.MovePiece({ 7,4 }, { 7,3 });
+	
+	game.MovePiece({ 4,4 }, { 4,3 });
+	game.MovePiece({ 7,3 }, { 7,4 });
+
+	game.MovePiece({ 4,3 }, { 4,4 });
+	//game.MovePiece({ 7,4 }, { 7,3 });
+
+	EXPECT_EQ(game.GetState(), EGameState::Tie);
+	//EXPECT_THROW(game.MovePiece({ 7,3 }, { 7,4 }), GameOverException);
+}
