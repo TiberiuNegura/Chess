@@ -272,7 +272,7 @@ void ChessUIQt::UpdateBoard(const MatrixPtr& newBoard)
 		for (int j = 0; j < 8; j++) {
 			m_grid[i][j]->setPiece(newBoard->GetElement({ i, j }));
 			m_grid[i][j]->setSelected(false);
-			m_grid[i][j]->setHighlighted(false);
+			m_grid[i][j]->setHighlighted(EHighlight::NONE);
 		}
 	}
 
@@ -283,15 +283,14 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 	for (const auto& position : possibleMoves) {
 		auto possibleMove = m_grid[position.first][position.second];
 		if (m_game->GetBoard()->GetElement(position))
-			possibleMove->setHighlighted(2); // highlight opponent piece
+			possibleMove->setHighlighted(EHighlight::OCCUPIED_POS); // highlight opponent piece
 		else
-			possibleMove->setHighlighted(1); // highlight empty 
+			possibleMove->setHighlighted(EHighlight::EMPTY_POS); // highlight empty 
 	}
 }
 
 void ChessUIQt::StartGame()
 {
-	//TODO MODIFY ME OR DELETE ME
 	m_MessageLabel->setText(GetTurnMessage());
 	UpdateBoard(m_game->GetBoard());
 }

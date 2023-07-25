@@ -1,6 +1,7 @@
 #pragma once
 #include <QPushButton>
 
+#include "Enums.h"
 #include "IPiece.h"
 
 class GridButton : public QPushButton
@@ -17,7 +18,7 @@ public:
 	void updateBackgroundColor();
 
 	void setPiece(IPiecePtr newPiece);
-	void setHighlighted(int highlighted);
+	void setHighlighted(EHighlight highlighted);
 	void setSelected(bool selected);
 
 signals:
@@ -31,6 +32,6 @@ private:
 	Position m_Position;
 	EType m_PieceType;
 	EColor m_PieceColor;
-	int m_Highlighted;
+	EHighlight m_Highlighted;
 	bool m_Selected;
 };

@@ -89,7 +89,7 @@ void GridButton::setPiece(IPiecePtr newPiece)
 	updatePiece();
 }
 
-void GridButton::setHighlighted(int highlighted) 
+void GridButton::setHighlighted(EHighlight highlighted) 
 {
 	m_Highlighted = highlighted;
 	updateBackgroundColor();
@@ -106,7 +106,7 @@ void GridButton::paintEvent(QPaintEvent* event)
 	QPushButton::paintEvent(event);
 	QPainter painter(this);
 
-	if (m_Highlighted == 1)
+	if (m_Highlighted == EHighlight::EMPTY_POS)
 	{
 		QBrush brush(Qt::black);
 		painter.setPen(Qt::NoPen);
@@ -123,7 +123,7 @@ void GridButton::paintEvent(QPaintEvent* event)
 		painter.setBrush(brush);
 		painter.drawEllipse(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
 	}
-	else if (m_Highlighted == 2)
+	else if (m_Highlighted == EHighlight::OCCUPIED_POS)
 	{
 		QPen pen(Qt::black); 
 		pen.setWidth(5);     
@@ -154,7 +154,7 @@ GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pi
 	: m_Position(boardPosition)
 	, m_PieceType(pieceType)
 	, m_PieceColor(pieceColor)
-	, m_Highlighted(false)
+	, m_Highlighted(EHighlight::NONE)
 	, m_Selected(false)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

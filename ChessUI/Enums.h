@@ -1,8 +1,7 @@
 #pragma once
-enum class PieceType {
-	none, king, rook, bishop, queen, knight, pawn
-};
-
-enum class PieceColor {
-	none, black, white
+enum class EHighlight
+{
+	NONE,
+	EMPTY_POS,
+	OCCUPIED_POS
 };
