@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPiece.h"
+#include "IGameListener.h"
 
 #include "CheckException.h"
 #include "ChessException.h"
@@ -26,6 +27,17 @@ public:
 
 
 using MatrixPtr = std::shared_ptr<IMatrix>;
+
+enum class Response
+{
+	CHECK,
+	PAWN_UPGRADE,
+	TIE_REQUEST,
+	MOVE,
+	WHITE_WON,
+	BLACK_WON,
+	TIE
+};
 
 class IGame
 {
@@ -56,7 +68,10 @@ public:
 	virtual bool WhiteWon() const = 0;
 	virtual bool IsGameOver() const = 0;
 
-
+	// for observer
+	virtual void AddListener(IGameListener* listener) = 0;
+	virtual void RemoveListener(IGameListener* listener) = 0;
+	virtual void Notify(Response response) = 0;
 
 	~IGame() = default;
 };

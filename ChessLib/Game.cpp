@@ -27,13 +27,6 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 }
 
-struct BitsetHash {
-	size_t operator()(const std::bitset<256>& bs) const {
-		// Convert the std::bitset to a string and use std::hash for strings
-		return std::hash<std::string>{}(bs.to_string());
-	}
-};
-
 void Game::MovePiece(Position start, Position destination)
 {
 	if (IsGameOver())
@@ -51,10 +44,7 @@ void Game::MovePiece(Position start, Position destination)
 	if (Board::IsOutOfBounds(start) || Board::IsOutOfBounds(destination))
 		throw OutOfBoundsException();
 
-
 	PositionList positions = GetMoves(start); // creates pattern
-
-	//std::map<std::bitset<256>, int> threeFold;
 	
 	for (auto& position : positions)
 	{
@@ -157,6 +147,7 @@ PositionList Game::GetMoves(Position piecePos) const
 void Game::MakeTieRequest()
 {
 	UpdateState(EGameState::TieRequest);
+	Notify(Response::TIE_REQUEST);
 }
 
 void Game::TieRequestResponse(bool answer)
@@ -222,4 +213,48 @@ bool Game::IsGameOver() const
 {
 	return (WhiteWon() || IsTie() || BlackWon());
 }
+
+void Game::AddListener(IGameListener* listener)
+{
+	listeners.push_back(listener);
+}
+
+void Game::RemoveListener(IGameListener* listener)
+{
+	for (auto it = listeners.begin(); it != listeners.end();)
+		if (*it == listener)
+			it = listeners.erase(it);
+		else
+			++it;
+}
+
+void Game::Notify(Response response)
+{
+	for (auto listener : listeners)
+	{
+		switch (response)
+		{
+		case Response::CHECK:
+			listener->OnCheck();
+				break;
+		case Response::PAWN_UPGRADE:
+			listener->OnPawnEvolve();
+			break;
+		case Response::TIE_REQUEST:
+			listener->OnTieRequest();
+			break;
+		case Response::MOVE:
+			listener->OnMovePiece();
+			break;
+		case Response::WHITE_WON:
+		case Response::BLACK_WON:
+		case Response::TIE:
+			listener->OnGameOver();
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 

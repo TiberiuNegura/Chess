@@ -2,6 +2,7 @@
 
 #include "IGame.h"
 #include "Board.h"
+#include "IGameListener.h"
 
 enum class EGameState
 {
@@ -15,6 +16,7 @@ enum class EGameState
 };
 
 using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
+using BitVector = std::vector<std::bitset<256>>;
 
 class Game : public IGame
 {
@@ -51,11 +53,15 @@ public:
 	bool IsGameOver() const override;
 
 
+	void AddListener(IGameListener* listener) override;
+	void RemoveListener(IGameListener* listener) override;
+	void Notify(Response response) override;
 
 private:
 	Board m_board;
 	EColor m_turn;
 	EGameState m_state;
-	std::vector<std::bitset<256>> boardConfigs;
+	BitVector boardConfigs;
+	std::vector<IGameListener*> listeners;
 };
 

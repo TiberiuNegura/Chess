@@ -23,6 +23,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 
 
 	m_game = IGame::Produce();
+	m_game->AddListener(this);
 }
 
 ChessUIQt::~ChessUIQt()
@@ -213,17 +214,6 @@ void ChessUIQt::OnRestartButtonClicked()
 void ChessUIQt::OnDrawButtonClicked()
 {
 	m_game->MakeTieRequest();
-	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
-
-	if (reply == QMessageBox::Yes)
-	{
-		m_game->TieRequestResponse(true);
-		m_MessageLabel->setText("Tie!");
-	}
-	else
-		m_game->TieRequestResponse(false);
-
 }
 
 void ChessUIQt::OnCopyButtonClicked()
@@ -313,10 +303,7 @@ void ChessUIQt::ShowPromoteOptions()
 
 	if (ok && !item.isEmpty())
 	{
-		//TODO
 		m_game->EvolvePawn(item.toStdString());
-
-		//TODO DELETE ME...
 		QMessageBox notification;
 		notification.setText("You selected " + item);
 		notification.exec();
@@ -353,6 +340,40 @@ QString ChessUIQt::GameStateToString()
 	else
 		state += "Playing";
 	return state;
+}
+
+void ChessUIQt::OnGameOver()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnCheck()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnPawnEvolve()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnTieRequest()
+{
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+
+	if (reply == QMessageBox::Yes)
+	{
+		m_game->TieRequestResponse(true);
+		m_MessageLabel->setText("Tie!");
+	}
+	else
+		m_game->TieRequestResponse(false);
+}
+
+void ChessUIQt::OnMovePiece()
+{
+	throw std::logic_error("The method or operation is not implemented.");
 }
 
 char ChessUIQt::PieceToChar(IPiecePtr piece) const

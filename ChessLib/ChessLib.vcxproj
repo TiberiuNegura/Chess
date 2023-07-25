@@ -148,6 +148,7 @@
     <ClInclude Include="GameOverException.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="Horse.h" />
+    <ClInclude Include="IGameListener.h" />
     <ClInclude Include="IllegalMoveException.h" />
     <ClInclude Include="InvalidOptionException.h" />
     <ClInclude Include="IPiece.h" />

@@ -11,8 +11,9 @@
 
 #include "IGame.h"
 #include "IPiece.h"
+#include "IGameListener.h"
 
-class ChessUIQt : public QMainWindow
+class ChessUIQt : public QMainWindow, public IGameListener
 {
     Q_OBJECT
 
@@ -40,6 +41,14 @@ public:
 
     QString GameTurnToString();
     QString GameStateToString();
+
+    
+    void OnGameOver() override;
+    void OnCheck() override;
+    void OnPawnEvolve() override;
+    void OnTieRequest() override;
+    void OnMovePiece() override;
+
 public slots:
     void OnButtonClicked(const Position& position);
 
