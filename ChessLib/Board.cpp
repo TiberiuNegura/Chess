@@ -1,6 +1,5 @@
 #include <unordered_set>
 
-
 #include "Board.h"
 #include "Piece.h"
 
@@ -143,6 +142,29 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 
 	}
 	return validPattern;
+}
+
+std::bitset<256> Board::GetBoardConfiguration() const
+{
+	std::bitset<256> config;
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			int k = (8 * i) + j;
+			if (auto piece = m_board[i][j])
+			{
+
+				int type = (int)piece->GetType();
+				config[4 * k] = (int)piece->GetColor();
+				config[4 * k + 1] = type % 2;
+				config[4 * k + 2] = type / 2 % 2;
+				config[4 * k + 3] = type / 4 % 2;
+			}
+			else
+				for (int x = 0; x < 4; x++)
+					config[4 * k + x] = 1;
+		}
+	return config;
 }
 
 void Board::MovePiece(Position start, Position end)
@@ -318,9 +340,6 @@ BoardPtr Board::Clone() const
 
 bool Board::IsCheckmate(EColor color) const
 {
-	//if (!IsCheck(color))    commented to test if i can make draw statement
-		//return false;
-
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
@@ -356,6 +375,13 @@ bool Board::CanPawnEvolve(Position pos) const
 	auto piece = Get(pos);
 	int row = (piece->GetColor() == EColor::BLACK ? 7 : 0);
 	return (piece->GetType() == EType::PAWN && pos.first == row);
+}
+
+#include <iostream>
+
+bool Board::IsThreeFold(std::vector<std::bitset<256>> boardConfigs, std::bitset<256> config) const
+{
+	return (std::count(boardConfigs.begin(), boardConfigs.end(), config) >= 3);
 }
 
 Position Board::FindEvolvingPawn(EColor color)

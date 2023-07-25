@@ -1,3 +1,5 @@
+#include <map>
+
 #include "Game.h"
 #include "Board.h"
 
@@ -14,7 +16,7 @@ Game::Game()
 	: m_turn(EColor::WHITE)
 	, m_state(EGameState::Playing)
 {
-	
+	boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
 
 Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
@@ -24,6 +26,13 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 {
 
 }
+
+struct BitsetHash {
+	size_t operator()(const std::bitset<256>& bs) const {
+		// Convert the std::bitset to a string and use std::hash for strings
+		return std::hash<std::string>{}(bs.to_string());
+	}
+};
 
 void Game::MovePiece(Position start, Position destination)
 {
@@ -45,6 +54,8 @@ void Game::MovePiece(Position start, Position destination)
 
 	PositionList positions = GetMoves(start); // creates pattern
 
+	//std::map<std::bitset<256>, int> threeFold;
+	
 	for (auto& position : positions)
 	{
 		if (position == destination)
@@ -80,6 +91,13 @@ void Game::MovePiece(Position start, Position destination)
 				m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
+
+			std::bitset<256> configuration = m_board.GetBoardConfiguration();
+			boardConfigs.push_back(configuration);
+			if (m_board.IsThreeFold(boardConfigs, configuration))
+				UpdateState(EGameState::Tie);
+
+
 			return;
 		}
 	}

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <bitset>
+
+
 #include "IGame.h"
 #include "Piece.h"
 
@@ -16,6 +19,7 @@ public:
 
 	EColor CharToColor(char c) const;
 	EType CharToType(char c) const;
+
 	// Inherited via BoardInterface
 	const Matrix& GetMatrix() const;
 	PiecePtr Get(int i, int j) const;
@@ -26,7 +30,6 @@ public:
 	BoardPtr Clone() const;
 
 	void MovePiece(Position start, Position end);
-	/*void Castling(EColor color, std::string where);*/
 	void SetPosition(PiecePtr toRevert, Position pos);
 
 	bool IsCastlingPossible(std::string where, EColor color) const;
@@ -36,8 +39,13 @@ public:
 	bool IsCheckmate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
+	bool IsThreeFold(std::vector<std::bitset<256>> threeFold, std::bitset<256> configuration) const;
+
 	Position FindEvolvingPawn(EColor color);
 	PositionList ComputePositionList(Position start, PiecePtr piece) const;
+	//int PieceToBinary(PiecePtr piece, Position pos) const;
+	std::bitset<256> GetBoardConfiguration() const;
+
 
 private:
 	Position FindKing(EColor color) const;

@@ -56,5 +56,6 @@ private:
 	Board m_board;
 	EColor m_turn;
 	EGameState m_state;
+	std::vector<std::bitset<256>> boardConfigs;
 };
 
