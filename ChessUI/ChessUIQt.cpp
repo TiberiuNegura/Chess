@@ -138,23 +138,23 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		}
 		catch (OutOfBoundsException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+			m_MessageLabel->setText(GetTurnMessage() + e.what());
 		}
 		catch (EmptyPositionException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+			m_MessageLabel->setText(GetTurnMessage() + e.what());
 		}
 		catch (PieceNotFoundException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+			m_MessageLabel->setText(GetTurnMessage() + e.what());
 		}
 		catch (IllegalMoveException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+			m_MessageLabel->setText(GetTurnMessage() + e.what());
 		}
 		catch (CheckException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + "\n" + e.what());
+			m_MessageLabel->setText(GetTurnMessage() + e.what());
 		}
 		catch (GameOverException e)
 		{
@@ -162,9 +162,9 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		}
 
 		if (m_game->BlackWon())
-			m_MessageLabel->setText("Black won the game!");
+			m_MessageLabel->setText("Black won the game!\n");
 		else if (m_game->WhiteWon())
-			m_MessageLabel->setText("White won the game!");
+			m_MessageLabel->setText("White won the game!\n");
 		else if (m_game->IsTie())
 			m_MessageLabel->setText("Tie!");
 		else if (m_game->IsPawnEvolving())
@@ -281,7 +281,11 @@ void ChessUIQt::UpdateBoard(const MatrixPtr& newBoard)
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
 	for (const auto& position : possibleMoves) {
-		m_grid[position.first][position.second]->setHighlighted(true);
+		auto possibleMove = m_grid[position.first][position.second];
+		if (m_game->GetBoard()->GetElement(position))
+			possibleMove->setHighlighted(2); // highlight opponent piece
+		else
+			possibleMove->setHighlighted(1); // highlight empty 
 	}
 }
 
@@ -322,7 +326,7 @@ void ChessUIQt::ShowPromoteOptions()
 
 QString ChessUIQt::GetTurnMessage()
 {
-	return m_game->GetTurn() == EColor::BLACK ? "Black turn" : "White turn";
+	return m_game->GetTurn() == EColor::BLACK ? "Black turn\n" : "White turn\n";
 }
 
 QString ChessUIQt::GameTurnToString()

@@ -17,16 +17,20 @@ public:
 	void updateBackgroundColor();
 
 	void setPiece(IPiecePtr newPiece);
-	void setHighlighted(bool highlighted);
+	void setHighlighted(int highlighted);
 	void setSelected(bool selected);
 
 signals:
 	void Clicked(const std::pair<int, int>& position);
 
+protected:
+	void paintEvent(QPaintEvent* event) override;
+
+
 private:
 	Position m_Position;
 	EType m_PieceType;
 	EColor m_PieceColor;
-	bool m_Highlighted;
+	int m_Highlighted;
 	bool m_Selected;
 };

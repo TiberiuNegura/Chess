@@ -1,6 +1,7 @@
 #include "GridButton.h"
 #include "IPiece.h"
 #include "IGame.h"
+#include <QPainter>
 
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -64,16 +65,12 @@ void GridButton::updateBackgroundColor()
 	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
 	QString backColor = "";
 
-	if (defaultColorBlack && !m_Highlighted)
+	if (defaultColorBlack)
 		backColor = "#769656";
-	if (!defaultColorBlack && !m_Highlighted)
+	else if (!defaultColorBlack)
 		backColor = "#efeed2";
 
-	if (m_Highlighted)
-		backColor = "#9bd184";
-
-
-	setStyleSheet("background-color: " + backColor + "; border: none; ");
+	setStyleSheet("background-color: " + backColor + "; border: none;");
 }
 
 void GridButton::setPiece(IPiecePtr newPiece)
@@ -92,7 +89,7 @@ void GridButton::setPiece(IPiecePtr newPiece)
 	updatePiece();
 }
 
-void GridButton::setHighlighted(bool highlighted)
+void GridButton::setHighlighted(int highlighted) 
 {
 	m_Highlighted = highlighted;
 	updateBackgroundColor();
@@ -102,6 +99,55 @@ void GridButton::setSelected(bool selected)
 {
 	m_Selected = selected;
 	updateBackgroundColor();
+}
+
+void GridButton::paintEvent(QPaintEvent* event)
+{
+	QPushButton::paintEvent(event);
+	QPainter painter(this);
+
+	if (m_Highlighted == 1)
+	{
+		QBrush brush(Qt::black);
+		painter.setPen(Qt::NoPen);
+		painter.setOpacity(0.1);
+
+		// Calculate the center of the button
+		int centerX = width() / 2;
+		int centerY = height() / 2;
+
+		// Calculate the radius of the circle as a fraction of the button size
+		int radius = qMin(width(), height()) / 6;
+
+		// Draw the circle
+		painter.setBrush(brush);
+		painter.drawEllipse(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+	}
+	else if (m_Highlighted == 2)
+	{
+		QPen pen(Qt::black); 
+		pen.setWidth(5);     
+		painter.setOpacity(0.1);
+
+		int squareSize = qMin(width(), height());
+
+		// Calculate the top-left corner of the square
+		int x = (width() - squareSize) / 2;
+		int y = (height() - squareSize) / 2;
+
+
+		// Calculate the radius of the inscribed circle as half the square size
+		int radius = squareSize / 2;
+
+		// Calculate the center of the square
+		int centerX = x + squareSize / 2;
+		int centerY = y + squareSize / 2;
+
+		// Draw the empty circle (no fill)
+		painter.setPen(pen);
+		painter.drawEllipse(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+	}
+
 }
 
 GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pieceColor, QWidget* parent)
