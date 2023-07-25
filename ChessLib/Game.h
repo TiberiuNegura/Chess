@@ -14,12 +14,14 @@ enum class EGameState
 	Check
 };
 
+using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
+
 class Game : public IGame
 {
 public:
 	// Constructor
 	Game();
-	Game(std::array<std::array<char, 8>, 8> mat, EColor turn, EGameState state);
+	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
 
 	void MovePiece(Position start, Position destination) override;
 	//void MakeCastling(std::string where) override;
