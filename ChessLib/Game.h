@@ -55,7 +55,7 @@ public:
 	void RestartRequest(IGamePtr& newGame) override;
 	void RestartGame(IGamePtr& newGame);
 
-	void AddListener(IGameListener* listener) override;
+	void AddListener(ListenerWeakPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
 	
 	void Notify(Response response);
@@ -66,6 +66,6 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	BitVector boardConfigs;
-	std::vector<IGameListener*> listeners;
+	std::vector<ListenerWeakPtr> listeners;
 };
 

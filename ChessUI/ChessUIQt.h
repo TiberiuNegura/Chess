@@ -29,12 +29,10 @@ public:
 
     //Modify if necessary with your history representation
     void UpdateHistory();
-    //Modify if necessary with your board representation
     void UpdateBoard(const MatrixPtr& newBoard);
-    //Modify if necessary with your possible moves representation
     void HighlightPossibleMoves(const PositionList& possibleMoves);
     void UnHighlightPossibleMoves(const PositionList& possibleMoves);
-    //Modify or delete
+
     void StartGame();
     void ShowPromoteOptions();
 
@@ -50,6 +48,8 @@ public:
     void OnTieRequest() override;
     void OnMovePiece(Position start, Position end, const PositionList& possibleMoves) override;
     void OnRestart() override;
+
+    void SetGame(IGamePtr game);
 
 public slots:
     void OnButtonClicked(const Position& position);

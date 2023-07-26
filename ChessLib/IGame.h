@@ -16,6 +16,8 @@
 
 
 using IGamePtr = std::shared_ptr<class IGame>;
+using ListenerWeakPtr = std::weak_ptr<IGameListener>;
+
 
 class IMatrix
 {
@@ -71,7 +73,7 @@ public:
 	virtual void RestartRequest(IGamePtr& newGame) = 0;
 
 	// for observer
-	virtual void AddListener(IGameListener* listener) = 0;
+	virtual void AddListener(ListenerWeakPtr listener) = 0;
 	virtual void RemoveListener(IGameListener* listener) = 0;
 	/*virtual void Notify(Response response) = 0;
 	virtual void Notify(Position start, Position end, const PositionList& possibleMoves) = 0;*/

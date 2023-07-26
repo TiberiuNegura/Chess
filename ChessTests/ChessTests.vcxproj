@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameTests.cpp" />
+    <ClCompile Include="ListenerTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BoardTests.cpp" />
     <ClCompile Include="ComputePositionListTests.cpp" />
@@ -159,9 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="PawnTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

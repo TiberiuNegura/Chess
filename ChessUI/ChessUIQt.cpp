@@ -22,8 +22,8 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	this->setCentralWidget(mainWidget);
 
 
-	m_game = IGame::Produce();
-	m_game->AddListener(this);
+	/*m_game = IGame::Produce();
+	m_game->AddListener(this);*/
 }
 
 ChessUIQt::~ChessUIQt()
@@ -311,7 +311,7 @@ void ChessUIQt::ShowPromoteOptions()
 
 QString ChessUIQt::GetTurnMessage()
 {
-	return m_game->GetTurn() == EColor::BLACK ? "Black turn\n" : "White turn\n";
+	return m_game->GetTurn() == EColor::BLACK ? "Black's turn\n" : "White's turn\n";
 }
 
 QString ChessUIQt::GameTurnToString()
@@ -399,6 +399,11 @@ void ChessUIQt::OnRestart()
 		m_game->RestartRequest(m_game);
 		StartGame();
 	}
+}
+
+void ChessUIQt::SetGame(IGamePtr game)
+{
+	m_game = game;
 }
 
 char ChessUIQt::PieceToChar(IPiecePtr piece) const

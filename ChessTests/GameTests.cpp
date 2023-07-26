@@ -188,3 +188,4 @@ TEST(ThreeFoldRepetitionTest, Test)
 	EXPECT_EQ(game.GetState(), EGameState::Tie);
 	//EXPECT_THROW(game.MovePiece({ 7,3 }, { 7,4 }), GameOverException);
 }
+

@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Board">
+    <Filter Include="Source Files\Unit Tests">
+      <UniqueIdentifier>{3fd7ea16-feb4-4f17-9f6c-ae5d96473d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit Tests\Game">
+      <UniqueIdentifier>{ad9b94de-9d28-4fdc-ba0e-56246744afcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit Tests\Board">
       <UniqueIdentifier>{60d5ba63-a1b9-4865-81b5-cf1f6b06637f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game">
-      <UniqueIdentifier>{ad9b94de-9d28-4fdc-ba0e-56246744afcd}</UniqueIdentifier>
+    <Filter Include="Source Files\Mock Tests">
+      <UniqueIdentifier>{eb18ae4b-46c3-49b0-a2af-2fbb3a3bc5d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,24 +37,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoardTests.cpp">
-      <Filter>Source Files\Board</Filter>
+      <Filter>Source Files\Unit Tests\Board</Filter>
     </ClCompile>
     <ClCompile Include="ComputePositionListTests.cpp">
-      <Filter>Source Files\Board</Filter>
+      <Filter>Source Files\Unit Tests\Board</Filter>
     </ClCompile>
     <ClCompile Include="GameTests.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Unit Tests\Game</Filter>
     </ClCompile>
     <ClCompile Include="PossibleMovesTests.cpp">
-      <Filter>Source Files\Board</Filter>
+      <Filter>Source Files\Unit Tests\Board</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerTests.cpp">
+      <Filter>Source Files\Mock Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="PawnTests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

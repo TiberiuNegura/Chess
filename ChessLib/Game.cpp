@@ -246,18 +246,24 @@ void Game::RestartGame(IGamePtr& newGame)
 	Notify(Response::RESTART);
 }
 
-void Game::AddListener(IGameListener* listener)
+void Game::AddListener(ListenerWeakPtr listener)
 {
 	listeners.push_back(listener);
 }
 
 void Game::RemoveListener(IGameListener* listener)
 {
-	for (auto it = listeners.begin(); it != listeners.end();)
-		if (*it == listener)
-			it = listeners.erase(it);
-		else
-			++it;
+	listeners.erase(
+		std::remove_if(
+			listeners.begin(),
+			listeners.end(),
+			[listener](ListenerWeakPtr& weak)
+			{
+				auto sp = weak.lock();
+
+				return !sp || sp.get() == listener;
+			}
+	));
 }
 
 void Game::Notify(Response response)
@@ -268,21 +274,21 @@ void Game::Notify(Response response)
 		switch (response)
 		{
 		case Response::CHECK:
-			listener->OnCheck(e);
+			listener.lock()->OnCheck(e);
 				break;
 		case Response::PAWN_UPGRADE:
-			listener->OnPawnEvolve();
+			listener.lock()->OnPawnEvolve();
 			break;
 		case Response::TIE_REQUEST:
-			listener->OnTieRequest();
+			listener.lock()->OnTieRequest();
 			break;
 		case Response::WHITE_WON:
 		case Response::BLACK_WON:
 		case Response::TIE:
-			listener->OnGameOver();
+			listener.lock()->OnGameOver();
 			break;
 		case Response::RESTART:
-			listener->OnRestart();
+			listener.lock()->OnRestart();
 			break;
 		}
 	}
@@ -291,7 +297,7 @@ void Game::Notify(Response response)
 void Game::Notify(Position start, Position end, const PositionList& possibleMoves)
 {
 	for (auto listener : listeners)
-		listener->OnMovePiece(start, end, possibleMoves);
+		listener.lock()->OnMovePiece(start, end, possibleMoves);
 }
 
 
