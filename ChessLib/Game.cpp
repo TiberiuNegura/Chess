@@ -67,6 +67,7 @@ void Game::MovePiece(Position start, Position destination)
 			if (m_board.CanPawnEvolve(destination))
 			{
 				UpdateState(EGameState::PawnEvolving);
+				Notify(Response::PAWN_UPGRADE);
 				return;
 			}
 
@@ -74,20 +75,41 @@ void Game::MovePiece(Position start, Position destination)
 			bool opponentInCheck = m_board.IsCheck(m_turn);
 			bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 			if (opponentInCheck)
+			{
 				UpdateState(EGameState::Check);
+				Notify(Response::CHECK);
+			}
 			if (opponentInCheckmate && !opponentInCheck)
+			{
 				UpdateState(EGameState::Tie);
+				Notify(Response::TIE);
+			}
 			else if (opponentInCheckmate)
-				m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+			{
+				if (m_turn == EColor::BLACK)
+				{
+					UpdateState(EGameState::WhiteWon);
+					Notify(Response::WHITE_WON);
+				}
+				else
+				{
+
+					UpdateState(EGameState::BlackWon);
+					Notify(Response::BLACK_WON);
+				}
+			}
 			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
 
 			std::bitset<256> configuration = m_board.GetBoardConfiguration();
 			boardConfigs.push_back(configuration);
 			if (m_board.IsThreeFold(boardConfigs, configuration))
+			{
 				UpdateState(EGameState::Tie);
+				Notify(Response::TIE);
+			}
 
-
+			Notify(start, destination, positions);
 			return;
 		}
 	}
@@ -214,6 +236,16 @@ bool Game::IsGameOver() const
 	return (WhiteWon() || IsTie() || BlackWon());
 }
 
+void Game::RestartRequest(IGamePtr& newGame)
+{
+	newGame = IGame::Produce();
+}
+
+void Game::RestartGame(IGamePtr& newGame)
+{
+	Notify(Response::RESTART);
+}
+
 void Game::AddListener(IGameListener* listener)
 {
 	listeners.push_back(listener);
@@ -230,12 +262,13 @@ void Game::RemoveListener(IGameListener* listener)
 
 void Game::Notify(Response response)
 {
+	CheckException e;
 	for (auto listener : listeners)
 	{
 		switch (response)
 		{
 		case Response::CHECK:
-			listener->OnCheck();
+			listener->OnCheck(e);
 				break;
 		case Response::PAWN_UPGRADE:
 			listener->OnPawnEvolve();
@@ -243,18 +276,22 @@ void Game::Notify(Response response)
 		case Response::TIE_REQUEST:
 			listener->OnTieRequest();
 			break;
-		case Response::MOVE:
-			listener->OnMovePiece();
-			break;
 		case Response::WHITE_WON:
 		case Response::BLACK_WON:
 		case Response::TIE:
 			listener->OnGameOver();
 			break;
-		default:
+		case Response::RESTART:
+			listener->OnRestart();
 			break;
 		}
 	}
+}
+
+void Game::Notify(Position start, Position end, const PositionList& possibleMoves)
+{
+	for (auto listener : listeners)
+		listener->OnMovePiece(start, end, possibleMoves);
 }
 
 

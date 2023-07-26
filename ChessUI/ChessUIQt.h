@@ -33,6 +33,7 @@ public:
     void UpdateBoard(const MatrixPtr& newBoard);
     //Modify if necessary with your possible moves representation
     void HighlightPossibleMoves(const PositionList& possibleMoves);
+    void UnHighlightPossibleMoves(const PositionList& possibleMoves);
     //Modify or delete
     void StartGame();
     void ShowPromoteOptions();
@@ -44,10 +45,11 @@ public:
 
     
     void OnGameOver() override;
-    void OnCheck() override;
+    void OnCheck(CheckException e) override;
     void OnPawnEvolve() override;
     void OnTieRequest() override;
-    void OnMovePiece() override;
+    void OnMovePiece(Position start, Position end, const PositionList& possibleMoves) override;
+    void OnRestart() override;
 
 public slots:
     void OnButtonClicked(const Position& position);

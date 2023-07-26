@@ -52,10 +52,14 @@ public:
 	bool WhiteWon() const override;
 	bool IsGameOver() const override;
 
+	void RestartRequest(IGamePtr& newGame) override;
+	void RestartGame(IGamePtr& newGame);
 
 	void AddListener(IGameListener* listener) override;
 	void RemoveListener(IGameListener* listener) override;
-	void Notify(Response response) override;
+	
+	void Notify(Response response);
+	void Notify(Position start, Position end, const PositionList& possibleMoves);
 
 private:
 	Board m_board;

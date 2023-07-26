@@ -33,10 +33,10 @@ enum class Response
 	CHECK,
 	PAWN_UPGRADE,
 	TIE_REQUEST,
-	MOVE,
 	WHITE_WON,
 	BLACK_WON,
-	TIE
+	TIE,
+	RESTART
 };
 
 class IGame
@@ -68,10 +68,13 @@ public:
 	virtual bool WhiteWon() const = 0;
 	virtual bool IsGameOver() const = 0;
 
+	virtual void RestartRequest(IGamePtr& newGame) = 0;
+
 	// for observer
 	virtual void AddListener(IGameListener* listener) = 0;
 	virtual void RemoveListener(IGameListener* listener) = 0;
-	virtual void Notify(Response response) = 0;
+	/*virtual void Notify(Response response) = 0;
+	virtual void Notify(Position start, Position end, const PositionList& possibleMoves) = 0;*/
 
 	~IGame() = default;
 };

@@ -131,6 +131,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 	if (m_selectedCell.has_value()) {
 		Position start({ m_selectedCell.value().first , m_selectedCell.value().second });
 
+		auto possibleMoves = m_game->GetMoves(start);
 		try
 		{
 			m_game->MovePiece(start, position);
@@ -155,36 +156,29 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		}
 		catch (CheckException e)
 		{
-			m_MessageLabel->setText(GetTurnMessage() + e.what());
+			OnCheck(e);
 		}
 		catch (GameOverException e)
 		{
 			m_MessageLabel->setText(e.what());
 		}
 
-		if (m_game->BlackWon())
-			m_MessageLabel->setText("Black won the game!\n");
-		else if (m_game->WhiteWon())
-			m_MessageLabel->setText("White won the game!\n");
-		else if (m_game->IsTie())
-			m_MessageLabel->setText("Tie!");
+		if (m_game->IsGameOver())
+			OnGameOver();
 		else if (m_game->IsPawnEvolving())
 		{
-			ShowPromoteOptions();
-			m_MessageLabel->setText(GetTurnMessage());
+			OnPawnEvolve();
 		}
-
-		UpdateBoard(m_game->GetBoard());
+		OnMovePiece(start, position, possibleMoves);
+		// OnMove..
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
-	//At first click
 	else 
 	{
 		m_selectedCell = position;
 		m_grid[position.first][position.second]->setSelected(true);
 
-		//TODO Show possible moves here
 		HighlightPossibleMoves(m_game->GetMoves(position));
 	}
 }
@@ -202,13 +196,7 @@ void ChessUIQt::OnLoadButtonClicked()
 
 void ChessUIQt::OnRestartButtonClicked()
 {
-	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
-	if (reply == QMessageBox::Yes)
-	{
-		m_game = IGame::Produce();
-		StartGame();
-	}
+	OnRestart();
 }
 
 void ChessUIQt::OnDrawButtonClicked()
@@ -279,6 +267,17 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 	}
 }
 
+void ChessUIQt::UnHighlightPossibleMoves(const PositionList& possibleMoves)
+{
+	for (const auto& position : possibleMoves) {
+		auto possibleMove = m_grid[position.first][position.second];
+		if (m_game->GetBoard()->GetElement(position))
+			possibleMove->setHighlighted(EHighlight::NONE); // highlight opponent piece
+		else
+			possibleMove->setHighlighted(EHighlight::NONE); // highlight empty 
+	}
+}
+
 void ChessUIQt::StartGame()
 {
 	m_MessageLabel->setText(GetTurnMessage());
@@ -344,17 +343,23 @@ QString ChessUIQt::GameStateToString()
 
 void ChessUIQt::OnGameOver()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	if (m_game->BlackWon())
+		m_MessageLabel->setText("Black won the game!\n");
+	else if (m_game->WhiteWon())
+		m_MessageLabel->setText("White won the game!\n");
+	else if (m_game->IsTie())
+		m_MessageLabel->setText("Tie!");
 }
 
-void ChessUIQt::OnCheck()
+void ChessUIQt::OnCheck(CheckException e)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	m_MessageLabel->setText(GetTurnMessage() + e.what());
 }
 
 void ChessUIQt::OnPawnEvolve()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	ShowPromoteOptions();
+	m_MessageLabel->setText(GetTurnMessage());
 }
 
 void ChessUIQt::OnTieRequest()
@@ -371,9 +376,29 @@ void ChessUIQt::OnTieRequest()
 		m_game->TieRequestResponse(false);
 }
 
-void ChessUIQt::OnMovePiece()
+void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& possibleMoves)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	//UpdateBoard(m_game->GetBoard());
+	UnHighlightPossibleMoves(possibleMoves);
+	m_grid[start.first][start.second]->setPiece(m_game->GetBoard()->GetElement(start));
+	m_grid[start.first][start.second]->setSelected(false);
+	m_grid[start.first][start.second]->setHighlighted(EHighlight::NONE);
+
+	m_grid[end.first][end.second]->setPiece(m_game->GetBoard()->GetElement(end));
+	m_grid[end.first][end.second]->setSelected(false);
+	m_grid[end.first][end.second]->setHighlighted(EHighlight::NONE);
+
+}
+
+void ChessUIQt::OnRestart()
+{
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::Yes)
+	{
+		m_game->RestartRequest(m_game);
+		StartGame();
+	}
 }
 
 char ChessUIQt::PieceToChar(IPiecePtr piece) const
