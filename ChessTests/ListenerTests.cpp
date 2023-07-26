@@ -164,5 +164,5 @@ TEST_F(GameMockTests, NotifyObserverCheck)
 	game.MovePiece({ 7,4 }, { 6,4 });
 
 	EXPECT_EQ(game.GetState(), EGameState::Playing);
-
 }
+// TODO: combine exception handling (EXPECT_THROW(...)) and mock with EXPECT_CALL(...).Times(0)
