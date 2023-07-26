@@ -26,6 +26,9 @@ public:
 	PiecePtr Get(Position pos) const;
 	void Set(Position pos, PiecePtr newPiece);
 	PositionList GetMoves(Position piecePos, EColor turn) const;
+	
+	void Init();
+	void Reset();
 
 	BoardPtr Clone() const;
 

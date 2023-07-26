@@ -6,24 +6,8 @@
 #include "PieceNotFoundException.h"
 
 Board::Board()
-{
-	// Board initialize
-
-	// Pawns
-	for (int column = 0; column < 8; column++) 
-	{
-		m_board[1][column] = Piece::Produce(EType::PAWN, EColor::BLACK);
-		m_board[6][column] = Piece::Produce(EType::PAWN, EColor::WHITE);
-	}
-
-	// other pieces
-	const std::vector<EType> TYPES = {EType::ROOK, EType::HORSE, EType::BISHOP, EType::QUEEN, EType::KING, EType::BISHOP, EType::HORSE, EType::ROOK };
-
-	for (int i = 0; i < TYPES.size(); i++)
-	{
-		m_board[0][i] = Piece::Produce(TYPES[i], EColor::BLACK);
-		m_board[7][i] = Piece::Produce(TYPES[i], EColor::WHITE);
-	}
+{	
+	Init();
 }
 
 EColor Board::CharToColor(char c) const
@@ -320,6 +304,32 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	
 
 	return positions;
+}
+
+void Board::Init()
+{
+	// Pawns
+	for (int column = 0; column < 8; column++)
+	{
+		m_board[1][column] = Piece::Produce(EType::PAWN, EColor::BLACK);
+		m_board[6][column] = Piece::Produce(EType::PAWN, EColor::WHITE);
+	}
+
+	// other pieces
+	const std::vector<EType> TYPES = { EType::ROOK, EType::HORSE, EType::BISHOP, EType::QUEEN, EType::KING, EType::BISHOP, EType::HORSE, EType::ROOK };
+
+	for (int i = 0; i < TYPES.size(); i++)
+	{
+		m_board[0][i] = Piece::Produce(TYPES[i], EColor::BLACK);
+		m_board[7][i] = Piece::Produce(TYPES[i], EColor::WHITE);
+	}
+}
+
+void Board::Reset()
+{
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+			m_board[i][j].reset();
 }
 
 Position Board::FindKing(EColor color) const

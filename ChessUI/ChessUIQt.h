@@ -21,6 +21,8 @@ public:
     ChessUIQt(QWidget *parent = nullptr);
     ~ChessUIQt() override;
 
+
+    void Init(QGridLayout* mainGridLayout);
     void InitializeMessage(QGridLayout* mainGridLayout);
     void InitializeButtons(QGridLayout* mainGridLayout);
     void InitializeTimers(QGridLayout* mainGridLayout);
@@ -43,7 +45,7 @@ public:
 
     
     void OnGameOver() override;
-    void OnCheck(CheckException e) override;
+    void OnCheck(std::string msg) override;
     void OnPawnEvolve() override;
     void OnTieRequest() override;
     void OnMovePiece(Position start, Position end, const PositionList& possibleMoves) override;

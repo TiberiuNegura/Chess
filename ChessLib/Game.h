@@ -52,8 +52,7 @@ public:
 	bool WhiteWon() const override;
 	bool IsGameOver() const override;
 
-	void RestartRequest(IGamePtr& newGame) override;
-	void RestartGame(IGamePtr& newGame);
+	void Restart() override;
 
 	void AddListener(ListenerWeakPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
@@ -66,6 +65,6 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	BitVector boardConfigs;
-	std::vector<ListenerWeakPtr> listeners;
+	std::vector<ListenerWeakPtr> m_listeners;
 };
 

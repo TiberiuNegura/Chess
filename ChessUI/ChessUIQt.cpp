@@ -9,10 +9,20 @@
 ChessUIQt::ChessUIQt(QWidget *parent)
 	: QMainWindow(parent)
 {
-   
+	QGridLayout* mainGridLayout = new QGridLayout();
+	Init(mainGridLayout);
+}
+
+ChessUIQt::~ChessUIQt()
+{
+	//No delete?
+	//https://doc.qt.io/qt-6/objecttrees.html
+}
+
+void ChessUIQt::Init(QGridLayout* mainGridLayout)
+{
 	//Widget containing everything
 	QWidget* mainWidget = new QWidget();
-	QGridLayout* mainGridLayout = new QGridLayout();
 	InitializeBoard(mainGridLayout);
 	InitializeMessage(mainGridLayout);
 	InitializeButtons(mainGridLayout);
@@ -20,16 +30,6 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	InitializeHistory(mainGridLayout);
 	mainWidget->setLayout(mainGridLayout);
 	this->setCentralWidget(mainWidget);
-
-
-	/*m_game = IGame::Produce();
-	m_game->AddListener(this);*/
-}
-
-ChessUIQt::~ChessUIQt()
-{
-	//No delete?
-	//https://doc.qt.io/qt-6/objecttrees.html
 }
 
 void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
@@ -156,7 +156,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		}
 		catch (CheckException e)
 		{
-			OnCheck(e);
+			OnCheck(e.what());
 		}
 		catch (GameOverException e)
 		{
@@ -196,7 +196,10 @@ void ChessUIQt::OnLoadButtonClicked()
 
 void ChessUIQt::OnRestartButtonClicked()
 {
-	OnRestart();
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::Yes)
+		m_game->Restart();
 }
 
 void ChessUIQt::OnDrawButtonClicked()
@@ -351,9 +354,11 @@ void ChessUIQt::OnGameOver()
 		m_MessageLabel->setText("Tie!");
 }
 
-void ChessUIQt::OnCheck(CheckException e)
+void ChessUIQt::OnCheck(std::string msg)
 {
-	m_MessageLabel->setText(GetTurnMessage() + e.what());
+	QString s = GetTurnMessage();
+	s.append(msg);	
+	m_MessageLabel->setText(s);
 }
 
 void ChessUIQt::OnPawnEvolve()
@@ -378,7 +383,6 @@ void ChessUIQt::OnTieRequest()
 
 void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& possibleMoves)
 {
-	//UpdateBoard(m_game->GetBoard());
 	UnHighlightPossibleMoves(possibleMoves);
 	m_grid[start.first][start.second]->setPiece(m_game->GetBoard()->GetElement(start));
 	m_grid[start.first][start.second]->setSelected(false);
@@ -392,13 +396,9 @@ void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& po
 
 void ChessUIQt::OnRestart()
 {
-	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
-	if (reply == QMessageBox::Yes)
-	{
-		m_game->RestartRequest(m_game);
-		StartGame();
-	}
+	QGridLayout* mainGridLayout = new QGridLayout();
+	Init(mainGridLayout);
+	StartGame();
 }
 
 void ChessUIQt::SetGame(IGamePtr game)

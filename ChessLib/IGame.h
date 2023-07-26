@@ -70,13 +70,11 @@ public:
 	virtual bool WhiteWon() const = 0;
 	virtual bool IsGameOver() const = 0;
 
-	virtual void RestartRequest(IGamePtr& newGame) = 0;
+	virtual void Restart() = 0;
 
 	// for observer
 	virtual void AddListener(ListenerWeakPtr listener) = 0;
 	virtual void RemoveListener(IGameListener* listener) = 0;
-	/*virtual void Notify(Response response) = 0;
-	virtual void Notify(Position start, Position end, const PositionList& possibleMoves) = 0;*/
 
 	~IGame() = default;
 };

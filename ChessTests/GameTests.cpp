@@ -183,9 +183,8 @@ TEST(ThreeFoldRepetitionTest, Test)
 	game.MovePiece({ 7,3 }, { 7,4 });
 
 	game.MovePiece({ 4,3 }, { 4,4 });
-	//game.MovePiece({ 7,4 }, { 7,3 });
-
+	
 	EXPECT_EQ(game.GetState(), EGameState::Tie);
-	//EXPECT_THROW(game.MovePiece({ 7,3 }, { 7,4 }), GameOverException);
+	EXPECT_THROW(game.MovePiece({ 7,4 }, { 7,3 }), GameOverException);
 }
 

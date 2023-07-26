@@ -51,6 +51,7 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
+			Notify(start, destination, positions);
 			m_board.Get(destination)->SetHasMoved();
 			
 			
@@ -109,7 +110,7 @@ void Game::MovePiece(Position start, Position destination)
 				Notify(Response::TIE);
 			}
 
-			Notify(start, destination, positions);
+			//Notify(start, destination, positions);
 			return;
 		}
 	}
@@ -236,27 +237,26 @@ bool Game::IsGameOver() const
 	return (WhiteWon() || IsTie() || BlackWon());
 }
 
-void Game::RestartRequest(IGamePtr& newGame)
+void Game::Restart()
 {
-	newGame = IGame::Produce();
-}
-
-void Game::RestartGame(IGamePtr& newGame)
-{
+	m_board.Reset();
+	m_board.Init();
+	m_turn = EColor::WHITE;
+	m_state = EGameState::Playing;
 	Notify(Response::RESTART);
 }
 
 void Game::AddListener(ListenerWeakPtr listener)
 {
-	listeners.push_back(listener);
+	m_listeners.push_back(listener);
 }
 
 void Game::RemoveListener(IGameListener* listener)
 {
-	listeners.erase(
+	m_listeners.erase(
 		std::remove_if(
-			listeners.begin(),
-			listeners.end(),
+			m_listeners.begin(),
+			m_listeners.end(),
 			[listener](ListenerWeakPtr& weak)
 			{
 				auto sp = weak.lock();
@@ -269,12 +269,12 @@ void Game::RemoveListener(IGameListener* listener)
 void Game::Notify(Response response)
 {
 	CheckException e;
-	for (auto listener : listeners)
+	for (auto listener : m_listeners)
 	{
 		switch (response)
 		{
 		case Response::CHECK:
-			listener.lock()->OnCheck(e);
+			listener.lock()->OnCheck(e.what());
 				break;
 		case Response::PAWN_UPGRADE:
 			listener.lock()->OnPawnEvolve();
@@ -296,7 +296,7 @@ void Game::Notify(Response response)
 
 void Game::Notify(Position start, Position end, const PositionList& possibleMoves)
 {
-	for (auto listener : listeners)
+	for (auto listener : m_listeners)
 		listener.lock()->OnMovePiece(start, end, possibleMoves);
 }
 
