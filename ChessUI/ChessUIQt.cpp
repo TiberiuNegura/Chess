@@ -5,6 +5,7 @@
 #include <QClipboard>
 #include <QtWidgets/QApplication>
 #include <QDebug>
+#include <QFileDialog>
 
 ChessUIQt::ChessUIQt(QWidget *parent)
 	: QMainWindow(parent)
@@ -162,13 +163,13 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		{
 			m_MessageLabel->setText(e.what());
 		}
-		UpdateBoard(m_game->GetBoard());
+		UpdateBoard();
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
 	else 
 	{
-		UpdateBoard(m_game->GetBoard());
+		UpdateBoard();
 		m_selectedCell = position;
 		m_grid[position.first][position.second]->setSelected(true);
 
@@ -178,13 +179,32 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	//TODO ...
+	QString defaultFileName = "Chess game.txt";
+	QString desktopPath = QDir::homePath() + "/Downloads";
+	QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "Text Files (*.txt);;All Files (*)");
 
+	QFile newFile(filePath);
+	if(!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
+		return;
+
+	QTextStream outStream(&newFile);
+	outStream << QString::fromStdString(m_game->GetFenString());
+
+	newFile.close();
 }
 
 void ChessUIQt::OnLoadButtonClicked()
 {
-	//TODO ...
+	QString desktopPath = QDir::homePath() + "/Downloads";
+	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "Text Files (*.txt);;All Files (*)");
+	QFile file(filePath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		return;
+	QTextStream in(&file);
+	QString line = in.readLine();
+	m_game = IGame::Produce(line.toStdString());
+	UpdateBoard();
+
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -240,16 +260,16 @@ void ChessUIQt::UpdateHistory()
 	}
 }
 
-void ChessUIQt::UpdateBoard(const MatrixPtr& newBoard)
+void ChessUIQt::UpdateBoard()
 {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			m_grid[i][j]->setPiece(newBoard->GetElement({ i, j }));
+			m_grid[i][j]->setPiece(m_game->GetBoard()->GetElement({ i, j }));
 			m_grid[i][j]->setSelected(false);
 			m_grid[i][j]->setHighlighted(EHighlight::NONE);
 		}
 	}
-
+	m_MessageLabel->setText(GetTurnMessage());
 }
 
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
@@ -262,13 +282,6 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 		else
 			possibleMove->setHighlighted(EHighlight::EMPTY_POS); // highlight empty 
 	}
-}
-
-
-void ChessUIQt::StartGame()
-{
-	m_MessageLabel->setText(GetTurnMessage());
-	UpdateBoard(m_game->GetBoard());
 }
 
 void ChessUIQt::ShowPromoteOptions()
@@ -375,14 +388,14 @@ void ChessUIQt::OnTieRequest()
 
 void ChessUIQt::OnMovePiece(Position start, Position end)
 {
-	UpdateBoard(m_game->GetBoard());
+	UpdateBoard();
 }
 
 void ChessUIQt::OnRestart()
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
 	Init(mainGridLayout);
-	StartGame();
+	UpdateBoard();
 }
 
 void ChessUIQt::SetGame(IGamePtr game)

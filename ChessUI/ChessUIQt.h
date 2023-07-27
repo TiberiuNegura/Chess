@@ -31,10 +31,9 @@ public:
 
     //Modify if necessary with your history representation
     void UpdateHistory();
-    void UpdateBoard(const MatrixPtr& newBoard);
+    void UpdateBoard();
     void HighlightPossibleMoves(const PositionList& possibleMoves);
 
-    void StartGame();
     void ShowPromoteOptions();
 
     QString GetTurnMessage();

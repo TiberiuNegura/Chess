@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     game->AddListener(w);
 
     w->show();
-    w->StartGame();
+    w->UpdateBoard();
 
     QObject::connect(w.get(), &ChessUIQt::Exit, &a, &QApplication::quit);
     return a.exec();

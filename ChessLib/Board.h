@@ -27,7 +27,7 @@ public:
 	Board();
 	Board(CharBoardRepresentation alternateMat);
 	Board(const Matrix& mat);
-	Board(const std::string& FenString);
+	Board(const std::string& fenString);
 
 	EColor CharToColor(char c) const;
 	EType CharToType(char c) const;

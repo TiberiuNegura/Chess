@@ -10,10 +10,11 @@ Board::Board()
 	Init();
 }
 
-Board::Board(const std::string& FenString)
+Board::Board(const std::string& fenString)
 {
+	Reset();
 	int row = 0, column = 0;
-	for (auto& c : FenString)
+	for (auto& c : fenString)
 	{
 		if (c == ' ') // just the first part of the string contains piece positions
 			break;
@@ -189,7 +190,10 @@ std::string Board::GetFenString() const
 			if (auto piece = Get(row, column))
 			{
 				if (cnt)
-					output.push_back(cnt);
+				{
+					output.push_back((char)'0' + cnt);
+					cnt = 0;
+				}
 				char pieceName = piece->GetName();
 				piece->Is(EColor::BLACK) ? output.push_back(tolower(pieceName)) : output.push_back(toupper(pieceName));
 			}
@@ -200,7 +204,7 @@ std::string Board::GetFenString() const
 
 		}
 		if (cnt)
-			output.push_back(cnt);
+			output.push_back((char) '0' + cnt);
 		if (row != 7)
 			output.push_back('/');
 	}

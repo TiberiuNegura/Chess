@@ -34,10 +34,9 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 Game::Game(const std::string& FenString)
 	: m_board(FenString)
-	, m_turn((EColor) FenString.back())
 	, m_state(EGameState::Playing)
 {
-	
+	FenString.back() == 'w' ? m_turn = EColor::WHITE : m_turn = EColor::BLACK;
 }
 
 void Game::MovePiece(Position start, Position destination)

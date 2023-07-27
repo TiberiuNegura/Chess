@@ -52,7 +52,14 @@ int main()
 			std::cin >> pieceOption; std::cin.ignore();
 			try
 			{
-				game->EvolvePawn(pieceOption);
+				if (pieceOption == "queen")
+					game->EvolvePawn(EType::QUEEN);
+				else if (pieceOption == "bishop")
+					game->EvolvePawn(EType::BISHOP);
+				else if (pieceOption == "horse")
+					game->EvolvePawn(EType::HORSE);
+				else if (pieceOption == "rook")
+					game->EvolvePawn(EType::ROOK);
 			}
 			catch (PieceNotFoundException e)
 			{
