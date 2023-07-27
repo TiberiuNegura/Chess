@@ -59,6 +59,10 @@ public:
 	PositionList ComputePositionList(Position start) const;
 	BoardConfig GetBoardConfiguration() const;
 
+	PiecePtr operator[](Position pos)
+	{
+		return Get(pos);
+	}
 
 private:
 	Position FindKing(EColor color) const;

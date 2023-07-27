@@ -67,6 +67,8 @@ public:
 	void Notify(Response response);
 	void Notify(Position start, Position end);
 
+
+
 private:
 	Board m_board;
 	EColor m_turn;

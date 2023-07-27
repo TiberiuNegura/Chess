@@ -52,12 +52,12 @@ void Game::MovePiece(Position start, Position destination)
 		{
 			m_board.MovePiece(start, destination);
 			Notify(start, destination);
-			m_board.Get(destination)->SetHasMoved();
+			m_board[destination]->SetHasMoved();
 			
 			
 			// Castling condition
 
-			if (m_board.Get(destination)->GetType() == EType::KING)
+			if (m_board[destination]->Is(EType::KING))
 			{
 				if (start.second - destination.second == 2)
 					m_board.MovePiece({ start.first, 0 }, { start.first, 3 });

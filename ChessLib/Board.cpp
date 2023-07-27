@@ -89,8 +89,6 @@ PositionList Board::ComputePositionList(Position start) const
 	PositionList validPattern;
 	PiecePtr piece = Get(start);
 	Directions positions = piece->GetDirections(start);
-	EColor pieceColor = piece->GetColor();
-	EType pieceType = piece->GetType();
 	
 	for (int direction = 0; direction < positions.size(); direction++)
 	{
@@ -105,18 +103,21 @@ PositionList Board::ComputePositionList(Position start) const
 			if (auto possiblePiece = m_board[row][column])
 			{
 				EColor obstacleColor = possiblePiece->GetColor();
-				if (pieceType == EType::PAWN && abs(start.first - row) >= 1 && abs(start.second - column) == 0)
+
+				if (piece->Is(EType::PAWN) && abs(start.first - row) >= 1 && abs(start.second - column) == 0)
 					continue; // pawn can't overtake a frontal piece
-				if (obstacleColor != pieceColor)
+
+				if (!piece->Is(obstacleColor))
 					validPattern.emplace_back(row, column);
-				if (Piece::Is(pieceType, { EType::HORSE, EType::PAWN, EType::KING }))
+
+				if (piece->Is({ EType::HORSE, EType::PAWN, EType::KING }))
 					continue; // if horse, pawn or king, continue to next position
 				else
 					break; // if queen, bishop or rook, break the tile loop when adversary piece found
 			}
 			else
 			{
-				if (pieceType == EType::PAWN && abs(start.first - row) == 1 && abs(start.second - column) == 1)
+				if (piece->Is(EType::PAWN) && abs(start.first - row) == 1 && abs(start.second - column) == 1)
 					continue; // if pawn and diagonal path is empty, skip the 2 diagonal path considering isFirstMove
 				validPattern.emplace_back(row, column);
 			}
@@ -220,7 +221,7 @@ bool Board::IsCheck(EColor color) const
 		{
 			auto piece = m_board[row][column];
 
-			if (piece && piece->GetColor() == oppositeColor)
+			if (piece && piece->Is(oppositeColor))
 			{
 				PositionList list = ComputePositionList({ row,column });
 				for (auto position : list)
@@ -241,7 +242,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	auto boardClone = Clone();
 	auto piece = boardClone->GetMatrix()[piecePos.first][piecePos.second];
 
-	if (!piece || piece->GetColor() != turn)
+	if (!piece || !piece->Is(turn))
 		return PositionList();
 
 
@@ -249,7 +250,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 
 	// Castling pattern without validation
-	if (piece->GetType() == EType::KING && !IsCheck(piece->GetColor()))
+	if (piece->Is(EType::KING) && !IsCheck(piece->GetColor()))
 	{
 		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
@@ -283,7 +284,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	}
 	
 	// Castling validation
-	if (piece->GetType() == EType::KING)
+	if (piece->Is(EType::KING))
 	{
 		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
@@ -366,7 +367,7 @@ bool Board::CanBeCaptured(Position pos, EColor color) const
 	EColor oppositeColor = (color == EColor::BLACK ? EColor::WHITE : EColor::BLACK);
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
-			if (m_board[i][j] && m_board[i][j]->GetColor() == oppositeColor)
+			if (m_board[i][j] && m_board[i][j]->Is(oppositeColor))
 			{
 				auto moves = GetMoves({ i,j }, oppositeColor);
 				for (auto move : moves)
@@ -380,7 +381,7 @@ bool Board::CanPawnEvolve(Position pos) const
 {
 	auto piece = Get(pos);
 	int row = (piece->GetColor() == EColor::BLACK ? 7 : 0);
-	return (piece->GetType() == EType::PAWN && pos.first == row);
+	return (piece->Is(EType::PAWN) && pos.first == row);
 }
 
 bool Board::IsThreeFold(BoardConfigList boardConfigs, BoardConfig config) const
@@ -394,7 +395,7 @@ Position Board::FindEvolvingPawn(EColor color)
 	for (int column = 0; column < 8; column++)
 	{
 		auto piece = Get(row, column);
-		if (piece && piece->GetType() == EType::PAWN)
+		if (piece && piece->Is(EType::PAWN))
 			return {row, column};
 	}
 	throw PieceNotFoundException();
