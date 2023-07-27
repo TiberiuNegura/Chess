@@ -94,7 +94,6 @@ void Game::MovePiece(Position start, Position destination)
 				}
 				else
 				{
-
 					UpdateState(EGameState::BlackWon);
 					Notify(Response::BLACK_WON);
 				}
@@ -110,7 +109,6 @@ void Game::MovePiece(Position start, Position destination)
 				Notify(Response::TIE);
 			}
 
-			//Notify(start, destination, positions);
 			return;
 		}
 	}
@@ -260,7 +258,6 @@ void Game::RemoveListener(IGameListener* listener)
 			[listener](ListenerWeakPtr& weak)
 			{
 				auto sp = weak.lock();
-
 				return !sp || sp.get() == listener;
 			}
 	));
