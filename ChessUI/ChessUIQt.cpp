@@ -270,16 +270,6 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 	}
 }
 
-void ChessUIQt::UnHighlightPossibleMoves(const PositionList& possibleMoves)
-{
-	for (const auto& position : possibleMoves) {
-		auto possibleMove = m_grid[position.first][position.second];
-		if (m_game->GetBoard()->GetElement(position))
-			possibleMove->setHighlighted(EHighlight::NONE); // highlight opponent piece
-		else
-			possibleMove->setHighlighted(EHighlight::NONE); // highlight empty 
-	}
-}
 
 void ChessUIQt::StartGame()
 {
@@ -389,17 +379,10 @@ void ChessUIQt::OnTieRequest()
 }
 
 
-void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& possibleMoves)
+void ChessUIQt::OnMovePiece(Position start, Position end)
 {
 
-	UnHighlightPossibleMoves(possibleMoves);
-	m_grid[start.first][start.second]->setPiece(m_game->GetBoard()->GetElement(start));
-	m_grid[start.first][start.second]->setSelected(false);
-	m_grid[start.first][start.second]->setHighlighted(EHighlight::NONE);
-
-	m_grid[end.first][end.second]->setPiece(m_game->GetBoard()->GetElement(end));
-	m_grid[end.first][end.second]->setSelected(false);
-	m_grid[end.first][end.second]->setHighlighted(EHighlight::NONE);
+	UpdateBoard(m_game->GetBoard());
 
 
 }

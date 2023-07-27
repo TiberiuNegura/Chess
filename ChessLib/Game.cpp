@@ -51,7 +51,7 @@ void Game::MovePiece(Position start, Position destination)
 		if (position == destination)
 		{
 			m_board.MovePiece(start, destination);
-			Notify(start, destination, positions);
+			Notify(start, destination);
 			m_board.Get(destination)->SetHasMoved();
 			
 			
@@ -290,10 +290,10 @@ void Game::Notify(Response response)
 	}
 }
 
-void Game::Notify(Position start, Position end, const PositionList& possibleMoves)
+void Game::Notify(Position start, Position end)
 {
 	for (auto listener : m_listeners)
-		listener.lock()->OnMovePiece(start, end, possibleMoves);
+		listener.lock()->OnMovePiece(start, end);
 }
 
 

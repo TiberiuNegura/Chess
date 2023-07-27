@@ -33,7 +33,6 @@ public:
     void UpdateHistory();
     void UpdateBoard(const MatrixPtr& newBoard);
     void HighlightPossibleMoves(const PositionList& possibleMoves);
-    void UnHighlightPossibleMoves(const PositionList& possibleMoves);
 
     void StartGame();
     void ShowPromoteOptions();
@@ -48,7 +47,7 @@ public:
     void OnCheck(std::string msg) override;
     void OnPawnEvolve() override;
     void OnTieRequest() override;
-    void OnMovePiece(Position start, Position end, const PositionList& possibleMoves) override;
+    void OnMovePiece(Position start, Position end) override;
     void OnRestart() override;
 
     void SetGame(IGamePtr game);

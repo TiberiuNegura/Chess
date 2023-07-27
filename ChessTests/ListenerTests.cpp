@@ -14,7 +14,7 @@ public:
 	MOCK_METHOD(void, OnCheck, (std::string msg), (override));
 	MOCK_METHOD(void, OnPawnEvolve, (), (override));
 	MOCK_METHOD(void, OnTieRequest, (), (override)); //
-	MOCK_METHOD(void, OnMovePiece, (Position start, Position end, const PositionList& possibleMoves), (override));
+	MOCK_METHOD(void, OnMovePiece, (Position start, Position end), (override));
 	MOCK_METHOD(void, OnRestart, (), (override));
 };
 
@@ -33,7 +33,7 @@ protected:
 
 TEST_F(GameMockTests, NotifyObserverMove)
 {
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(2);
 
 	Game game;
 	Game game2;
@@ -49,7 +49,7 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 {
 	Game game;
 	Game game2;
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(3);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(3);
 
 	game.AddListener(mock);
 	game2.AddListener(mock);
@@ -79,7 +79,7 @@ TEST_F(GameMockTests, NotifyObserverGameOverCheckmate)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(1);
 	EXPECT_CALL(*mock, OnCheck(::_));
 	EXPECT_CALL(*mock, OnGameOver()).Times(1);
 
@@ -105,7 +105,7 @@ TEST_F(GameMockTests, NotifyObserverGameOverTie)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(1);
 	EXPECT_CALL(*mock, OnGameOver()).Times(1);
 
 	game.MovePiece({ 4,1 }, { 4,2 });
@@ -138,7 +138,7 @@ TEST_F(GameMockTests, NotifyObserverPawnEvolve)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(1);
 	EXPECT_CALL(*mock, OnPawnEvolve()).Times(1);
 
 	game.MovePiece({ 1,1 }, { 0,1 });
@@ -159,7 +159,7 @@ TEST_F(GameMockTests, NotifyObserverCheck)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
+	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(2);
 	EXPECT_CALL(*mock, OnCheck(_)).Times(1);
 
 	game.MovePiece({ 0,3 }, { 4,7 });

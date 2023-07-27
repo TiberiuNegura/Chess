@@ -65,7 +65,7 @@ public:
 	void RemoveListener(IGameListener* listener) override;
 	
 	void Notify(Response response);
-	void Notify(Position start, Position end, const PositionList& possibleMoves);
+	void Notify(Position start, Position end);
 
 private:
 	Board m_board;
