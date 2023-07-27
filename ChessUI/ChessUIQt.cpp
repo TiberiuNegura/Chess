@@ -212,7 +212,11 @@ void ChessUIQt::OnRestartButtonClicked()
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
 	if (reply == QMessageBox::Yes)
+	{
 		m_game->Restart();
+		UpdateBoard();
+	}
+	
 }
 
 void ChessUIQt::OnDrawButtonClicked()
