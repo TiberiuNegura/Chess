@@ -187,8 +187,51 @@ TEST_F(GameMockTests, NotifyObserverTieRequest)
 	game.MakeTieRequest();
 }
 
+
+void MakeMovesFrom(std::vector<std::pair<Position, Position>>& moves, Game& game)
+{
+	for (auto move : moves)
+		EXPECT_NO_THROW(game.MovePiece(move.first, move.second));
+	moves.clear();
+}
+
 TEST_F(GameMockTests, NotifyObserver)
 {
+	Game game;
 
+	//25
+	game.AddListener(mock);
+	EXPECT_CALL(*mock, OnMovePiece).Times(25);
+	EXPECT_CALL(*mock, OnCheck).Times(3);
+	EXPECT_CALL(*mock, OnPawnEvolve).Times(1);
+	EXPECT_CALL(*mock, OnRestart).Times(1);
+	EXPECT_CALL(*mock, OnGameOver).Times(1);
+
+	std::vector<std::pair<Position, Position>> moves = {
+		{{6,3},{4,3}},{{1,4},{3,4}},{{7,4},{6,3}},{{0,3},{3,6}}, // black checks white
+	};
+	MakeMovesFrom(moves, game);
+	// do some bad moves
+	moves = {
+		{{6,4},{5,4}},{{3,6},{5,4}},{{6,3},{5,4}},{{0,4},{1,4}},
+		{{7,3},{5,3}},{{0,1},{2,2}},{{6,0},{4,0}},{{2,2},{4,1}},
+		{{4,0},{3,0}},{{1,1},{2,1}},{{3,0},{2,1}},{{0,2},{2,0}},
+		{{2,1},{1,2}},{{1,4},{2,5}},{{1,2},{0,2}}
+	}; // pawn evolve
+	// evolve the pawn
+	MakeMovesFrom(moves, game);
+	game.EvolvePawn(EType::QUEEN);
+
+	moves = {
+		{{4,1},{5,3}},{{0,2},{2,2}} // white checks black
+	};
+	MakeMovesFrom(moves, game);
+	// bad moves
+	game.Restart();
+	moves = {
+		{{6,6},{4,6}},{{1,4},{2,4}},{{6,5},{5,5}},{{0,3},{4,7}} // black checkmate white
+	};
+	MakeMovesFrom(moves, game);
+	// a few other bad moves, game over
 }
 // TODO: combine exception handling (EXPECT_THROW(...)) and mock with EXPECT_CALL(...).Times(0)
