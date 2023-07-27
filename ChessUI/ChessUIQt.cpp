@@ -111,12 +111,12 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 
 	QWidget* board = new QWidget();
 
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			m_grid[i][j] = new GridButton({ i,j }, EType::EMPTY, EColor::NONE);
-			chessGridLayout->addWidget(m_grid[i][j], i, j, 1, 1);
+	for (int row = 0; row < 8; row++) {
+		for (int column = 0; column < 8; column++) {
+			m_grid[row][column] = new GridButton({ row,column }, EType::EMPTY, EColor::NONE);
+			chessGridLayout->addWidget(m_grid[row][column], row, column, 1, 1);
 			chessGridLayout->setSpacing(0);
-			connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+			connect(m_grid[row][column], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
 		}
 	}
 
@@ -261,7 +261,8 @@ void ChessUIQt::UpdateBoard(const MatrixPtr& newBoard)
 
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
-	for (const auto& position : possibleMoves) {
+	for (const auto& position : possibleMoves) 
+	{
 		auto possibleMove = m_grid[position.first][position.second];
 		if (m_game->GetBoard()->GetElement(position))
 			possibleMove->setHighlighted(EHighlight::OCCUPIED_POS); // highlight opponent piece
@@ -295,7 +296,6 @@ void ChessUIQt::ShowPromoteOptions()
 	options.append("Bishop");
 	options.append("Queen");
 	options.append("Horse");
-
 	dialog.setComboBoxItems(options);
 	dialog.setModal(true);
 

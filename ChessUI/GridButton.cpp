@@ -3,6 +3,9 @@
 #include "IGame.h"
 #include <QPainter>
 
+#define BLACK_SQUARE_COLOR "#769656"
+#define WHITE_SQUARE_COLOR "#efeed2"
+
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
@@ -65,10 +68,7 @@ void GridButton::updateBackgroundColor()
 	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
 	QString backColor = "";
 
-	if (defaultColorBlack)
-		backColor = "#769656";
-	else if (!defaultColorBlack)
-		backColor = "#efeed2";
+	defaultColorBlack == true ? backColor = BLACK_SQUARE_COLOR : backColor = WHITE_SQUARE_COLOR;
 
 	setStyleSheet("background-color: " + backColor + "; border: none;");
 }
@@ -103,8 +103,31 @@ void GridButton::setSelected(bool selected)
 
 void GridButton::paintEvent(QPaintEvent* event)
 {
+
+
 	QPushButton::paintEvent(event);
 	QPainter painter(this);
+	QColor penColor;
+	QFont font = painter.font();
+
+	font.setFamily("Segoe UI");
+	font.setBold(true);
+	painter.setFont(font);
+
+
+	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
+	defaultColorBlack == true ? penColor = WHITE_SQUARE_COLOR : penColor = BLACK_SQUARE_COLOR;
+
+	int textX = 5;
+	int textY = 5;
+
+	painter.setRenderHint(QPainter::TextAntialiasing, true);
+	painter.setPen(penColor);
+
+	if (m_Position.first == 7)
+		painter.drawText(textX, textY, width() - 2 * textX, height() - 2 * textY, Qt::AlignBottom | Qt::AlignRight, QChar((char)'a' + m_Position.second));
+	if (m_Position.second == 0)
+		painter.drawText(textX, textY, width() - 2 * textX, height() - 2 * textY, Qt::AlignTop | Qt::AlignLeft, QString::number(8-m_Position.first));
 
 	if (m_Highlighted == EHighlight::EMPTY_POS)
 	{
