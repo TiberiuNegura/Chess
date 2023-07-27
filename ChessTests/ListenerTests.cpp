@@ -5,13 +5,15 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+using ::testing::_;
+
 class MockObserver : public IGameListener
 {
 public:
 	MOCK_METHOD(void, OnGameOver, (), (override));
 	MOCK_METHOD(void, OnCheck, (std::string msg), (override));
 	MOCK_METHOD(void, OnPawnEvolve, (), (override));
-	MOCK_METHOD(void, OnTieRequest, (), (override));
+	MOCK_METHOD(void, OnTieRequest, (), (override)); //
 	MOCK_METHOD(void, OnMovePiece, (Position start, Position end, const PositionList& possibleMoves), (override));
 	MOCK_METHOD(void, OnRestart, (), (override));
 };
@@ -31,12 +33,14 @@ protected:
 
 TEST_F(GameMockTests, NotifyObserverMove)
 {
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(2);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
 
 	Game game;
 	Game game2;
+
 	game.AddListener(mock);
 	game2.AddListener(mock);
+
 	game.MovePiece({ 6,0 }, { 5,0 });
 	game2.MovePiece({ 6,0 }, { 5,0 });
 }
@@ -45,7 +49,7 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 {
 	Game game;
 	Game game2;
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(2);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
 
 	game.AddListener(mock);
 	game2.AddListener(mock);
@@ -55,7 +59,7 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 
 	game.RemoveListener(mock.get());
 
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
 
 
 	game.MovePiece({ 1,0 }, { 2,0 });
@@ -78,8 +82,8 @@ TEST_F(GameMockTests, NotifyObserverGameOverCheckmate)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(1);
-	EXPECT_CALL(*mock, OnCheck(::testing::_));
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
+	EXPECT_CALL(*mock, OnCheck(::_));
 	EXPECT_CALL(*mock, OnGameOver()).Times(1);
 
 
@@ -103,7 +107,7 @@ TEST_F(GameMockTests, NotifyObserverGameOverTie)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
 	EXPECT_CALL(*mock, OnGameOver()).Times(1);
 
 	game.MovePiece({ 4,1 }, { 4,2 });
@@ -111,7 +115,7 @@ TEST_F(GameMockTests, NotifyObserverGameOverTie)
 	EXPECT_EQ(game.GetState(), EGameState::Tie);
 }
 
-TEST_F(GameMockTests, NotifyObserverTieRequest)
+TEST_F(GameMockTests, NotifyObserverRestart)
 {
 	auto game = IGame::Produce();
 	game->AddListener(mock);
@@ -136,7 +140,7 @@ TEST_F(GameMockTests, NotifyObserverPawnEvolve)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
 	EXPECT_CALL(*mock, OnPawnEvolve()).Times(1);
 
 	game.MovePiece({ 1,1 }, { 0,1 });
@@ -157,12 +161,31 @@ TEST_F(GameMockTests, NotifyObserverCheck)
 
 	game.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnMovePiece(testing::_, testing::_, testing::_)).Times(2);
-	EXPECT_CALL(*mock, OnCheck(::testing::_)).Times(1);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
+	EXPECT_CALL(*mock, OnCheck(_)).Times(1);
 
 	game.MovePiece({ 0,3 }, { 4,7 });
 	game.MovePiece({ 7,4 }, { 6,4 });
 
 	EXPECT_EQ(game.GetState(), EGameState::Playing);
+}
+
+TEST_F(GameMockTests, NotifyObserverTieRequest)
+{
+	Game game({
+	'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r',
+	' ', 'p', 'p', 'p', ' ', 'p', 'p', 'p',
+	'p', ' ', ' ', ' ', 'p', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ',
+	' ', ' ', ' ', ' ', 'P', 'P', ' ', ' ',
+	'P', 'P', 'P', 'P', ' ', ' ', ' ', 'P',
+	'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R'
+		}, EColor::BLACK, EGameState::Playing);
+
+	game.AddListener(mock);
+	EXPECT_CALL(*mock, OnTieRequest);
+
+	game.MakeTieRequest();
 }
 // TODO: combine exception handling (EXPECT_THROW(...)) and mock with EXPECT_CALL(...).Times(0)

@@ -1,10 +1,6 @@
-#include <unordered_set>
+#include "Helper.h"
 
-#include "Game.h"
-#include "IPiece.h"
-#include "Board.h"
-
-#include "gtest/gtest.h"
+using IntPairHash = Helper::IntPairHash;
 
 class ComputePositionListTests : public ::testing::Test
 {
@@ -26,33 +22,10 @@ protected:
 
 protected:
 	Board board;
+	Helper helper;
 };
 
-struct IntPairHash {
-	size_t operator()(const Position& p) const {
-		// Use std::hash to get the hashes of both ints
-		std::hash<int> hasher;
-		size_t hash_first = hasher(p.first);
-		size_t hash_second = hasher(p.second);
 
-		// Combine the two hashes using XOR
-		return hash_first ^ hash_second;
-	}
-};
-
-bool ExpectedStatus(PositionList positions, std::unordered_set<Position, IntPairHash> expected)
-{
-	for (auto position : positions)
-	{
-		EXPECT_NO_THROW(expected.find(position) != expected.end());
-
-		if (expected.find(position) != expected.end())
-			expected.erase(position);
-
-	}
-
-	return expected.empty();
-}
 
 TEST_F(ComputePositionListTests, PawnTest)
 {
@@ -61,7 +34,7 @@ TEST_F(ComputePositionListTests, PawnTest)
 	expected.insert({ 2,1 });
 	expected.insert({ 3,1 });
 	
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
 
 TEST_F(ComputePositionListTests, QueenTest)
@@ -72,6 +45,7 @@ TEST_F(ComputePositionListTests, QueenTest)
 	expected.insert({ 1,3 });
 	expected.insert({ 2,3 });
 	expected.insert({ 3,3 });
+	expected.insert({ 4,3 });
 	
 	expected.insert({ 0,4 });
 	expected.insert({ 0,5 });
@@ -87,7 +61,7 @@ TEST_F(ComputePositionListTests, QueenTest)
 	expected.insert({3,6});
 	expected.insert({4,7});
 
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
 
 TEST_F(ComputePositionListTests, BishopTest)
@@ -105,7 +79,7 @@ TEST_F(ComputePositionListTests, BishopTest)
 	expected.insert({ 3,7 });
 	expected.insert({ 0,4 });
 
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
 
 TEST_F(ComputePositionListTests, HorseTest)
@@ -122,7 +96,7 @@ TEST_F(ComputePositionListTests, HorseTest)
 	expected.insert({ 3,5 });
 	expected.insert({ 5,5 });
 	
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
 
 TEST_F(ComputePositionListTests, KingTest)
@@ -136,7 +110,7 @@ TEST_F(ComputePositionListTests, KingTest)
 	expected.insert({ 7,5 });
 	expected.insert({ 6,5 });
 
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
 
 TEST_F(ComputePositionListTests, RookTest)
@@ -155,5 +129,5 @@ TEST_F(ComputePositionListTests, RookTest)
 	expected.insert({ 7,6 });
 	expected.insert({ 7,5 });
 
-	EXPECT_EQ(ExpectedStatus(positions, expected), true);
+	EXPECT_EQ(helper.ExpectedStatus(positions, expected), true);
 }
