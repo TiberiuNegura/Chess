@@ -170,7 +170,6 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 			OnPawnEvolve();
 		}
 		OnMovePiece(start, position, possibleMoves);
-		// OnMove..
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
