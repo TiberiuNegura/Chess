@@ -162,19 +162,13 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		{
 			m_MessageLabel->setText(e.what());
 		}
-
-		if (m_game->IsGameOver())
-			OnGameOver();
-		else if (m_game->IsPawnEvolving())
-		{
-			OnPawnEvolve();
-		}
-		//OnMovePiece(start, position, possibleMoves);
+		UpdateBoard(m_game->GetBoard());
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
 	else 
 	{
+		UpdateBoard(m_game->GetBoard());
 		m_selectedCell = position;
 		m_grid[position.first][position.second]->setSelected(true);
 
@@ -381,10 +375,7 @@ void ChessUIQt::OnTieRequest()
 
 void ChessUIQt::OnMovePiece(Position start, Position end)
 {
-
 	UpdateBoard(m_game->GetBoard());
-
-
 }
 
 void ChessUIQt::OnRestart()

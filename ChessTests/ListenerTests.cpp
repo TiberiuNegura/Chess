@@ -202,7 +202,7 @@ TEST_F(GameMockTests, NotifyObserver)
 	//25
 	game.AddListener(mock);
 	EXPECT_CALL(*mock, OnMovePiece).Times(25);
-	EXPECT_CALL(*mock, OnCheck).Times(3);
+	EXPECT_CALL(*mock, OnCheck).Times(4);
 	EXPECT_CALL(*mock, OnPawnEvolve).Times(1);
 	EXPECT_CALL(*mock, OnRestart).Times(1);
 	EXPECT_CALL(*mock, OnGameOver).Times(1);
