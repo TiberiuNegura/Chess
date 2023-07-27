@@ -41,6 +41,8 @@ public:
 	virtual EColor GetTurn() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual std::string GetFenString() const = 0;
+	virtual TypeList GetWhiteMissingPieces() const = 0;
+	virtual TypeList GetBlackMissingPieces() const = 0;
 
 	// tie invitation
 	virtual void MakeTieRequest() = 0;

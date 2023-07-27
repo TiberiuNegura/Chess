@@ -10,7 +10,6 @@ using Position = std::pair<int, int>;
 using PositionList = std::vector<Position>;
 using Directions = std::vector<PositionList>;
 
-
 // Color enum
 enum class EColor {
 	WHITE,
@@ -29,6 +28,8 @@ enum class EType {
 	KING,
 	EMPTY
 };
+
+using TypeList = std::vector<EType>;
 
 class IPiece
 {

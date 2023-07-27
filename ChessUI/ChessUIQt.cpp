@@ -136,8 +136,6 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		try
 		{
 			m_game->MovePiece(start, position);
-			m_MessageLabel->setText(GetTurnMessage());
-
 		}
 		catch (OutOfBoundsException e)
 		{

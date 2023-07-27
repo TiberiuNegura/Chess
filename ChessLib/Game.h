@@ -43,6 +43,9 @@ public:
 	EColor GetTurn() const override;
 	EGameState GetState() const;
 	PositionList GetMoves(Position piecePos) const override;
+	TypeList GetWhiteMissingPieces() const override;
+	TypeList GetBlackMissingPieces() const override;
+	
 	std::string GetFenString() const override;
 	
 	// tie invitation
@@ -76,6 +79,7 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	BoardConfigList boardConfigs;
+	TypeList m_whiteMissing, m_blackMissing;
 	std::vector<ListenerWeakPtr> m_listeners;
 };
 

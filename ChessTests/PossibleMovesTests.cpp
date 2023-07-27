@@ -7,7 +7,7 @@ class PossibleMovesTests : public ::testing::Test
 protected:
 	void SetUp()
 	{
-		Board mat({
+		Board mat(CharBoardRepresentation{
 		'r', ' ', ' ', ' ', ' ', 'b', 'h', 'r',
 		'p', 'p', ' ', 'b', ' ', 'p', 'p', 'p',
 		'h', ' ', ' ', 'p', 'p', 'k', ' ', ' ',

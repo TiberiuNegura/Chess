@@ -7,7 +7,7 @@ class ComputePositionListTests : public ::testing::Test
 protected:
 	void SetUp()
 	{
-		Board mat({
+		Board mat(CharBoardRepresentation{
 		' ', ' ',' ','q',' ',' ','k',' ',
 		' ', 'p',' ',' ',' ','b',' ',' ',
 		' ', ' ',' ',' ',' ',' ',' ',' ',

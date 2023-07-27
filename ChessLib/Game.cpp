@@ -62,6 +62,8 @@ void Game::MovePiece(Position start, Position destination)
 	{
 		if (position == destination)
 		{
+			if (auto capturedPiece = m_board[destination])
+				m_turn == EColor::BLACK ? m_whiteMissing.push_back(capturedPiece->GetType()) : m_blackMissing.push_back(capturedPiece->GetType());
 			m_board.MovePiece(start, destination);
 			Notify(start, destination);
 			m_board[destination]->SetHasMoved();
@@ -177,6 +179,16 @@ PositionList Game::GetMoves(Position piecePos) const
 	return m_board.GetMoves(piecePos, m_turn);
 }
 
+TypeList Game::GetWhiteMissingPieces() const
+{
+	return m_whiteMissing;
+}
+
+TypeList Game::GetBlackMissingPieces() const
+{
+	return m_blackMissing;
+}
+
 std::string Game::GetFenString() const
 {
 	std::string output = m_board.GetFenString();
@@ -261,6 +273,8 @@ void Game::Restart()
 	m_board.Init();
 	m_turn = EColor::WHITE;
 	m_state = EGameState::Playing;
+	m_whiteMissing.clear();
+	m_blackMissing.clear();
 	Notify(Response::RESTART);
 }
 
