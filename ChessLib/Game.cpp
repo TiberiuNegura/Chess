@@ -101,7 +101,7 @@ void Game::MovePiece(Position start, Position destination)
 			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
 
-			std::bitset<256> configuration = m_board.GetBoardConfiguration();
+			BoardConfig configuration = m_board.GetBoardConfiguration();
 			boardConfigs.push_back(configuration);
 			if (m_board.IsThreeFold(boardConfigs, configuration))
 			{
@@ -265,13 +265,12 @@ void Game::RemoveListener(IGameListener* listener)
 
 void Game::Notify(Response response)
 {
-	CheckException e;
 	for (auto listener : m_listeners)
 	{
 		switch (response)
 		{
 		case Response::CHECK:
-			listener.lock()->OnCheck(e.what());
+			listener.lock()->OnCheck(CheckException().what());
 				break;
 		case Response::PAWN_UPGRADE:
 			listener.lock()->OnPawnEvolve();

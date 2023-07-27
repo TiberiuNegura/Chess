@@ -49,7 +49,7 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 {
 	Game game;
 	Game game2;
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(2);
+	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(3);
 
 	game.AddListener(mock);
 	game2.AddListener(mock);
@@ -58,9 +58,6 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 	game2.MovePiece({ 6,0 }, { 5,0 });
 
 	game.RemoveListener(mock.get());
-
-	EXPECT_CALL(*mock, OnMovePiece(_, _, _)).Times(1);
-
 
 	game.MovePiece({ 1,0 }, { 2,0 });
 	game2.MovePiece({ 1,0 }, { 2,0 });
@@ -89,6 +86,7 @@ TEST_F(GameMockTests, NotifyObserverGameOverCheckmate)
 
 	game.MovePiece({ 0,3 }, { 4,7 });
 
+	EXPECT_TRUE(game.IsGameOver());
 	EXPECT_EQ(game.GetState(), EGameState::BlackWon);
 }
 

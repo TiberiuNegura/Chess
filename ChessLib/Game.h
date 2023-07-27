@@ -16,7 +16,6 @@ enum class EGameState
 };
 
 using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
-using BitVector = std::vector<std::bitset<256>>;
 
 class Game : public IGame
 {
@@ -64,7 +63,7 @@ private:
 	Board m_board;
 	EColor m_turn;
 	EGameState m_state;
-	BitVector boardConfigs;
+	BoardConfigList boardConfigs;
 	std::vector<ListenerWeakPtr> m_listeners;
 };
 

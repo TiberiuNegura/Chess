@@ -169,7 +169,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		{
 			OnPawnEvolve();
 		}
-		OnMovePiece(start, position, possibleMoves);
+		//OnMovePiece(start, position, possibleMoves);
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
@@ -380,8 +380,10 @@ void ChessUIQt::OnTieRequest()
 		m_game->TieRequestResponse(false);
 }
 
+
 void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& possibleMoves)
 {
+
 	UnHighlightPossibleMoves(possibleMoves);
 	m_grid[start.first][start.second]->setPiece(m_game->GetBoard()->GetElement(start));
 	m_grid[start.first][start.second]->setSelected(false);
@@ -390,6 +392,7 @@ void ChessUIQt::OnMovePiece(Position start, Position end, const PositionList& po
 	m_grid[end.first][end.second]->setPiece(m_game->GetBoard()->GetElement(end));
 	m_grid[end.first][end.second]->setSelected(false);
 	m_grid[end.first][end.second]->setHighlighted(EHighlight::NONE);
+
 
 }
 

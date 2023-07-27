@@ -40,11 +40,11 @@
     <Filter Include="Source Files\Piece\Pieces">
       <UniqueIdentifier>{4ddb92c4-45f0-4df0-8891-dbc49d7ec2f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Exception">
-      <UniqueIdentifier>{17f38fc0-0f58-47f0-8944-ea6f6ebec7cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Exception">
       <UniqueIdentifier>{babb8ce1-3eff-4e2b-b89a-12636d9d3a73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\API\Exception">
+      <UniqueIdentifier>{17f38fc0-0f58-47f0-8944-ea6f6ebec7cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,37 +79,37 @@
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="OutOfBoundsException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="IllegalMoveException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="EmptyPositionException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="ChessException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="IPiece.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="PieceNotFoundException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="CheckException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="InvalidOptionException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="GameOverException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="TieRequestException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="PawnEvolveException.h">
-      <Filter>Header Files\Exception</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
     <ClInclude Include="IGameListener.h">
       <Filter>Header Files\API</Filter>

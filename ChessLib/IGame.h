@@ -14,10 +14,8 @@
 #include "PieceNotFoundException.h"
 #include "TieRequestException.h"
 
-
 using IGamePtr = std::shared_ptr<class IGame>;
 using ListenerWeakPtr = std::weak_ptr<IGameListener>;
-
 
 class IMatrix
 {

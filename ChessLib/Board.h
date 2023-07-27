@@ -6,6 +6,9 @@
 #include "IGame.h"
 #include "Piece.h"
 
+using BoardConfig = std::bitset<256>;
+using BoardConfigList = std::vector<BoardConfig>;
+
 using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
 using BoardPtr = std::shared_ptr<class Board>;
 
@@ -42,11 +45,11 @@ public:
 	bool IsCheckmate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
-	bool IsThreeFold(std::vector<std::bitset<256>> threeFold, std::bitset<256> configuration) const;
+	bool IsThreeFold(BoardConfigList threeFold, BoardConfig configuration) const;
 
 	Position FindEvolvingPawn(EColor color);
 	PositionList ComputePositionList(Position start, PiecePtr piece) const;
-	std::bitset<256> GetBoardConfiguration() const;
+	BoardConfig GetBoardConfiguration() const;
 
 
 private:

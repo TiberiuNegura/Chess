@@ -66,9 +66,7 @@ const Matrix& Board::GetMatrix() const
 
 bool Board::IsEmptyPosition(Position p) const
 {
-	if (!m_board[p.first][p.second])
-		return true;
-	return false;
+	return !m_board[p.first][p.second];
 }
 
 PiecePtr Board::Get(int i, int j) const
@@ -128,16 +126,15 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 	return validPattern;
 }
 
-std::bitset<256> Board::GetBoardConfiguration() const
+BoardConfig Board::GetBoardConfiguration() const
 {
-	std::bitset<256> config;
+	BoardConfig config;
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
 			int k = (8 * i) + j;
 			if (auto piece = m_board[i][j])
 			{
-
 				int type = (int)piece->GetType();
 				config[4 * k] = (int)piece->GetColor();
 				config[4 * k + 1] = type % 2;
@@ -387,7 +384,7 @@ bool Board::CanPawnEvolve(Position pos) const
 	return (piece->GetType() == EType::PAWN && pos.first == row);
 }
 
-bool Board::IsThreeFold(std::vector<std::bitset<256>> boardConfigs, std::bitset<256> config) const
+bool Board::IsThreeFold(BoardConfigList boardConfigs, BoardConfig config) const
 {
 	return (std::count(boardConfigs.begin(), boardConfigs.end(), config) >= 3);
 }

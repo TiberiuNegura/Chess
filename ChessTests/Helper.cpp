@@ -7,7 +7,7 @@ bool Helper::ExpectedStatus(PositionList positions, std::unordered_set<Position,
 
 	for (auto position : positions)
 	{
-		EXPECT_NO_THROW(expected.find(position) != expected.end());
+		EXPECT_EQ(expected.find(position) != expected.end(), true);
 
 		if (expected.find(position) != expected.end())
 			expected.erase(position);
