@@ -188,4 +188,9 @@ TEST_F(GameMockTests, NotifyObserverTieRequest)
 
 	game.MakeTieRequest();
 }
+
+TEST_F(GameMockTests, NotifyObserver)
+{
+
+}
 // TODO: combine exception handling (EXPECT_THROW(...)) and mock with EXPECT_CALL(...).Times(0)
