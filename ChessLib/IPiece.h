@@ -39,6 +39,9 @@ public:
 	virtual EType GetType() const = 0;
 
 	virtual bool Is(EType type, EColor color) const = 0;
+	virtual bool Is(EType type) const = 0;
+	virtual bool Is(EColor color) const = 0;
+	virtual bool Is(const std::vector<EType>& typeList) const = 0;
 
 
 
