@@ -10,6 +10,34 @@ Board::Board()
 	Init();
 }
 
+Board::Board(const std::string& FenString)
+{
+	int row = 0, column = 0;
+	for (auto& c : FenString)
+	{
+		if (c == ' ') // just the first part of the string contains piece positions
+			break;
+
+		if (isdigit(c)) 
+			column += c - '0';
+
+		else if (c == '/')
+		{
+			row++;
+			column = 0;
+		}
+
+		else
+		{
+			auto color = CharToColor(c);
+			auto type = CharToType(c);
+
+			m_board[row][column] = Piece::Produce(type, color);
+			column++;
+		}
+	}
+}
+
 EColor Board::CharToColor(char c) const
 {
 	return (islower(c) ? EColor::BLACK : EColor::WHITE);
@@ -148,6 +176,40 @@ BoardConfig Board::GetBoardConfiguration() const
 					config[bits[x]] = 1;                  // all bits are 1 for empty square
 		}
 	return config;
+}
+
+std::string Board::GetFenString() const
+{
+	std::string output;
+	for (int row = 0; row < 8; row++)
+	{
+		int cnt = 0;
+		for (int column = 0; column < 8; column++)
+		{
+			if (auto piece = Get(row, column))
+			{
+				if (cnt)
+					output.push_back(cnt);
+				char pieceName = piece->GetName();
+				piece->Is(EColor::BLACK) ? output.push_back(tolower(pieceName)) : output.push_back(toupper(pieceName));
+			}
+			else
+			{
+				cnt++;
+			}
+
+		}
+		if (cnt)
+			output.push_back(cnt);
+		if (row != 7)
+			output.push_back('/');
+	}
+	return output;
+}
+
+PiecePtr Board::operator[](Position pos)
+{
+	return Get(pos);
 }
 
 void Board::MovePiece(Position start, Position end)

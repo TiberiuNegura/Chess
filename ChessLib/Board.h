@@ -27,6 +27,7 @@ public:
 	Board();
 	Board(CharBoardRepresentation alternateMat);
 	Board(const Matrix& mat);
+	Board(const std::string& FenString);
 
 	EColor CharToColor(char c) const;
 	EType CharToType(char c) const;
@@ -58,11 +59,9 @@ public:
 	Position FindEvolvingPawn(EColor color);
 	PositionList ComputePositionList(Position start) const;
 	BoardConfig GetBoardConfiguration() const;
+	std::string GetFenString() const;
 
-	PiecePtr operator[](Position pos)
-	{
-		return Get(pos);
-	}
+	PiecePtr operator[](Position pos);
 
 private:
 	Position FindKing(EColor color) const;

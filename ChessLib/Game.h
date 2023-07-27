@@ -32,6 +32,7 @@ public:
 	// Constructor
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
+	Game(const std::string& FenString);
 
 	void MovePiece(Position start, Position destination) override;
 	void UpdateTurn();
@@ -42,6 +43,7 @@ public:
 	EColor GetTurn() const override;
 	EGameState GetState() const;
 	PositionList GetMoves(Position piecePos) const override;
+	std::string GetFenString() const override;
 	
 	// tie invitation
 	void MakeTieRequest() override;

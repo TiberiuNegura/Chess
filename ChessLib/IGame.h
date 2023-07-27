@@ -32,6 +32,7 @@ class IGame
 {
 public:
 	static IGamePtr Produce(); 
+	static IGamePtr Produce(const std::string& FenString);
 
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
@@ -39,6 +40,7 @@ public:
 	virtual MatrixPtr GetBoard() const = 0;
 	virtual EColor GetTurn() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
+	virtual std::string GetFenString() const = 0;
 
 	// tie invitation
 	virtual void MakeTieRequest() = 0;

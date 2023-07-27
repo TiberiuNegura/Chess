@@ -11,6 +11,11 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
+IGamePtr IGame::Produce(const std::string& FenString)
+{
+	return std::make_shared<Game>(FenString);
+}
+
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
@@ -25,6 +30,14 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	, m_state(state)
 {
 
+}
+
+Game::Game(const std::string& FenString)
+	: m_board(FenString)
+	, m_turn((EColor) FenString.back())
+	, m_state(EGameState::Playing)
+{
+	
 }
 
 void Game::MovePiece(Position start, Position destination)
@@ -163,6 +176,14 @@ PositionList Game::GetMoves(Position piecePos) const
 	if (IsGameOver())
 		return PositionList();
 	return m_board.GetMoves(piecePos, m_turn);
+}
+
+std::string Game::GetFenString() const
+{
+	std::string output = m_board.GetFenString();
+	output.push_back(' ');
+	m_turn == EColor::BLACK ? output.push_back('b') : output.push_back('w');
+	return output;
 }
 
 void Game::MakeTieRequest()
