@@ -67,3 +67,13 @@ bool Piece::Is(EType type, EColor color) const
 {
 	return m_type == type && m_color == color;
 }
+
+bool Piece::Is(EType type, const std::vector<EType>& typeList)
+{
+	for (auto& it : typeList)
+		if (type == it)
+			return true;
+	return false;
+}
+
+

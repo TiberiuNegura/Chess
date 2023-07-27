@@ -6,18 +6,26 @@
 #include "IGame.h"
 #include "Piece.h"
 
+
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
 
+using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
 using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
 using BoardPtr = std::shared_ptr<class Board>;
+
+enum class ECastling
+{
+	Left,
+	Right,
+};
 
 class Board
 {	
 public:
 
 	Board();
-	Board(std::array<std::array<char, 8>, 8> alternateMat);
+	Board(CharBoardRepresentation alternateMat);
 	Board(const Matrix& mat);
 
 	EColor CharToColor(char c) const;
@@ -38,17 +46,17 @@ public:
 	void MovePiece(Position start, Position end);
 	void SetPosition(PiecePtr toRevert, Position pos);
 
-	bool IsCastlingPossible(std::string where, EColor color) const;
+	bool IsCastlingPossible(ECastling option, EColor color) const;
 	bool IsEmptyPosition(Position p) const;
 	static bool IsOutOfBounds(Position p);
 	bool IsCheck(EColor color) const;
 	bool IsCheckmate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
-	bool IsThreeFold(BoardConfigList threeFold, BoardConfig configuration) const;
+	bool IsThreeFold(BoardConfigList boardConfigs, BoardConfig config) const;
 
 	Position FindEvolvingPawn(EColor color);
-	PositionList ComputePositionList(Position start, PiecePtr piece) const;
+	PositionList ComputePositionList(Position start) const;
 	BoardConfig GetBoardConfiguration() const;
 
 

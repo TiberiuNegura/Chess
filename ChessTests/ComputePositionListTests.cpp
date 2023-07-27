@@ -29,7 +29,7 @@ protected:
 
 TEST_F(ComputePositionListTests, PawnTest)
 {
-	PositionList positions = board.ComputePositionList({ 1,1 }, board.Get(1, 1));
+	PositionList positions = board.ComputePositionList({ 1,1 });
 	std::unordered_set<Position, IntPairHash> expected;
 	expected.insert({ 2,1 });
 	expected.insert({ 3,1 });
@@ -39,7 +39,7 @@ TEST_F(ComputePositionListTests, PawnTest)
 
 TEST_F(ComputePositionListTests, QueenTest)
 {
-	PositionList positions = board.ComputePositionList({ 0,3 }, board.Get(0, 3));
+	PositionList positions = board.ComputePositionList({ 0,3 });
 	std::unordered_set<Position, IntPairHash> expected;
 	
 	expected.insert({ 1,3 });
@@ -66,7 +66,7 @@ TEST_F(ComputePositionListTests, QueenTest)
 
 TEST_F(ComputePositionListTests, BishopTest)
 {
-	PositionList positions = board.ComputePositionList({ 1,5 }, board.Get(1, 5));
+	PositionList positions = board.ComputePositionList({ 1,5 });
 	std::unordered_set<Position, IntPairHash> expected;
 	
 	expected.insert({ 2,4 });
@@ -84,7 +84,7 @@ TEST_F(ComputePositionListTests, BishopTest)
 
 TEST_F(ComputePositionListTests, HorseTest)
 {
-	PositionList positions = board.ComputePositionList({ 4,3 }, board.Get(4, 3));
+	PositionList positions = board.ComputePositionList({ 4,3 });
 	std::unordered_set<Position, IntPairHash> expected;
 	
 	expected.insert({ 2,4 });
@@ -101,7 +101,7 @@ TEST_F(ComputePositionListTests, HorseTest)
 
 TEST_F(ComputePositionListTests, KingTest)
 {
-	PositionList positions = board.ComputePositionList({ 7,4 }, board.Get(7, 4));
+	PositionList positions = board.ComputePositionList({ 7,4 });
 	std::unordered_set<Position, IntPairHash> expected;
 
 	expected.insert({ 6,4 });
@@ -115,7 +115,7 @@ TEST_F(ComputePositionListTests, KingTest)
 
 TEST_F(ComputePositionListTests, RookTest)
 {
-	PositionList positions = board.ComputePositionList({ 7,7 }, board.Get(7, 7));
+	PositionList positions = board.ComputePositionList({ 7,7 });
 	std::unordered_set<Position, IntPairHash> expected;
 
 	expected.insert({ 6,7 });

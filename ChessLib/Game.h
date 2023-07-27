@@ -15,7 +15,16 @@ enum class EGameState
 	Check
 };
 
-using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
+enum class Response
+{
+	CHECK,
+	PAWN_UPGRADE,
+	TIE_REQUEST,
+	WHITE_WON,
+	BLACK_WON,
+	TIE,
+	RESTART
+};
 
 class Game : public IGame
 {
@@ -25,7 +34,6 @@ public:
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
 
 	void MovePiece(Position start, Position destination) override;
-	//void MakeCastling(std::string where) override;
 	void UpdateTurn();
 	void UpdateState(EGameState state);
 
@@ -42,7 +50,7 @@ public:
 
 	// pawn evolve
 	bool IsPawnEvolving() const override;
-	void EvolvePawn(const std::string& pieceName) override;
+	void EvolvePawn(EType PieceType) override;
 
 	// game over states
 	bool IsCheck() const override;

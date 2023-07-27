@@ -304,7 +304,15 @@ void ChessUIQt::ShowPromoteOptions()
 
 	if (ok && !item.isEmpty())
 	{
-		m_game->EvolvePawn(item.toStdString());
+		if (item == "Rook")
+			m_game->EvolvePawn(EType::ROOK);
+		else if (item == "Bishop")
+			m_game->EvolvePawn(EType::BISHOP);
+		else if (item == "Queen")
+			m_game->EvolvePawn(EType::QUEEN);
+		else if (item == "Horse")
+			m_game->EvolvePawn(EType::HORSE);
+
 		QMessageBox notification;
 		notification.setText("You selected " + item);
 		notification.exec();

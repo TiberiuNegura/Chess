@@ -36,7 +36,7 @@ EType Board::CharToType(char c) const
 	}
 }
 
-Board::Board(std::array<std::array<char, 8>, 8> alternateMat)
+Board::Board(CharBoardRepresentation alternateMat)
 {
 	// UPPERCASE - WHITE, lowercase - black
 	for (int row = 0; row < 8; row++)
@@ -84,13 +84,13 @@ void Board::Set(Position pos, PiecePtr newPiece)
 	m_board[pos.first][pos.second] = newPiece;
 }
 
-PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
+PositionList Board::ComputePositionList(Position start) const
 {
 	PositionList validPattern;
-
+	PiecePtr piece = Get(start);
 	Directions positions = piece->GetDirections(start);
-	EColor pieceColor = m_board[start.first][start.second]->GetColor();
-	EType pieceType = m_board[start.first][start.second]->GetType();
+	EColor pieceColor = piece->GetColor();
+	EType pieceType = piece->GetType();
 	
 	for (int direction = 0; direction < positions.size(); direction++)
 	{
@@ -109,7 +109,7 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 					continue; // pawn can't overtake a frontal piece
 				if (obstacleColor != pieceColor)
 					validPattern.emplace_back(row, column);
-				if (pieceType == EType::HORSE || pieceType == EType::PAWN || pieceType == EType::KING)
+				if (Piece::Is(pieceType, { EType::HORSE, EType::PAWN, EType::KING }))
 					continue; // if horse, pawn or king, continue to next position
 				else
 					break; // if queen, bishop or rook, break the tile loop when adversary piece found
@@ -129,21 +129,22 @@ PositionList Board::ComputePositionList(Position start, PiecePtr piece) const
 BoardConfig Board::GetBoardConfiguration() const
 {
 	BoardConfig config;
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
 		{
-			int k = (8 * i) + j;
-			if (auto piece = m_board[i][j])
+			int index = (8 * row) + column;
+			int bits[4] = { 4 * index, 4 * index + 1, 4 * index + 2, 4 * index + 3 }; // 4k, 4k+1, 4k+2, 4k+3
+			if (auto piece = m_board[row][column])
 			{
 				int type = (int)piece->GetType();
-				config[4 * k] = (int)piece->GetColor();
-				config[4 * k + 1] = type % 2;
-				config[4 * k + 2] = type / 2 % 2;
-				config[4 * k + 3] = type / 4 % 2;
+				config[bits[0]] = (int)piece->GetColor(); // color bit
+				config[bits[1]] = type % 2;               // first type bit
+				config[bits[2]] = type / 2 % 2;           // second type bit
+				config[bits[3]] = type / 4 % 2;           // third type bit
 			}
 			else
 				for (int x = 0; x < 4; x++)
-					config[4 * k + x] = 1;
+					config[bits[x]] = 1;                  // all bits are 1 for empty square
 		}
 	return config;
 }
@@ -154,7 +155,7 @@ void Board::MovePiece(Position start, Position end)
 	m_board[start.first][start.second] = {};
 }
 
-bool Board::IsCastlingPossible(std::string where, EColor color) const
+bool Board::IsCastlingPossible(ECastling option, EColor color) const
 {
 	int row = (color == EColor::BLACK ? 0 : 7);
 	auto leftRook = Get(row, 0);
@@ -164,13 +165,13 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 	if (!king || !king->Is(EType::KING, color))
 		return false;
 
-	if (where != "left" && where != "right") 
+	if (option != ECastling::Left && option != ECastling::Right) 
 		return false;
 
 	if (king->HasMoved())
 		return false;
 
-	if (where == "left" && leftRook && leftRook->Is(EType::ROOK, color))
+	if (option == ECastling::Left && leftRook && leftRook->Is(EType::ROOK, color))
 	{
 		if (leftRook->HasMoved())
 			return false;
@@ -181,7 +182,7 @@ bool Board::IsCastlingPossible(std::string where, EColor color) const
 
 		return true;
 	}
-	else if (where == "right" && rightRook && rightRook->Is(EType::ROOK, color))
+	else if (option == ECastling::Right && rightRook && rightRook->Is(EType::ROOK, color))
 	{
 		if (rightRook->HasMoved())
 			return false;
@@ -214,14 +215,14 @@ bool Board::IsCheck(EColor color) const
 
 	auto kingPos = FindKing(color);
 
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
 		{
-			auto piece = m_board[i][j];
+			auto piece = m_board[row][column];
 
 			if (piece && piece->GetColor() == oppositeColor)
 			{
-				PositionList list = ComputePositionList({ i,j }, piece);
+				PositionList list = ComputePositionList({ row,column });
 				for (auto position : list)
 				{
 					if (position == kingPos)
@@ -244,7 +245,7 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 		return PositionList();
 
 
-	PositionList positions = ComputePositionList(piecePos, piece);
+	PositionList positions = ComputePositionList(piecePos);
 
 
 	// Castling pattern without validation
@@ -253,12 +254,12 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
 
-		if (kingMoveLeft && IsCastlingPossible("left", piece->GetColor()))
+		if (kingMoveLeft && IsCastlingPossible(ECastling::Left, piece->GetColor()))
 			positions.emplace_back(row, 2);
 
 		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
 
-		if (kingMoveRight && IsCastlingPossible("right", piece->GetColor()))
+		if (kingMoveRight && IsCastlingPossible(ECastling::Right, piece->GetColor()))
 			positions.emplace_back(row, 6);
 	}
 
@@ -331,12 +332,10 @@ void Board::Reset()
 
 Position Board::FindKing(EColor color) const
 {
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j] && m_board[i][j]->Is(EType::KING, color))
-				return { i, j };
-		}
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+			if (Get(row, column) && Get(row, column)->Is(EType::KING, color))
+				return { row, column };
 	throw PieceNotFoundException();
 }
 
@@ -347,15 +346,15 @@ BoardPtr Board::Clone() const
 
 bool Board::IsCheckmate(EColor color) const
 {
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
 		{
-			auto piece = GetMatrix()[i][j];
+			auto piece = GetMatrix()[row][column];
 
 			if (!piece || piece->GetColor() != color)
 				continue;
 
-			PositionList list = GetMoves({ i,j }, color);
+			PositionList list = GetMoves({ row,column }, color);
 			if (!list.empty())
 				return false;
 		}

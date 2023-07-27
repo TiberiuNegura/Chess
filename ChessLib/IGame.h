@@ -28,24 +28,12 @@ public:
 
 using MatrixPtr = std::shared_ptr<IMatrix>;
 
-enum class Response
-{
-	CHECK,
-	PAWN_UPGRADE,
-	TIE_REQUEST,
-	WHITE_WON,
-	BLACK_WON,
-	TIE,
-	RESTART
-};
-
 class IGame
 {
 public:
 	static IGamePtr Produce(); 
 
 	virtual void MovePiece(Position start, Position destination) = 0;
-	//virtual void MakeCastling(std::string where) = 0;
 	
 	// Getters
 	virtual MatrixPtr GetBoard() const = 0;
@@ -59,7 +47,7 @@ public:
 
 	// pawn evolving
 	virtual bool IsPawnEvolving() const = 0;
-	virtual void EvolvePawn(const std::string& pieceName) = 0;
+	virtual void EvolvePawn(EType pieceType) = 0;
 
 	// Game over states
 	virtual bool IsCheck() const = 0;

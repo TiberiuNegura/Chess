@@ -201,16 +201,16 @@ bool Game::IsPawnEvolving() const
 	return m_state == EGameState::PawnEvolving;
 }
 
-void Game::EvolvePawn(const std::string& pieceName)
+void Game::EvolvePawn(EType pieceType)
 {
 	Position piecePos = m_board.FindEvolvingPawn(m_turn);
-	if (pieceName == "Bishop")
+	if (pieceType == EType::BISHOP)
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
-	else if (pieceName == "Queen")
+	else if (pieceType == EType::QUEEN)
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
-	else if (pieceName == "Rook")
+	else if (pieceType == EType::ROOK)
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
-	else if (pieceName == "Horse")
+	else if (pieceType ==  EType::HORSE)
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
 	else 
 		throw PieceNotFoundException();

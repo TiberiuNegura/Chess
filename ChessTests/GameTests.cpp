@@ -24,7 +24,7 @@ TEST(PawnEvolveTest, BlackPawn)
 
 	EXPECT_EQ(game.GetState(), EGameState::PawnEvolving);
 
-	EXPECT_NO_THROW(game.EvolvePawn("Queen"));
+	EXPECT_NO_THROW(game.EvolvePawn(EType::QUEEN));
 
 	EXPECT_EQ(game.GetBoard()->GetElement({ 7, 3 })->GetType(), EType::QUEEN);
 	EXPECT_EQ(game.GetState(), EGameState::Playing);
@@ -46,7 +46,7 @@ TEST(PawnEvolveTest, WhitePawn)
 
 	EXPECT_EQ(game.GetState(), EGameState::PawnEvolving);
 
-	EXPECT_NO_THROW(game.EvolvePawn("Horse"));
+	EXPECT_NO_THROW(game.EvolvePawn(EType::HORSE));
 
 	EXPECT_EQ(game.GetBoard()->GetElement({ 0, 3 })->GetType(), EType::HORSE);
 	EXPECT_EQ(game.GetState(), EGameState::Playing);

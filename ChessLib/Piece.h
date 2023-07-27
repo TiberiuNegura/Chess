@@ -23,6 +23,8 @@ public:
 	void SetHasMoved();
 
 	bool Is(EType type, EColor color) const override;
+	static bool Is(EType type, const std::vector<EType>& typeList);
+
 
 
 protected:
