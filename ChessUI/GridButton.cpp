@@ -180,6 +180,7 @@ GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pi
 	, m_Highlighted(EHighlight::NONE)
 	, m_Selected(false)
 {
+
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	updateBackgroundColor();

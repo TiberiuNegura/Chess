@@ -4,6 +4,8 @@
 #include "Board.h"
 #include "IGameListener.h"
 
+using ListenerList = std::vector<ListenerWeakPtr>;
+
 enum class EGameState
 {
 	Playing,
@@ -45,8 +47,8 @@ public:
 	PositionList GetMoves(Position piecePos) const override;
 	TypeList GetWhiteMissingPieces() const override;
 	TypeList GetBlackMissingPieces() const override;
-	
 	std::string GetFenString() const override;
+	std::string GetPgnMove() const override;
 	
 	// tie invitation
 	void MakeTieRequest() override;
@@ -80,6 +82,7 @@ private:
 	EGameState m_state;
 	BoardConfigList boardConfigs;
 	TypeList m_whiteMissing, m_blackMissing;
-	std::vector<ListenerWeakPtr> m_listeners;
+	StringList m_moves;
+	ListenerList m_listeners;
 };
 

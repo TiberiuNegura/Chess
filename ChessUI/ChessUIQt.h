@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/qgridlayout.h>
+#include <QMouseEvent>
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
@@ -23,12 +24,12 @@ public:
 
 
     void Init(QGridLayout* mainGridLayout);
-    void InitializeMessage(QGridLayout* mainGridLayout);
+    void InitializeTitleBar(QGridLayout* mainGridLayout);
+    void InitializePlayers(QGridLayout* mainGridLayout, EColor color);
     void InitializeButtons(QGridLayout* mainGridLayout);
     void InitializeTimers(QGridLayout* mainGridLayout);
     void InitializeHistory(QGridLayout* mainGridLayout);
     void InitializeBoard(QGridLayout* mainGridLayout);
-
     void UpdateHistory();
     void UpdateBoard();
     void HighlightPossibleMoves(const PositionList& possibleMoves);
@@ -62,14 +63,20 @@ public slots:
     void OnHistoryClicked(QListWidgetItem* item);
     
 
+protected:
+	void mousePressEvent(QMouseEvent* event) override;
+
+	void mouseMoveEvent(QMouseEvent* event) override;
+
 signals:
     void Exit();
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
     std::optional<Position> m_selectedCell;
-    QLabel* m_MessageLabel;
+    QGridLayout* m_blackGrid, m_whiteGrid;
     QListWidget* m_MovesList;
     QLabel* m_BlackTimer, *m_WhiteTimer;
     IGamePtr m_game;
+    QPoint m_dragStartPos;
 };

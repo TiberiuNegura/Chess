@@ -36,6 +36,8 @@ Game::Game(const std::string& FenString)
 	: m_board(FenString)
 	, m_state(EGameState::Playing)
 {
+	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
+	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
 	FenString.back() == 'w' ? m_turn = EColor::WHITE : m_turn = EColor::BLACK;
 }
 
@@ -62,9 +64,19 @@ void Game::MovePiece(Position start, Position destination)
 	{
 		if (position == destination)
 		{
+			std::string pgnMove;
+			if (!m_board[start]->Is(EType::PAWN))
+				pgnMove = m_board[start]->GetName();
 			if (auto capturedPiece = m_board[destination])
+			{
 				m_turn == EColor::BLACK ? m_whiteMissing.push_back(capturedPiece->GetType()) : m_blackMissing.push_back(capturedPiece->GetType());
+				if (m_board[start]->Is(EType::PAWN))
+					pgnMove.push_back('a' + start.second);
+				pgnMove.push_back('x');
+			}
 			m_board.MovePiece(start, destination);
+			pgnMove.push_back('a' + destination.second); // column
+			pgnMove.push_back('8' - destination.first); // row
 			Notify(start, destination);
 			m_board[destination]->SetHasMoved();
 			
@@ -74,13 +86,20 @@ void Game::MovePiece(Position start, Position destination)
 			if (m_board[destination]->Is(EType::KING))
 			{
 				if (start.second - destination.second == 2)
+				{
 					m_board.MovePiece({ start.first, 0 }, { start.first, 3 });
+					pgnMove = "0-0-0";
+				}
 				else if (start.second - destination.second == -2)
+				{
 					m_board.MovePiece({ start.first, 7 }, { start.first, 5 });
+					pgnMove = "0-0";
+				}
 			}
 
 			if (m_board.CanPawnEvolve(destination))
 			{
+				m_moves.push_back(pgnMove);
 				UpdateState(EGameState::PawnEvolving);
 				Notify(Response::PAWN_UPGRADE);
 				return;
@@ -91,6 +110,8 @@ void Game::MovePiece(Position start, Position destination)
 			bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 			if (opponentInCheck)
 			{
+				pgnMove.push_back('+');
+				m_moves.push_back(pgnMove);
 				UpdateState(EGameState::Check);
 				Notify(Response::CHECK);
 			}
@@ -101,6 +122,8 @@ void Game::MovePiece(Position start, Position destination)
 			}
 			else if (opponentInCheckmate)
 			{
+				pgnMove.push_back('#');
+				m_moves.push_back(pgnMove);
 				if (m_turn == EColor::BLACK)
 				{
 					UpdateState(EGameState::WhiteWon);
@@ -113,7 +136,10 @@ void Game::MovePiece(Position start, Position destination)
 				}
 			}
 			else if (!opponentInCheck)
+			{
+				m_moves.push_back(pgnMove);
 				UpdateState(EGameState::Playing);
+			}
 
 			BoardConfig configuration = m_board.GetBoardConfiguration();
 			boardConfigs.push_back(configuration);
@@ -122,7 +148,6 @@ void Game::MovePiece(Position start, Position destination)
 				UpdateState(EGameState::Tie);
 				Notify(Response::TIE);
 			}
-
 			return;
 		}
 	}
@@ -197,6 +222,11 @@ std::string Game::GetFenString() const
 	return output;
 }
 
+std::string Game::GetPgnMove() const
+{
+	return m_moves.back();
+}
+
 void Game::MakeTieRequest()
 {
 	UpdateState(EGameState::TieRequest);
@@ -236,22 +266,42 @@ bool Game::IsPawnEvolving() const
 void Game::EvolvePawn(EType pieceType)
 {
 	Position piecePos = m_board.FindEvolvingPawn(m_turn);
+	
 	if (pieceType == EType::BISHOP)
+	{
+		m_moves.back() += "=B";
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
+	}
 	else if (pieceType == EType::QUEEN)
+	{
+		m_moves.back() += "=Q";
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
+	}
 	else if (pieceType == EType::ROOK)
+	{
+		m_moves.back() += "=R";
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
+	}
 	else if (pieceType ==  EType::HORSE)
+	{
+		m_moves.back() += "=H";
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
+	}
 	else 
 		throw PieceNotFoundException();
 
 	UpdateTurn();
-	if (m_board.IsCheckmate(m_turn) && !m_board.IsCheck(m_turn))
+	bool opponentInCheck = m_board.IsCheck(m_turn);
+	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
+	if (opponentInCheck)
+		m_moves.back() += '+';
+	if (opponentInCheckmate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
 	else if (m_board.IsCheckmate(m_turn))
+	{
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+		m_moves.back() += '#';
+	}
 	else
 		UpdateState(EGameState::Playing);
 

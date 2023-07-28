@@ -1,5 +1,6 @@
 #pragma once
 #include <QPushButton>
+#include <QMouseEvent>
 
 #include "Enums.h"
 #include "IPiece.h"
@@ -20,6 +21,7 @@ public:
 	void setPiece(IPiecePtr newPiece);
 	void setHighlighted(EHighlight highlighted);
 	void setSelected(bool selected);
+
 
 signals:
 	void Clicked(const std::pair<int, int>& position);

@@ -199,9 +199,7 @@ std::string Board::GetFenString() const
 				piece->Is(EColor::BLACK) ? output.push_back(tolower(pieceName)) : output.push_back(toupper(pieceName));
 			}
 			else
-			{
 				cnt++;
-			}
 
 		}
 		if (cnt)
