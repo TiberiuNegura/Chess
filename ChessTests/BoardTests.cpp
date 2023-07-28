@@ -330,7 +330,6 @@ TEST_F(MoveTests, BlackQueenMoveTest)
 	EXPECT_THROW(game.MovePiece({ 6, 0 }, { 1, 0 }), IllegalMoveException);
 
 
-	// Test queen capturing a piece
 	EXPECT_TRUE(game.GetBoard()->GetElement({ 6, 0 })->Is(EType::QUEEN));
 }
 
@@ -734,4 +733,42 @@ TEST(CastlingTest, RookMovedTest)
 
 
 	EXPECT_THROW(game.MovePiece({ 0, 4 }, { 0, 6 }), IllegalMoveException);
+}
+
+TEST(FenStringTest, FromFenToBoard)
+{
+	Game game("2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w");
+	Board board(CharBoardRepresentation{
+		' ', ' ','r',' ',' ','k',' ','r',
+		'p', 'p',' ',' ','b','p','p','p',
+		' ', ' ',' ','p',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ','B',' ',
+		'P', 'Q','B',' ','h',' ','b',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', 'P',' ',' ',' ','P',' ','P',
+		' ',' ','K',' ',' ',' ','H',' '
+		});
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+		{
+			if(board.Get({ row,column }) && game.GetBoard()->GetElement({ row, column }))
+				EXPECT_TRUE(board.Get({row,column})->Is(game.GetBoard()->GetElement({ row, column })->GetType()));
+		}
+	EXPECT_TRUE(game.GetTurn() == EColor::WHITE);
+}
+
+TEST(FenStringTest, FromBoardToFen)
+{
+	Game game(CharBoardRepresentation{
+		' ', ' ','r',' ',' ','k',' ','r',
+		'p', 'p',' ',' ','b','p','p','p',
+		' ', ' ',' ','p',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ','B',' ',
+		'P', 'Q','B',' ','h',' ','b',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', 'P',' ',' ',' ','P',' ','P',
+		' ',' ','K',' ',' ',' ','H',' '
+		}, EColor::WHITE, EGameState::Playing);
+
+	EXPECT_EQ(game.GetFenString(), "2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w");
 }

@@ -224,12 +224,16 @@ TypeList Board::SearchMissingPieces(EColor color) const
 			{
 				auto it = pieces.find(piece->GetType());
 				if (it != pieces.end() && piece->Is(color))
-					pieces.erase(it);
-
+				{
+					it->second--;
+					if(!it->second)
+						pieces.erase(it);
+				}
 			}
 		}
 	for (auto& it : pieces)
 		missingPieces.insert(missingPieces.end(), it.second, it.first);
+
 	return missingPieces;
 }
 
