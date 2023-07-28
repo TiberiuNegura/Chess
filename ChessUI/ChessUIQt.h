@@ -29,7 +29,6 @@ public:
     void InitializeHistory(QGridLayout* mainGridLayout);
     void InitializeBoard(QGridLayout* mainGridLayout);
 
-    //Modify if necessary with your history representation
     void UpdateHistory();
     void UpdateBoard();
     void HighlightPossibleMoves(const PositionList& possibleMoves);
