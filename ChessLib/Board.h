@@ -60,6 +60,7 @@ public:
 	PositionList ComputePositionList(Position start) const;
 	BoardConfig GetBoardConfiguration() const;
 	std::string GetFenString() const;
+	TypeList SearchMissingPieces(EColor color) const;
 
 	PiecePtr operator[](Position pos);
 

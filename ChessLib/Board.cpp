@@ -1,4 +1,5 @@
 #include <unordered_set>
+#include <unordered_map>
 
 #include "Board.h"
 #include "Piece.h"
@@ -209,6 +210,27 @@ std::string Board::GetFenString() const
 			output.push_back('/');
 	}
 	return output;
+}
+
+TypeList Board::SearchMissingPieces(EColor color) const
+{
+	TypeList missingPieces;
+	std::unordered_map<EType, int> pieces = { {EType::PAWN, 8}, {EType::ROOK, 2}, {EType::HORSE, 2}, {EType::BISHOP, 2}, {EType::QUEEN, 1}, {EType::KING, 1} };
+
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+		{
+			if (auto piece = Get(row, column))
+			{
+				auto it = pieces.find(piece->GetType());
+				if (it != pieces.end() && piece->Is(color))
+					pieces.erase(it);
+
+			}
+		}
+	for (auto& it : pieces)
+		missingPieces.insert(missingPieces.end(), it.second, it.first);
+	return missingPieces;
 }
 
 PiecePtr Board::operator[](Position pos)
