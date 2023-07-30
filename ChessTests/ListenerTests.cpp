@@ -24,6 +24,7 @@ public:
 	MOCK_METHOD(void, OnTieRequest, (), (override)); //
 	MOCK_METHOD(void, OnMovePiece, (Position start, Position end), (override));
 	MOCK_METHOD(void, OnRestart, (), (override));
+	MOCK_METHOD(void, OnPieceCapture, (EType pieceType, EColor pieceColor), (override));
 };
 
 class GameMockTests : public ::testing::Test

@@ -73,6 +73,7 @@ public:
 	
 	void Notify(Response response);
 	void Notify(Position start, Position end);
+	void Notify(EType pieceType, EColor pieceColor);
 
 
 

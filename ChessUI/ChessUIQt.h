@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QClipboard>
+#include <QProcess>
+#include <QApplication>
 
 #include "GridButton.h"
 
@@ -48,6 +50,7 @@ public:
     void OnTieRequest() override;
     void OnMovePiece(Position start, Position end) override;
     void OnRestart() override;
+    void OnPieceCapture(EType pieceType, EColor pieceColor) override;
 
     void SetGame(IGamePtr game);
 
@@ -74,9 +77,9 @@ signals:
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
     std::optional<Position> m_selectedCell;
-    QGridLayout* m_blackGrid, m_whiteGrid;
-    QListWidget* m_MovesList;
-    QLabel* m_BlackTimer, *m_WhiteTimer;
+    QGridLayout* m_blackGrid, *m_whiteGrid;
+    QListWidget* m_MovesList, *m_blackPieces, *m_whitePieces;
+    QLabel* m_BlackTimer, *m_WhiteTimer, *m_StatusMessage;
     IGamePtr m_game;
     QPoint m_dragStartPos;
 };

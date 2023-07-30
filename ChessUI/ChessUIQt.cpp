@@ -22,6 +22,7 @@ ChessUIQt::~ChessUIQt()
 
 void ChessUIQt::Init(QGridLayout* mainGridLayout)
 {
+
 	//Widget containing everything
 	QWidget* mainWidget = new QWidget();
 	mainWidget->setStyleSheet("background-color: #302e2b;");
@@ -34,7 +35,7 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 	mainWidget->setLayout(mainGridLayout);
 
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-	resize(size() * 1.8);
+	//resize(size() * 1.8);
 	this->setCentralWidget(mainWidget);
 }
 
@@ -43,20 +44,27 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	QWidget* titleBar = new QWidget();
 	QGridLayout* titleBarGrid = new QGridLayout();
 
+
 	QPushButton* minimizeButton = new QPushButton("-");
 	connect(minimizeButton, &QPushButton::clicked, this, &QWidget::showMinimized);
-	minimizeButton->setStyleSheet("border: none; color: white; margin: 0px 0px; padding: 0px; font-size: 25px;");
+	minimizeButton->setStyleSheet("border: none; color: white; font-size: 25px;");
 
 	QPushButton* exitButton = new QPushButton("x");
 	connect(exitButton, &QPushButton::clicked, this, &QWidget::close);
-	exitButton->setStyleSheet("border: none; color: white; margin: 0px 0px; padding: 0px; font-size: 25px; ");
-	exitButton->setFixedSize(20, 20);
+	exitButton->setStyleSheet("border: none; color: white; font-size: 25px; ");
 
-	titleBarGrid->addWidget(minimizeButton, 0, 0, Qt::AlignRight);
-	titleBarGrid->addWidget(exitButton, 0, 1, Qt::AlignRight);
+	m_StatusMessage = new QLabel();
+	m_StatusMessage->setStyleSheet("color: white; font-size: 15px; font-weight: bold;");
+	
+
+	titleBarGrid->addWidget(minimizeButton, 0, 1, Qt::AlignRight | Qt::AlignTop);
+	titleBarGrid->addWidget(exitButton, 0, 2, Qt::AlignRight | Qt::AlignTop);
+	titleBarGrid->setSpacing(20);
 	titleBar->setLayout(titleBarGrid);
 
-	mainGridLayout->addWidget(titleBar, 0, 1);
+
+	mainGridLayout->addWidget(m_StatusMessage, 0, 0, Qt::AlignLeft | Qt::AlignTop);
+	mainGridLayout->addWidget(titleBar, 0, 1, Qt::AlignRight);
 
 }
 
@@ -80,15 +88,29 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	profileName->setText(name);
 	profileName->setStyleSheet("color: white; font-size: 18px; font-weight: bold;");
 
-	playerGrid->addWidget(profilePicture, 0, 0);
+	if (color == EColor::BLACK)
+		m_blackPieces = new QListWidget();
+	else
+		m_whitePieces = new QListWidget();
+
+	QListWidget* playerPieces;
+	color == EColor::BLACK ? playerPieces = m_blackPieces : playerPieces = m_whitePieces;
+	playerPieces->setFlow(QListWidget::LeftToRight);
+	playerPieces->setStyleSheet("QListWidget::item, QListWidget{background-color:transparent; border: none;}");
+	playerPieces->setMaximumHeight(20);
+
+	
+	playerGrid->addWidget(profilePicture, 0, 0, 2, 1);
 	playerGrid->addWidget(profileName, 0, 1, Qt::AlignTop);
+	playerGrid->addWidget(playerPieces, 1, 1, Qt::AlignCenter);
 
 
 	player->setLayout(playerGrid);
 	if (color == EColor::BLACK)
-		mainGridLayout->addWidget(player, 1, 0, 1, 1, Qt::AlignLeft);
+		mainGridLayout->addWidget(player, 1, 0, Qt::AlignLeft);
 	else 
-		mainGridLayout->addWidget(player, 3, 0, 1, 1, Qt::AlignLeft);
+		mainGridLayout->addWidget(player, 3, 0, Qt::AlignLeft);
+
 
 }
 
@@ -122,11 +144,11 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	SetIcon(drawButton, "res/draw.png");
 	SetIcon(copyButton, "res/copy.png");
 
-	btnGrid->addWidget(saveButton, 0, 0, Qt::AlignLeft);
-	btnGrid->addWidget(loadButton, 0, 1, Qt::AlignLeft);
-	btnGrid->addWidget(restartButton, 0, 2, Qt::AlignLeft);
-	btnGrid->addWidget(drawButton, 0, 3, Qt::AlignLeft);
-	btnGrid->addWidget(copyButton, 0, 4, Qt::AlignLeft);
+	btnGrid->addWidget(saveButton, 0, 0);
+	btnGrid->addWidget(loadButton, 0, 1);
+	btnGrid->addWidget(restartButton, 0, 2);
+	btnGrid->addWidget(drawButton, 0, 3);
+	btnGrid->addWidget(copyButton, 0, 4);
 	
 
 	connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
@@ -135,8 +157,9 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
 	connect(copyButton, &QPushButton::pressed, this, &ChessUIQt::OnCopyButtonClicked);
 
+	btnGrid->setSpacing(0);
 	buttonContainer->setLayout(btnGrid);
-	mainGridLayout->addWidget(buttonContainer, 1, 1, 1, 1);
+	mainGridLayout->addWidget(buttonContainer, 1, 1);
 }
 
 void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
@@ -162,7 +185,7 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	timerGrid->addWidget(m_WhiteTimer, 0, 4);
 
 	timerContainer->setLayout(timerGrid);
-	mainGridLayout->addWidget(timerContainer, 2, 0, 1, 2, Qt::AlignCenter);
+	mainGridLayout->addWidget(timerContainer, 2, 0, Qt::AlignCenter);
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
@@ -172,8 +195,8 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	m_MovesList->setMinimumWidth(100);
 	m_MovesList->setMaximumWidth(350);
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	m_MovesList->setStyleSheet("background-color: #262522; border: none;");
-	mainGridLayout->addWidget(m_MovesList, 2, 1, 1, 1);
+	m_MovesList->setStyleSheet("background-color: #262522; border: none; color: white;");
+	mainGridLayout->addWidget(m_MovesList, 2, 1);
 }
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
@@ -193,7 +216,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 
 	board->setStyleSheet("border: none;");
 	board->setLayout(chessGridLayout);
-	mainGridLayout->addWidget(board, 2, 0, 1, 1);
+	mainGridLayout->addWidget(board, 2, 0);
 }
 
 void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
@@ -267,7 +290,38 @@ void ChessUIQt::OnLoadButtonClicked()
 		return;
 	QTextStream in(&file);
 	QString line = in.readLine();
+
+	m_game->Restart();
+	m_whitePieces->clear();
+	m_blackPieces->clear();
+	m_MovesList->clear();
 	m_game = IGame::Produce(line.toStdString());
+
+	TypeList whitePieces = m_game->GetBlackMissingPieces();
+	TypeList blackPieces = m_game->GetWhiteMissingPieces();
+	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
+	QListWidgetItem* capturedPiece = new QListWidgetItem();
+
+	QString imagePath = "res/b";
+	for (auto& pieceType : whitePieces)
+	{
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_whitePieces->addItem(capturedPiece);
+	}
+
+	imagePath = "res/w";
+	for (auto& pieceType : blackPieces)
+	{
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_blackPieces->addItem(capturedPiece);
+	}
+
+	// Houston, we have a problem. After board loading, the game don't get notifications from observer 
+
 	UpdateBoard();
 
 }
@@ -275,10 +329,13 @@ void ChessUIQt::OnLoadButtonClicked()
 void ChessUIQt::OnRestartButtonClicked()
 {
 	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart??", QMessageBox::Yes | QMessageBox::No);
+	reply = QMessageBox::question(this, "Restart proposal", "Are you sure you want to restart?", QMessageBox::Yes | QMessageBox::No);
 	if (reply == QMessageBox::Yes)
 	{
 		m_game->Restart();
+		m_MovesList->clear();
+		m_whitePieces->clear();
+		m_blackPieces->clear();	
 		UpdateBoard();
 	}
 	
@@ -354,6 +411,8 @@ void ChessUIQt::UpdateBoard()
 			m_grid[i][j]->setHighlighted(EHighlight::NONE);
 		}
 	}
+	if (!m_game->IsGameOver())
+		m_StatusMessage->setText(GetTurnMessage());
 }
 
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
@@ -434,12 +493,12 @@ QString ChessUIQt::GameStateToString()
 
 void ChessUIQt::OnGameOver()
 {
-	//if (m_game->BlackWon())
-	//	//m_MessageLabel->setText("Black won the game!\n");
-	//else if (m_game->WhiteWon())
-	//	//m_MessageLabel->setText("White won the game!\n");
-	//else if (m_game->IsTie())
-	//	//m_MessageLabel->setText("Tie!");
+	if (m_game->BlackWon())
+		m_StatusMessage->setText("Black won the game!\n");
+	else if (m_game->WhiteWon())
+		m_StatusMessage->setText("White won the game!\n");
+	else if (m_game->IsTie())
+		m_StatusMessage->setText("Tie!");
 }
 
 void ChessUIQt::OnCheck(std::string msg)
@@ -463,7 +522,7 @@ void ChessUIQt::OnTieRequest()
 	if (reply == QMessageBox::Yes)
 	{
 		m_game->TieRequestResponse(true);
-		//m_MessageLabel->setText("Tie!");
+		m_StatusMessage->setText("Tie!");
 	}
 	else
 		m_game->TieRequestResponse(false);
@@ -477,8 +536,28 @@ void ChessUIQt::OnMovePiece(Position start, Position end)
 void ChessUIQt::OnRestart()
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
-	Init(mainGridLayout);
+	//Init(mainGridLayout);
+	// if you want to modify this, init breaks my window sizes. if you really want to make this restart, reset widget
 	UpdateBoard();
+}
+
+
+void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
+{
+	qDebug() << (int)pieceColor;
+	QListWidget* playerPieces;
+	pieceColor == EColor::BLACK ? playerPieces = m_whitePieces : playerPieces = m_blackPieces;
+
+	QListWidgetItem* capturedPiece = new QListWidgetItem();
+	QString imagePath;
+	pieceColor == EColor::BLACK ? imagePath = "res/b" : imagePath = "res/w";
+	QString pieces[] = {"p", "r", "b", "h", "q", "k", "empty"};
+	imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+	QPixmap pixmap(imagePath);
+	capturedPiece->setIcon(QIcon(pixmap));
+	
+	playerPieces->addItem(capturedPiece);
+
 }
 
 void ChessUIQt::SetGame(IGamePtr game)

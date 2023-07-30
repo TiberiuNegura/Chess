@@ -73,6 +73,7 @@ void Game::MovePiece(Position start, Position destination)
 				if (m_board[start]->Is(EType::PAWN))
 					pgnMove.push_back('a' + start.second);
 				pgnMove.push_back('x');
+				Notify(capturedPiece->GetType(), capturedPiece->GetColor());
 			}
 			m_board.MovePiece(start, destination);
 			pgnMove.push_back('a' + destination.second); // column
@@ -110,8 +111,11 @@ void Game::MovePiece(Position start, Position destination)
 			bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 			if (opponentInCheck)
 			{
-				pgnMove.push_back('+');
-				m_moves.push_back(pgnMove);
+				if (!opponentInCheckmate)
+				{
+					pgnMove.push_back('+');
+					m_moves.push_back(pgnMove);
+				}
 				UpdateState(EGameState::Check);
 				Notify(Response::CHECK);
 			}
@@ -380,4 +384,9 @@ void Game::Notify(Position start, Position end)
 		listener.lock()->OnMovePiece(start, end);
 }
 
+void Game::Notify(EType pieceType, EColor pieceColor)
+{
+	for (auto listener : m_listeners)
+		listener.lock()->OnPieceCapture(pieceType, pieceColor);
+}
 
