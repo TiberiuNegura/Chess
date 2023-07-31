@@ -41,32 +41,85 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 {
+	// Title bar
 	QWidget* titleBar = new QWidget();
-	QGridLayout* titleBarGrid = new QGridLayout();
+	titleBar->setFixedHeight(40); // Set a fixed height for the title bar
+	titleBar->setStyleSheet("background-color: #333;"); // Set the background color for dark theme
 
+	QGridLayout* titleBarGrid = new QGridLayout(titleBar);
 
-	QPushButton* minimizeButton = new QPushButton("-");
+	// Title text
+	QLabel* title = new QLabel("Chess Game");
+	QFont titleFont = title->font();
+	titleFont.setPointSize(16);
+	titleFont.setBold(true);
+	title->setFont(titleFont);
+	title->setStyleSheet("color: #FFF;"); // Set the text color for dark theme
+
+	// Minimize button
+	QPushButton* minimizeButton = new QPushButton(titleBar);
+	minimizeButton->setFixedSize(30, 30); // Set a fixed size for the button
+	minimizeButton->setIcon(QIcon("res/minimize.png")); // Set the custom icon
+	minimizeButton->setIconSize(QSize(30, 30)); // Set the icon size
+	minimizeButton->setStyleSheet(
+		"QPushButton {"
+		"   background-color: transparent;" // Normal background color
+		"}"
+		"QPushButton:hover {"
+		"   background-color: #4a5c56;" // Highlighted background color on hover
+		"}"
+	);
 	connect(minimizeButton, &QPushButton::clicked, this, &QWidget::showMinimized);
-	minimizeButton->setStyleSheet("border: none; color: white; font-size: 25px;");
 
-	QPushButton* exitButton = new QPushButton("x");
+	// Expand button
+	QPushButton* expandButton = new QPushButton(titleBar);
+	expandButton->setFixedSize(30, 30); // Set a fixed size for the button
+	expandButton->setIcon(QIcon("res/expand.png")); // Set the custom icon
+	expandButton->setIconSize(QSize(30, 30)); // Set the icon size
+	expandButton->setStyleSheet(
+		"QPushButton {"
+		"   background-color: transparent;" // Normal background color
+		"}"
+		"QPushButton:hover {"
+		"   background-color: #4a5c56;" // Highlighted background color on hover
+		"}"
+	);
+	connect(expandButton, &QPushButton::clicked, this, &QWidget::showFullScreen);
+
+	// Close button
+	QPushButton* exitButton = new QPushButton(titleBar);
+	exitButton->setFixedSize(30, 30); // Set a fixed size for the button
+	exitButton->setIcon(QIcon("res/exit.png")); // Set the custom icon
+	exitButton->setIconSize(QSize(30, 30)); // Set the icon size
+	exitButton->setStyleSheet(
+		"QPushButton {"
+		"   background-color: transparent;" // Normal background color
+		"}"
+		"QPushButton:hover {"
+		"   background-color: #4a5c56;" // Highlighted background color on hover
+		"}"
+	);
 	connect(exitButton, &QPushButton::clicked, this, &QWidget::close);
-	exitButton->setStyleSheet("border: none; color: white; font-size: 25px; ");
 
+	// Status message label
 	m_StatusMessage = new QLabel();
-	m_StatusMessage->setStyleSheet("color: white; font-size: 15px; font-weight: bold;");
-	
+	m_StatusMessage->setStyleSheet("color: #FFF; font-size: 14px;"); // Set the text color for dark theme
 
-	titleBarGrid->addWidget(minimizeButton, 0, 1, Qt::AlignRight | Qt::AlignTop);
-	titleBarGrid->addWidget(exitButton, 0, 2, Qt::AlignRight | Qt::AlignTop);
-	titleBarGrid->setSpacing(20);
-	titleBar->setLayout(titleBarGrid);
+	// Add widgets to the title bar layout
+	titleBarGrid->addWidget(title, 0, 0);
+	titleBarGrid->addWidget(m_StatusMessage, 0, 1);
+	titleBarGrid->addWidget(minimizeButton, 0, 2);
+	titleBarGrid->addWidget(expandButton, 0, 3);
+	titleBarGrid->addWidget(exitButton, 0, 4);
 
+	// Set spacing and margins
+	titleBarGrid->setSpacing(10);
+	titleBarGrid->setContentsMargins(10, 0, 10, 0);
 
-	mainGridLayout->addWidget(m_StatusMessage, 0, 0, Qt::AlignLeft | Qt::AlignTop);
-	mainGridLayout->addWidget(titleBar, 0, 1, Qt::AlignRight);
-
+	// Add the title bar to the mainGridLayout
+	mainGridLayout->addWidget(titleBar, 0, 0, 1, 2);
 }
+
 
 void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 {
@@ -134,7 +187,15 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	QPushButton* copyButton = new QPushButton();
 
 	QWidget* buttonContainer = new QWidget();
-	buttonContainer->setStyleSheet("background-color: #21201d; color: white;");
+	buttonContainer->setStyleSheet(
+		"QPushButton {"
+		"   background-color: #21201d;" // Normal background color
+		"   color: white; "
+		"}"
+		"QPushButton:hover {"
+		"   background-color: #d234eb;" // Highlighted background color on hover
+		"}"
+	);
 	QGridLayout* btnGrid = new QGridLayout();
 
 
@@ -190,12 +251,31 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-
 	m_MovesList = new QListWidget();
 	m_MovesList->setMinimumWidth(100);
 	m_MovesList->setMaximumWidth(350);
+
+	// Set a custom style for the history list
+	m_MovesList->setStyleSheet(
+		"QListWidget {"
+		"   background-color: #262522;" // Set the background color for dark theme
+		"   border: 1px solid #555555;" // Add a thin border
+		"   color: white;" // Set the text color to white
+		"}"
+		"QListWidget::item {"
+		"   padding: 5px;" // Add padding to the list items
+		"}"
+		"QListWidget::item:hover {"
+		"   background-color: #4a5c56;" // Highlighted background color on hover
+		"}"
+	);
+
+	QFont listFont;
+	listFont.setFamily("Arial");
+	listFont.setPointSize(12);
+	m_MovesList->setFont(listFont);
+
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	m_MovesList->setStyleSheet("background-color: #262522; border: none; color: white;");
 	mainGridLayout->addWidget(m_MovesList, 2, 1);
 }
 
@@ -228,8 +308,10 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		auto possibleMoves = m_game->GetMoves(start);
 		try
 		{
+			std::string source, target, turn;
+			turn = m_game->GetTurn() == EColor::WHITE ? "White" : "Black";
 			m_game->MovePiece(start, position);
-			m_MovesList->addItem(QString::fromStdString(m_game->GetPgnMove()));
+			m_MovesList->addItem(FromMatrixToChessMove(start, position));
 		}
 		catch (OutOfBoundsException e)
 		{
@@ -265,21 +347,77 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 	}
 }
 
+//void ChessUIQt::OnSaveButtonClicked()
+//{
+//	QString defaultFileName = "Chess game.txt";
+//	QString desktopPath = QDir::homePath() + "/Downloads";
+//	QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "Text Files (*.txt);;All Files (*)");
+//
+//	QFile newFile(filePath);
+//	if(!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
+//		return;
+//
+//	QTextStream outStream(&newFile);
+//	outStream << QString::fromStdString(m_game->GetFenString());
+//
+//	newFile.close();
+//}
+
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString defaultFileName = "Chess game.txt";
-	QString desktopPath = QDir::homePath() + "/Downloads";
-	QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "Text Files (*.txt);;All Files (*)");
+	QMessageBox saveOptionDialog;
+	saveOptionDialog.setWindowTitle("Save Game");
+	saveOptionDialog.setText("Choose how to save the game:");
+	saveOptionDialog.setIcon(QMessageBox::Question);
 
-	QFile newFile(filePath);
-	if(!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
-		return;
+	// Add custom buttons for FEN and PGN options
+	QPushButton* saveAsFenButton = saveOptionDialog.addButton("Save as FEN", QMessageBox::AcceptRole);
+	QPushButton* saveAsPgnButton = saveOptionDialog.addButton("Save as PGN", QMessageBox::AcceptRole);
+	QPushButton* cancelButton = saveOptionDialog.addButton("Cancel", QMessageBox::RejectRole);
 
-	QTextStream outStream(&newFile);
-	outStream << QString::fromStdString(m_game->GetFenString());
+	// Execute the dialog and wait for user input
+	saveOptionDialog.exec();
 
-	newFile.close();
+	// Check which button was clicked and perform the corresponding action
+	if (saveOptionDialog.clickedButton() == saveAsFenButton) {
+		// Save as FEN
+		QString defaultFileName = "Chess game.fen";
+		QString desktopPath = QDir::homePath() + "/Downloads";
+		QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "FEN Files (*.fen)");
+
+		if (!filePath.isEmpty()) {
+			QFile newFile(filePath);
+			if (!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
+				return;
+
+			QTextStream outStream(&newFile);
+			outStream << QString::fromStdString(m_game->GetFenString());
+
+			newFile.close();
+		}
+	}
+	else if (saveOptionDialog.clickedButton() == saveAsPgnButton) {
+		// Save as PGN
+		QString defaultFileName = "Chess game.pgn";
+		QString desktopPath = QDir::homePath() + "/Downloads";
+		QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "PGN Files (*.pgn)");
+
+		if (!filePath.isEmpty()) {
+			QFile newFile(filePath);
+			if (!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
+				return;
+
+			QTextStream outStream(&newFile);
+			outStream << QString::fromStdString(m_game->GetPGN());
+
+			newFile.close();
+		}
+	}
+	else if (saveOptionDialog.clickedButton() == cancelButton) {
+		// User clicked Cancel, do nothing or handle it as required
+	}
 }
+
 
 void ChessUIQt::OnLoadButtonClicked()
 {
@@ -291,11 +429,17 @@ void ChessUIQt::OnLoadButtonClicked()
 	QTextStream in(&file);
 	QString line = in.readLine();
 
+
 	m_game->Restart();
+	if (m_game)
+		m_game->RemoveListener(this);
 	m_whitePieces->clear();
 	m_blackPieces->clear();
 	m_MovesList->clear();
+	
 	m_game = IGame::Produce(line.toStdString());
+	m_game->AddListener(shared_from_this());
+
 
 	TypeList whitePieces = m_game->GetBlackMissingPieces();
 	TypeList blackPieces = m_game->GetWhiteMissingPieces();
@@ -320,10 +464,7 @@ void ChessUIQt::OnLoadButtonClicked()
 		m_blackPieces->addItem(capturedPiece);
 	}
 
-	// Houston, we have a problem. After board loading, the game don't get notifications from observer 
-
 	UpdateBoard();
-
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -389,6 +530,21 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 		// Calculate the new position of the window based on the mouse movement
 		move(event->globalPos() - m_dragStartPos);
 	}
+}
+
+QString ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
+{
+	std::string source, target, turn;
+	turn = m_game->GetTurn() == EColor::WHITE ? "White" : "Black";
+
+	source += toupper('a' + start.second);
+	source += toupper('1' + (7 - start.first));
+	
+	target += toupper('a' + end.second);
+	target += toupper('1' + (7 - end.first));
+	
+	std::string output = turn + ": " + source + " -> " + target;
+	return QString::fromStdString(output);
 }
 
 void ChessUIQt::UpdateHistory()
@@ -505,13 +661,11 @@ void ChessUIQt::OnCheck(std::string msg)
 {
 	QString s = GetTurnMessage();
 	s.append(msg);	
-	//m_MessageLabel->setText(s);
 }
 
 void ChessUIQt::OnPawnEvolve()
 {
 	ShowPromoteOptions();
-	//m_MessageLabel->setText(GetTurnMessage());
 }
 
 void ChessUIQt::OnTieRequest()
@@ -536,8 +690,7 @@ void ChessUIQt::OnMovePiece(Position start, Position end)
 void ChessUIQt::OnRestart()
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
-	//Init(mainGridLayout);
-	// if you want to modify this, init breaks my window sizes. if you really want to make this restart, reset widget
+	Init(mainGridLayout);
 	UpdateBoard();
 }
 
@@ -557,7 +710,6 @@ void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 	capturedPiece->setIcon(QIcon(pixmap));
 	
 	playerPieces->addItem(capturedPiece);
-
 }
 
 void ChessUIQt::SetGame(IGamePtr game)

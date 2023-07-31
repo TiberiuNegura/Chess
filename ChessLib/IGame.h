@@ -16,7 +16,7 @@
 
 using IGamePtr = std::shared_ptr<class IGame>;
 using ListenerWeakPtr = std::weak_ptr<IGameListener>;
-using StringList = std::vector<std::string>;
+using MovesList = std::vector<std::string>;
 
 class IMatrix
 {
@@ -45,6 +45,7 @@ public:
 	virtual TypeList GetWhiteMissingPieces() const = 0;
 	virtual TypeList GetBlackMissingPieces() const = 0;
 	virtual std::string GetPgnMove() const = 0;
+	virtual std::string GetPGN() const = 0;
 
 	// tie invitation
 	virtual void MakeTieRequest() = 0;

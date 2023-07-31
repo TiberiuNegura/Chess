@@ -235,6 +235,37 @@ TypeList Board::SearchMissingPieces(EColor color) const
 	return missingPieces;
 }
 
+std::string Board::MatrixToChessMove(Position start, Position end, bool capture) const
+{
+	std::string move = "";
+	auto piece = m_board[end.first][end.second];
+	auto enemyColor = (piece->GetColor() == EColor::BLACK) ? EColor::WHITE : EColor::BLACK;
+
+	int castlingRow = piece->GetColor() == EColor::BLACK ? 0 : 7;
+
+	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 0))
+		return "O-O";
+
+	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 7))
+		return "O-O-O";
+
+	if (!piece->Is(EType::PAWN))
+		move += (piece->GetColor() == EColor::BLACK) ? tolower(piece->GetName()) : toupper(piece->GetName());
+	if (capture)
+		move += 'x';
+	
+	move += ('a' + end.second);
+	move += ('1' + (7 - end.first));
+
+	if (IsCheck(enemyColor))
+		move += IsCheckmate(enemyColor) ? '#' : '+';
+	else
+		if (IsCheckmate(enemyColor))
+			move += '#';
+
+	return move;
+}
+
 PiecePtr Board::operator[](Position pos)
 {
 	return Get(pos);

@@ -62,13 +62,16 @@ public:
 	std::string GetFenString() const;
 	TypeList SearchMissingPieces(EColor color) const;
 
+
 	PiecePtr operator[](Position pos);
 
+	std::string MatrixToChessMove(Position start, Position end, bool capture) const;
 private:
 	Position FindKing(EColor color) const;
 
 private:
 	Matrix m_board;
+	std::vector<std::pair<Position, Position>> m_moves;
 };
 
 

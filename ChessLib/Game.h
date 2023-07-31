@@ -28,6 +28,12 @@ enum class Response
 	RESTART
 };
 
+enum class LoadType
+{
+	FEN,
+	PGN
+};
+
 class Game : public IGame
 {
 public:
@@ -35,6 +41,10 @@ public:
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
 	Game(const std::string& FenString);
+
+	//void LoadFromFen(std::string fen);
+
+	void LoadFromPGN(std::string pgn);
 
 	void MovePiece(Position start, Position destination) override;
 	void UpdateTurn();
@@ -49,6 +59,7 @@ public:
 	TypeList GetBlackMissingPieces() const override;
 	std::string GetFenString() const override;
 	std::string GetPgnMove() const override;
+	std::string GetPGN() const;
 	
 	// tie invitation
 	void MakeTieRequest() override;
@@ -83,7 +94,7 @@ private:
 	EGameState m_state;
 	BoardConfigList boardConfigs;
 	TypeList m_whiteMissing, m_blackMissing;
-	StringList m_moves;
+	MovesList m_moves;
 	ListenerList m_listeners;
 };
 
