@@ -53,7 +53,7 @@ void Game::LoadFromFEN(std::string fen)
 {
 	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
 	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
-	fen.back() == 'w' ? m_turn = EColor::WHITE : m_turn = EColor::BLACK;
+	m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
 }
 
 void Game::LoadFromPGN(std::string pgn)
@@ -69,14 +69,13 @@ void Game::LoadFromPGN(std::string pgn)
 	{
 		if (pgn[i] == ' ' || (i == pgn.size() - 1))
 		{
+			move = ChessMoveToMatrix(pgnMove);
+			MovePiece(move.first, move.second);
 			if (FindSubstring(pgnMove, evolve))
 			{
-				auto upgradeTo = m_board.CharToType(pgnMove[4]);
+				auto upgradeTo = m_board.CharToType(pgnMove[3]);
 				EvolvePawn(upgradeTo);
 			}
-			else
-				move = ChessMoveToMatrix(pgnMove);
-			MovePiece(move.first, move.second);
 			pgnMove.clear();
 		}
 		if (pgn[i] != ' ')
@@ -86,12 +85,12 @@ void Game::LoadFromPGN(std::string pgn)
 
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
-	static const std::set<char> validChars = { 'B','R','Q','K','H' };
+	static const std::set<char> validChars = { 'b' ,'r' ,'q' ,'k' ,'h' };
 
 	
 	int i = validChars.find(move[0]) != validChars.end() ? 1 : 0;
 
-	Position end('8' - move[i + 1], move[i] - 'a');
+	Position end = { '8' - move[i + 1], move[i] - 'a' };
 	auto start = m_board.FindForPGN(move[0], end, m_turn);
 	
 	return { start, end };
@@ -124,7 +123,9 @@ void Game::MovePiece(Position start, Position destination)
 		{
 			if (auto capturedPiece = m_board[destination])
 			{
-				m_turn == EColor::BLACK ? m_whiteMissing.push_back(capturedPiece->GetType()) : m_blackMissing.push_back(capturedPiece->GetType());
+				auto& missing = m_turn == EColor::BLACK ? m_whiteMissing : m_blackMissing;
+				missing.push_back(capturedPiece->GetType());
+
 				Notify(capturedPiece->GetType(), capturedPiece->GetColor());
 				captures = true;
 			}
