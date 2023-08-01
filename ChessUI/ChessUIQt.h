@@ -75,6 +75,7 @@ signals:
 
 private:
 	QString FromMatrixToChessMove(Position start, Position end) const;
+	void toggleFullScreen();
 
 private:
 	std::array<std::array<GridButton*, 8>, 8> m_grid;
@@ -84,4 +85,5 @@ private:
 	QLabel* m_BlackTimer, *m_WhiteTimer, *m_StatusMessage;
 	IGamePtr m_game;
 	QPoint m_dragStartPos;
+	QPushButton* m_expandButton;
 };

@@ -44,12 +44,12 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	// Title bar
 	QWidget* titleBar = new QWidget();
 	titleBar->setFixedHeight(40); // Set a fixed height for the title bar
-	titleBar->setStyleSheet("background-color: #333;"); // Set the background color for dark theme
+	//titleBar->setStyleSheet("background-color: #333;"); // Set the background color for dark theme
 
 	QGridLayout* titleBarGrid = new QGridLayout(titleBar);
 
 	// Title text
-	QLabel* title = new QLabel("Chess Game");
+	QLabel* title = new QLabel("Chess.ro");
 	QFont titleFont = title->font();
 	titleFont.setPointSize(16);
 	titleFont.setBold(true);
@@ -64,6 +64,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	minimizeButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
+		"   border: none;"
 		"}"
 		"QPushButton:hover {"
 		"   background-color: #4a5c56;" // Highlighted background color on hover
@@ -72,19 +73,21 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	connect(minimizeButton, &QPushButton::clicked, this, &QWidget::showMinimized);
 
 	// Expand button
-	QPushButton* expandButton = new QPushButton(titleBar);
-	expandButton->setFixedSize(30, 30); // Set a fixed size for the button
-	expandButton->setIcon(QIcon("res/expand.png")); // Set the custom icon
-	expandButton->setIconSize(QSize(30, 30)); // Set the icon size
-	expandButton->setStyleSheet(
+	m_expandButton = new QPushButton(titleBar);
+	m_expandButton->setFixedSize(30, 30); // Set a fixed size for the button
+	m_expandButton->setIcon(QIcon("res/expand.png")); // Set the custom icon
+	m_expandButton->setIconSize(QSize(30, 30)); // Set the icon size
+	m_expandButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
+		"   border: none;"
 		"}"
 		"QPushButton:hover {"
 		"   background-color: #4a5c56;" // Highlighted background color on hover
 		"}"
 	);
-	connect(expandButton, &QPushButton::clicked, this, &QWidget::showFullScreen);
+	//connect(m_expandButton, &QPushButton::clicked, this, &ChessUIQt::toggleFullScreen);
+	connect(m_expandButton, &QPushButton::clicked, this, &ChessUIQt::toggleFullScreen);
 
 	// Close button
 	QPushButton* exitButton = new QPushButton(titleBar);
@@ -94,6 +97,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	exitButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
+		"   border: none;"
 		"}"
 		"QPushButton:hover {"
 		"   background-color: #4a5c56;" // Highlighted background color on hover
@@ -103,13 +107,13 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 
 	// Status message label
 	m_StatusMessage = new QLabel();
-	m_StatusMessage->setStyleSheet("color: #FFF; font-size: 14px;"); // Set the text color for dark theme
+	m_StatusMessage->setStyleSheet("color: #FFF; font-size: 16px; font-weight: bold;"); // Set the text color for dark theme
 
 	// Add widgets to the title bar layout
 	titleBarGrid->addWidget(title, 0, 0);
 	titleBarGrid->addWidget(m_StatusMessage, 0, 1);
 	titleBarGrid->addWidget(minimizeButton, 0, 2);
-	titleBarGrid->addWidget(expandButton, 0, 3);
+	titleBarGrid->addWidget(m_expandButton, 0, 3);
 	titleBarGrid->addWidget(exitButton, 0, 4);
 
 	// Set spacing and margins
@@ -149,13 +153,15 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	QListWidget* playerPieces;
 	color == EColor::BLACK ? playerPieces = m_blackPieces : playerPieces = m_whitePieces;
 	playerPieces->setFlow(QListWidget::LeftToRight);
-	playerPieces->setStyleSheet("QListWidget::item, QListWidget{background-color:transparent; border: none;}");
+	playerPieces->setStyleSheet("QListWidget::item, QListWidget{background-color:transparent;}");
 	playerPieces->setMaximumHeight(20);
+	playerPieces->setMinimumWidth(400);
+	//playerPieces->setIconSize({ 30, 30 });
 
-	
 	playerGrid->addWidget(profilePicture, 0, 0, 2, 1);
 	playerGrid->addWidget(profileName, 0, 1, Qt::AlignTop);
 	playerGrid->addWidget(playerPieces, 1, 1, Qt::AlignCenter);
+
 
 
 	player->setLayout(playerGrid);
@@ -259,14 +265,14 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	m_MovesList->setStyleSheet(
 		"QListWidget {"
 		"   background-color: #262522;" // Set the background color for dark theme
-		"   border: 1px solid #555555;" // Add a thin border
+		"   border: none;" // Add a thin border
 		"   color: white;" // Set the text color to white
 		"}"
 		"QListWidget::item {"
 		"   padding: 5px;" // Add padding to the list items
 		"}"
 		"QListWidget::item:hover {"
-		"   background-color: #4a5c56;" // Highlighted background color on hover
+		"   background-color: #d234eb;" // Highlighted background color on hover
 		"}"
 	);
 
@@ -422,7 +428,7 @@ void ChessUIQt::OnSaveButtonClicked()
 void ChessUIQt::OnLoadButtonClicked()
 {
 	QString desktopPath = QDir::homePath() + "/Downloads";
-	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "Text Files (*.txt);;All Files (*)");
+	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "Fen Files (*.fen);; Pgn Files(*.pgn);;All Files (*)");
 	QFile file(filePath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
@@ -444,20 +450,22 @@ void ChessUIQt::OnLoadButtonClicked()
 	TypeList whitePieces = m_game->GetBlackMissingPieces();
 	TypeList blackPieces = m_game->GetWhiteMissingPieces();
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
-	QListWidgetItem* capturedPiece = new QListWidgetItem();
 
-	QString imagePath = "res/b";
+
 	for (auto& pieceType : whitePieces)
 	{
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/b";
 		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 		QPixmap pixmap(imagePath);
 		capturedPiece->setIcon(QIcon(pixmap));
+		qDebug() << imagePath;
 		m_whitePieces->addItem(capturedPiece);
 	}
-
-	imagePath = "res/w";
 	for (auto& pieceType : blackPieces)
 	{
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/w";
 		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 		QPixmap pixmap(imagePath);
 		capturedPiece->setIcon(QIcon(pixmap));
@@ -547,6 +555,20 @@ QString ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
 	return QString::fromStdString(output);
 }
 
+void ChessUIQt::toggleFullScreen()
+{
+	if (isFullScreen())
+	{
+		showNormal();
+		m_expandButton->setIcon(QIcon("res/expand.png"));
+	}
+	else
+	{
+		showFullScreen();
+		m_expandButton->setIcon(QIcon("res/restore.png"));
+	}
+}
+
 void ChessUIQt::UpdateHistory()
 {
 	m_MovesList->clear();
@@ -560,6 +582,7 @@ void ChessUIQt::UpdateHistory()
 
 void ChessUIQt::UpdateBoard()
 {
+	m_whitePieces->setMinimumWidth(m_whitePieces->sizeHintForColumn(0));
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			m_grid[i][j]->setPiece(m_game->GetBoard()->GetElement({ i, j }));
@@ -697,7 +720,6 @@ void ChessUIQt::OnRestart()
 
 void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 {
-	qDebug() << (int)pieceColor;
 	QListWidget* playerPieces;
 	pieceColor == EColor::BLACK ? playerPieces = m_whitePieces : playerPieces = m_blackPieces;
 
@@ -707,6 +729,7 @@ void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 	QString pieces[] = {"p", "r", "b", "h", "q", "k", "empty"};
 	imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 	QPixmap pixmap(imagePath);
+	QIcon icon(pixmap);
 	capturedPiece->setIcon(QIcon(pixmap));
 	
 	playerPieces->addItem(capturedPiece);
