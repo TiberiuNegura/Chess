@@ -36,6 +36,8 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 	//resize(size() * 1.8);
+	centerOnScreen();
+
 	this->setCentralWidget(mainWidget);
 }
 
@@ -152,11 +154,13 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 
 	QListWidget* playerPieces;
 	color == EColor::BLACK ? playerPieces = m_blackPieces : playerPieces = m_whitePieces;
+
+	playerPieces->setMinimumWidth(600);
 	playerPieces->setFlow(QListWidget::LeftToRight);
-	playerPieces->setStyleSheet("QListWidget::item, QListWidget{background-color:transparent;}");
-	playerPieces->setMaximumHeight(20);
-	playerPieces->setMinimumWidth(400);
-	//playerPieces->setIconSize({ 30, 30 });
+	playerPieces->setStyleSheet("QListWidget::item, QListWidget{background-color:transparent; border: none;}");
+	playerPieces->setMaximumHeight(40);
+	playerPieces->setIconSize({ 30, 30 });
+	playerPieces->setSpacing(0);
 
 	playerGrid->addWidget(profilePicture, 0, 0, 2, 1);
 	playerGrid->addWidget(profileName, 0, 1, Qt::AlignTop);
@@ -315,7 +319,6 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		try
 		{
 			std::string source, target, turn;
-			turn = m_game->GetTurn() == EColor::WHITE ? "White" : "Black";
 			m_game->MovePiece(start, position);
 			m_MovesList->addItem(FromMatrixToChessMove(start, position));
 		}
@@ -427,7 +430,10 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_blackPieces->clear();
 	m_MovesList->clear();
 	
-	m_game = IGame::Produce(LoadType::FEN, line.toStdString());
+	if (filePath.contains(".fen"))
+		m_game = IGame::Produce(LoadType::FEN, line.toStdString());
+	else if (filePath.contains(".pgn"))
+		m_game = IGame::Produce(LoadType::PGN, line.toStdString());
 	m_game->AddListener(shared_from_this());
 
 
@@ -443,7 +449,6 @@ void ChessUIQt::OnLoadButtonClicked()
 		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 		QPixmap pixmap(imagePath);
 		capturedPiece->setIcon(QIcon(pixmap));
-		qDebug() << imagePath;
 		m_whitePieces->addItem(capturedPiece);
 	}
 	for (auto& pieceType : blackPieces)
@@ -527,7 +532,7 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 QString ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
 {
 	std::string source, target, turn;
-	turn = m_game->GetTurn() == EColor::WHITE ? "White" : "Black";
+	turn = m_game->GetTurn() == EColor::WHITE ? "Black" : "White";
 
 	source += toupper('a' + start.second);
 	source += toupper('1' + (7 - start.first));
@@ -553,6 +558,20 @@ void ChessUIQt::toggleFullScreen()
 	}
 }
 
+void ChessUIQt::centerOnScreen()
+{
+	// Get the available screen geometry
+	QScreen* screen = QGuiApplication::primaryScreen();
+	QRect screenGeometry = screen->availableGeometry();
+
+	// Calculate the position to center the window on the screen
+	int x = (screenGeometry.width() - width()) / 2;
+	int y = (screenGeometry.height() - height()) / 2;
+
+	// Set the window position
+	move(x, y);
+}
+
 void ChessUIQt::UpdateHistory()
 {
 	m_MovesList->clear();
@@ -566,7 +585,6 @@ void ChessUIQt::UpdateHistory()
 
 void ChessUIQt::UpdateBoard()
 {
-	m_whitePieces->setMinimumWidth(m_whitePieces->sizeHintForColumn(0));
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			m_grid[i][j]->setPiece(m_game->GetBoard()->GetElement({ i, j }));
