@@ -279,7 +279,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	QFont listFont;
 	listFont.setFamily("Arial");
 	listFont.setPointSize(12);
-	m_MovesList->setFont(listFont);
+	m_MovesList->setFont(listFont); // --> schimba pt history
 
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
 	mainGridLayout->addWidget(m_MovesList, 2, 1);
@@ -352,22 +352,6 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		HighlightPossibleMoves(m_game->GetMoves(position));
 	}
 }
-
-//void ChessUIQt::OnSaveButtonClicked()
-//{
-//	QString defaultFileName = "Chess game.txt";
-//	QString desktopPath = QDir::homePath() + "/Downloads";
-//	QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "Text Files (*.txt);;All Files (*)");
-//
-//	QFile newFile(filePath);
-//	if(!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
-//		return;
-//
-//	QTextStream outStream(&newFile);
-//	outStream << QString::fromStdString(m_game->GetFenString());
-//
-//	newFile.close();
-//}
 
 void ChessUIQt::OnSaveButtonClicked()
 {
@@ -443,7 +427,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_blackPieces->clear();
 	m_MovesList->clear();
 	
-	m_game = IGame::Produce(line.toStdString());
+	m_game = IGame::Produce(LoadType::FEN, line.toStdString());
 	m_game->AddListener(shared_from_this());
 
 

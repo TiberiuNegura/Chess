@@ -18,6 +18,12 @@ using IGamePtr = std::shared_ptr<class IGame>;
 using ListenerWeakPtr = std::weak_ptr<IGameListener>;
 using MovesList = std::vector<std::string>;
 
+enum class LoadType
+{
+	PGN,
+	FEN
+};
+
 class IMatrix
 {
 public:
@@ -33,7 +39,7 @@ class IGame
 {
 public:
 	static IGamePtr Produce(); 
-	static IGamePtr Produce(const std::string& FenString);
+	static IGamePtr Produce(LoadType type, std::string string);
 
 	virtual void MovePiece(Position start, Position destination) = 0;
 	

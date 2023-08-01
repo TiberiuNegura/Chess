@@ -28,23 +28,19 @@ enum class Response
 	RESTART
 };
 
-enum class LoadType
-{
-	FEN,
-	PGN
-};
-
 class Game : public IGame
 {
 public:
 	// Constructor
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
-	Game(const std::string& FenString);
+	Game(LoadType type, std::string& string);
 
-	//void LoadFromFen(std::string fen);
 
+	void LoadFromFEN(std::string fen);
 	void LoadFromPGN(std::string pgn);
+	Move ChessMoveToMatrix(const std::string& move);
+
 
 	void MovePiece(Position start, Position destination) override;
 	void UpdateTurn();

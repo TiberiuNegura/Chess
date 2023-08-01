@@ -1,4 +1,5 @@
 #include <map>
+#include <set>
 
 #include "Game.h"
 #include "Board.h"
@@ -11,9 +12,9 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
-IGamePtr IGame::Produce(const std::string& FenString)
+IGamePtr IGame::Produce(LoadType type, std::string string)
 {
-	return std::make_shared<Game>(FenString);
+	return std::make_shared<Game>(type, string);
 }
 
 // Constructor
@@ -32,17 +33,50 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 }
 
-Game::Game(const std::string& FenString)
-	: m_board(FenString)
+Game::Game(LoadType type, std::string& string)
+	: m_board(type, string)
 	, m_state(EGameState::Playing)
+{
+	switch (type)
+	{
+	case LoadType::PGN:
+		LoadFromPGN(string);
+		break;
+	case LoadType::FEN:
+		LoadFromFEN(string);
+		break;
+	}
+}
+
+void Game::LoadFromFEN(std::string fen)
 {
 	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
 	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
-	FenString.back() == 'w' ? m_turn = EColor::WHITE : m_turn = EColor::BLACK;
+	fen.back() == 'w' ? m_turn = EColor::WHITE : m_turn = EColor::BLACK;
 }
 
 void Game::LoadFromPGN(std::string pgn)
 {
+
+}
+
+Move Game::ChessMoveToMatrix(const std::string& move)
+{
+	static const std::set<char> validChars = { 'b', 'B', 'r', 'R', 'q', 'Q', 'k', 'K', 'h', 'H' };
+	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
+
+	/*if (move.size() - 1 == 4)
+	{
+		auto upgradeTo = m_board.CharToType(move[4]);
+		EvolvePawn(upgradeTo);
+	}*/
+
+	if (validChars.find(move[0]) != validChars.end())
+	{
+		Position end('8' - move[2], move[1] - 'a');
+		auto start = m_board.FindForPGN(move[0], end, m_turn);
+		return { start, end };
+	}
 
 }
 

@@ -9,6 +9,7 @@
 
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
+using Move = std::pair<Position, Position>;
 
 using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
 using Matrix = std::array<std::array<PiecePtr, 8>, 8>;
@@ -27,7 +28,10 @@ public:
 	Board();
 	Board(CharBoardRepresentation alternateMat);
 	Board(const Matrix& mat);
-	Board(const std::string& fenString);
+	Board(LoadType type,std::string& string);
+
+	void LoadFromFEN(std::string& fen);
+	void LoadFromPGN(std::string& pgn);
 
 	EColor CharToColor(char c) const;
 	EType CharToType(char c) const;
@@ -66,6 +70,9 @@ public:
 	PiecePtr operator[](Position pos);
 
 	std::string MatrixToChessMove(Position start, Position end, bool capture) const;
+	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
+	Position FindForPGN(char name, Position end, EColor turn) const;
+
 private:
 	Position FindKing(EColor color) const;
 

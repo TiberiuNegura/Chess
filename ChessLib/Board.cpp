@@ -1,5 +1,7 @@
 #include <unordered_set>
+#include <set>
 #include <unordered_map>
+#include <regex>
 
 #include "Board.h"
 #include "Piece.h"
@@ -11,32 +13,17 @@ Board::Board()
 	Init();
 }
 
-Board::Board(const std::string& fenString)
+Board::Board(LoadType type, std::string& string)
 {
 	Reset();
-	int row = 0, column = 0;
-	for (auto& c : fenString)
+	switch (type)
 	{
-		if (c == ' ') // just the first part of the string contains piece positions
-			break;
-
-		if (isdigit(c)) 
-			column += c - '0';
-
-		else if (c == '/')
-		{
-			row++;
-			column = 0;
-		}
-
-		else
-		{
-			auto color = CharToColor(c);
-			auto type = CharToType(c);
-
-			m_board[row][column] = Piece::Produce(type, color);
-			column++;
-		}
+	case LoadType::PGN:
+		LoadFromPGN(string);
+		break;
+	case LoadType::FEN:
+		LoadFromFEN(string);
+		break;
 	}
 }
 
@@ -87,6 +74,51 @@ Board::Board(CharBoardRepresentation alternateMat)
 Board::Board(const Matrix& mat)
 {
 	m_board = mat;
+}
+
+void Board::LoadFromFEN(std::string& fen)
+{
+	int row = 0, column = 0;
+	for (auto& c : fen)
+	{
+		if (c == ' ') // just the first part of the string contains piece positions
+			break;
+
+		if (isdigit(c))
+			column += c - '0';
+
+		else if (c == '/')
+		{
+			row++;
+			column = 0;
+		}
+
+		else
+		{
+			auto color = CharToColor(c);
+			auto type = CharToType(c);
+
+			m_board[row][column] = Piece::Produce(type, color);
+			column++;
+		}
+	}
+}
+
+void Board::LoadFromPGN(std::string& pgn)
+{
+	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
+	std::string pgnMove;
+	Move move;
+
+	//for (auto c : pgn)
+	//{
+	//	if (c == ' ' || std::next(&c) == '\0')
+	//	{
+	//		//move = ChessMoveToMatrix(pgnMove);
+	//	}
+	//	
+	//	pgnMove += c;
+	//}
 }
 
 const Matrix& Board::GetMatrix() const
@@ -459,6 +491,32 @@ Position Board::FindKing(EColor color) const
 			if (Get(row, column) && Get(row, column)->Is(EType::KING, color))
 				return { row, column };
 	throw PieceNotFoundException();
+}
+
+bool Board::FindSubstring(std::string input, const std::set<std::string>& substrings) const
+{
+	for (const auto& substring : substrings) {
+		if (input.find(substring) != std::string::npos) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Position Board::FindForPGN(char name, Position end, EColor turn) const
+{
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetName() == name)
+			{
+				auto list = GetMoves({ i,j }, turn);
+				for (const auto& move : list)
+					if (move == end)
+						return Position(i, j);
+			}
+		}
+	return Position(-1,-1);
 }
 
 BoardPtr Board::Clone() const
