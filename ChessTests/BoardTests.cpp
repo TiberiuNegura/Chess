@@ -737,7 +737,8 @@ TEST(CastlingTest, RookMovedTest)
 
 TEST(FenStringTest, FromFenToBoard)
 {
-	Game game(LoadType::FEN, "2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w");
+	std::string fen = "2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w";
+	Game game(LoadType::FEN, fen);
 	Board board(CharBoardRepresentation{
 		' ', ' ','r',' ',' ','k',' ','r',
 		'p', 'p',' ',' ','b','p','p','p',

@@ -1,5 +1,6 @@
 #include <map>
 #include <set>
+#include <regex>
 
 #include "Game.h"
 #include "Board.h"
@@ -57,27 +58,43 @@ void Game::LoadFromFEN(std::string fen)
 
 void Game::LoadFromPGN(std::string pgn)
 {
+	m_turn = EColor::WHITE;
 
+	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
+	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
+	std::string pgnMove;
+	Move move;
+
+	for (int i = 0; i < pgn.size(); i++)
+	{
+		if (pgn[i] == ' ' || (i == pgn.size() - 1))
+		{
+			if (FindSubstring(pgnMove, evolve))
+			{
+				auto upgradeTo = m_board.CharToType(pgnMove[4]);
+				EvolvePawn(upgradeTo);
+			}
+			else
+				move = ChessMoveToMatrix(pgnMove);
+			MovePiece(move.first, move.second);
+			pgnMove.clear();
+		}
+		if (pgn[i] != ' ')
+			pgnMove += pgn[i];
+	}
 }
 
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
-	static const std::set<char> validChars = { 'b', 'B', 'r', 'R', 'q', 'Q', 'k', 'K', 'h', 'H' };
-	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
+	static const std::set<char> validChars = { 'B','R','Q','K','H' };
 
-	/*if (move.size() - 1 == 4)
-	{
-		auto upgradeTo = m_board.CharToType(move[4]);
-		EvolvePawn(upgradeTo);
-	}*/
+	
+	int i = validChars.find(move[0]) != validChars.end() ? 1 : 0;
 
-	if (validChars.find(move[0]) != validChars.end())
-	{
-		Position end('8' - move[2], move[1] - 'a');
-		auto start = m_board.FindForPGN(move[0], end, m_turn);
-		return { start, end };
-	}
-
+	Position end('8' - move[i + 1], move[i] - 'a');
+	auto start = m_board.FindForPGN(move[0], end, m_turn);
+	
+	return { start, end };
 }
 
 
@@ -251,11 +268,10 @@ std::string Game::GetPgnMove() const
 std::string Game::GetPGN() const
 {
 	std::string pgn;
-	char counter = '1';
-	for (int i = 0; i < m_moves.size() - 1; i+=2)
+	int counter = 1;
+	for (size_t i = 0; i < m_moves.size() - 1; i += 2) 
 	{
-		pgn += counter;
-		pgn += ". ";
+		pgn += std::to_string(counter) + ". ";
 		pgn += m_moves[i];
 		pgn += " ";
 		pgn += m_moves[i + 1];
@@ -351,6 +367,16 @@ bool Game::IsCheck() const
 bool Game::IsGameOver() const
 {
 	return (WhiteWon() || IsTie() || BlackWon());
+}
+
+bool Game::FindSubstring(std::string input, const std::set<std::string>& substrings) const
+{
+	for (const auto& substring : substrings) {
+		if (input.find(substring) != std::string::npos) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void Game::Restart()

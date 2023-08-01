@@ -430,36 +430,35 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_blackPieces->clear();
 	m_MovesList->clear();
 	
-	if (filePath.contains(".fen"))
-		m_game = IGame::Produce(LoadType::FEN, line.toStdString());
-	else if (filePath.contains(".pgn"))
-		m_game = IGame::Produce(LoadType::PGN, line.toStdString());
-	m_game->AddListener(shared_from_this());
-
-
 	TypeList whitePieces = m_game->GetBlackMissingPieces();
 	TypeList blackPieces = m_game->GetWhiteMissingPieces();
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
 
-
-	for (auto& pieceType : whitePieces)
+	if (filePath.contains(".fen"))
 	{
-		QListWidgetItem* capturedPiece = new QListWidgetItem();
-		QString imagePath = "res/b";
-		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-		QPixmap pixmap(imagePath);
-		capturedPiece->setIcon(QIcon(pixmap));
-		m_whitePieces->addItem(capturedPiece);
+		m_game = IGame::Produce(LoadType::FEN, line.toStdString());
+		for (auto& pieceType : whitePieces)
+		{
+			QListWidgetItem* capturedPiece = new QListWidgetItem();
+			QString imagePath = "res/b";
+			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+			QPixmap pixmap(imagePath);
+			capturedPiece->setIcon(QIcon(pixmap));
+			m_whitePieces->addItem(capturedPiece);
+		}
+		for (auto& pieceType : blackPieces)
+		{
+			QListWidgetItem* capturedPiece = new QListWidgetItem();
+			QString imagePath = "res/w";
+			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+			QPixmap pixmap(imagePath);
+			capturedPiece->setIcon(QIcon(pixmap));
+			m_blackPieces->addItem(capturedPiece);
+		}
 	}
-	for (auto& pieceType : blackPieces)
-	{
-		QListWidgetItem* capturedPiece = new QListWidgetItem();
-		QString imagePath = "res/w";
-		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-		QPixmap pixmap(imagePath);
-		capturedPiece->setIcon(QIcon(pixmap));
-		m_blackPieces->addItem(capturedPiece);
-	}
+	else if (filePath.contains(".pgn"))
+		m_game = IGame::Produce(LoadType::PGN, line.toStdString());
+	m_game->AddListener(shared_from_this());
 
 	UpdateBoard();
 }

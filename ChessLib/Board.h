@@ -70,7 +70,6 @@ public:
 	PiecePtr operator[](Position pos);
 
 	std::string MatrixToChessMove(Position start, Position end, bool capture) const;
-	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
 	Position FindForPGN(char name, Position end, EColor turn) const;
 
 private:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 #include "IGame.h"
 #include "Board.h"
 #include "IGameListener.h"
@@ -72,6 +74,7 @@ public:
 	bool BlackWon() const override;
 	bool WhiteWon() const override;
 	bool IsGameOver() const override;
+	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
 
 	void Restart() override;
 

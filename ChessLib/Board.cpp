@@ -1,7 +1,5 @@
 #include <unordered_set>
-#include <set>
 #include <unordered_map>
-#include <regex>
 
 #include "Board.h"
 #include "Piece.h"
@@ -19,7 +17,7 @@ Board::Board(LoadType type, std::string& string)
 	switch (type)
 	{
 	case LoadType::PGN:
-		LoadFromPGN(string);
+		Init();
 		break;
 	case LoadType::FEN:
 		LoadFromFEN(string);
@@ -106,19 +104,7 @@ void Board::LoadFromFEN(std::string& fen)
 
 void Board::LoadFromPGN(std::string& pgn)
 {
-	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
-	std::string pgnMove;
-	Move move;
-
-	//for (auto c : pgn)
-	//{
-	//	if (c == ' ' || std::next(&c) == '\0')
-	//	{
-	//		//move = ChessMoveToMatrix(pgnMove);
-	//	}
-	//	
-	//	pgnMove += c;
-	//}
+	
 }
 
 const Matrix& Board::GetMatrix() const
@@ -282,7 +268,7 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture)
 		return "O-O-O";
 
 	if (!piece->Is(EType::PAWN))
-		move += (piece->GetColor() == EColor::BLACK) ? tolower(piece->GetName()) : toupper(piece->GetName());
+		move += tolower(piece->GetName());
 	if (capture)
 		move += 'x';
 	
@@ -493,30 +479,20 @@ Position Board::FindKing(EColor color) const
 	throw PieceNotFoundException();
 }
 
-bool Board::FindSubstring(std::string input, const std::set<std::string>& substrings) const
-{
-	for (const auto& substring : substrings) {
-		if (input.find(substring) != std::string::npos) {
-			return true;
-		}
-	}
-	return false;
-}
-
 Position Board::FindForPGN(char name, Position end, EColor turn) const
 {
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j] && m_board[i][j]->GetName() == name)
+			if (m_board[i][j] && (m_board[i][j]->GetName() == name || m_board[i][j]->GetName() == 'P'))
 			{
 				auto list = GetMoves({ i,j }, turn);
 				for (const auto& move : list)
 					if (move == end)
-						return Position(i, j);
+						return { i, j };
 			}
 		}
-	return Position(-1,-1);
+	return {};
 }
 
 BoardPtr Board::Clone() const
