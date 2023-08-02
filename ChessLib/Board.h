@@ -70,7 +70,7 @@ public:
 	PiecePtr operator[](Position pos);
 
 	std::string MatrixToChessMove(Position start, Position end, bool capture) const;
-	Position FindForPGN(char name, Position end, EColor turn) const;
+	Position FindForPGN(char name, Position end, EColor turn, bool isPawn) const;
 
 private:
 	Position FindKing(EColor color) const;

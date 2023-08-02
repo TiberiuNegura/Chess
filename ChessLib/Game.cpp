@@ -67,6 +67,8 @@ void Game::LoadFromPGN(std::string pgn)
 
 	for (int i = 0; i < pgn.size(); i++)
 	{
+		if (i == 101)
+			i = 101;
 		if (pgn[i] == ' ' || (i == pgn.size() - 1))
 		{
 			move = ChessMoveToMatrix(pgnMove);
@@ -86,12 +88,16 @@ void Game::LoadFromPGN(std::string pgn)
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
 	static const std::set<char> validChars = { 'B' ,'R' ,'Q' ,'K' ,'H' };
-
+	int row = m_turn == EColor::WHITE ? 7 : 0;
 	
 	int i = validChars.find(move[0]) != validChars.end() ? 1 : 0;
 
+	/*if(move == "O-O")
+		auto start = m_board.FindForPGN('K', {row, 6}, m_turn, !i);
+	else if(move == "O-O-O")
+		auto start = m_board.FindForPGN('K', { row, 2 }, m_turn, !i);*/
 	Position end = { '8' - move[i + 1], move[i] - 'a' };
-	auto start = m_board.FindForPGN(move[0], end, m_turn);
+	auto start = m_board.FindForPGN(move[0], end, m_turn, !i);
 	
 	return { start, end };
 }

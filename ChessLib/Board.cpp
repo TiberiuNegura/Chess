@@ -479,12 +479,14 @@ Position Board::FindKing(EColor color) const
 	throw PieceNotFoundException();
 }
 
-Position Board::FindForPGN(char name, Position end, EColor turn) const
+Position Board::FindForPGN(char name, Position end, EColor turn, bool isPawn) const
 {
+	if (isPawn)
+		name = 'P';
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j] && (toupper(m_board[i][j]->GetName()) == name || toupper(m_board[i][j]->GetName()) == 'P'))
+			if (m_board[i][j] && (toupper(m_board[i][j]->GetName()) == name))
 			{
 				auto list = GetMoves({ i,j }, turn);
 				for (const auto& move : list)
