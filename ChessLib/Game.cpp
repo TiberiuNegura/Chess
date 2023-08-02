@@ -85,7 +85,7 @@ void Game::LoadFromPGN(std::string pgn)
 
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
-	static const std::set<char> validChars = { 'b' ,'r' ,'q' ,'k' ,'h' };
+	static const std::set<char> validChars = { 'B' ,'R' ,'Q' ,'K' ,'H' };
 
 	
 	int i = validChars.find(move[0]) != validChars.end() ? 1 : 0;

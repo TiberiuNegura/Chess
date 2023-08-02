@@ -268,7 +268,7 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture)
 		return "O-O-O";
 
 	if (!piece->Is(EType::PAWN))
-		move += tolower(piece->GetName());
+		move += toupper(piece->GetName());
 	if (capture)
 		move += 'x';
 	
@@ -484,7 +484,7 @@ Position Board::FindForPGN(char name, Position end, EColor turn) const
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j] && (tolower(m_board[i][j]->GetName()) == name || m_board[i][j]->GetName() == 'P'))
+			if (m_board[i][j] && (toupper(m_board[i][j]->GetName()) == name || toupper(m_board[i][j]->GetName()) == 'P'))
 			{
 				auto list = GetMoves({ i,j }, turn);
 				for (const auto& move : list)
