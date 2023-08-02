@@ -51,7 +51,6 @@ public:
 	void OnMovePiece(Position start, Position end) override;
 	void OnRestart() override;
 	void OnPieceCapture(EType pieceType, EColor pieceColor) override;
-
 	void SetGame(IGamePtr game);
 
 public slots:
@@ -75,7 +74,7 @@ signals:
 	void Exit();
 
 private:
-	QString FromMatrixToChessMove(Position start, Position end) const;
+	QWidget* FromMatrixToChessMove(Position start, Position end) const;
 	void toggleFullScreen();
 
 private:

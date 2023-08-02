@@ -275,7 +275,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"}"
 
 		"QListWidget::item {"
-		"   padding: 5px;" // Add padding to the list items
+		"   padding: 0px;" // Add padding to the list items
 		"}"
 
 		"QListWidget::item:hover {"
@@ -301,11 +301,11 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"}"
 
 		"QScrollBar::handle:vertical:hover{	"
-		"	background-color: rgb(255, 0, 127);"
+		"	background-color: #d234eb;"
 		"}"
 
 		"QScrollBar::handle:vertical:pressed {	"
-		"	background-color: rgb(185, 0, 92);"
+		"	background-color: #8e2b9e;"
 		"}"
 
 		"QScrollBar::sub-line:vertical {"
@@ -319,11 +319,11 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"}"
 
 		"QScrollBar::sub-line:vertical:hover {	"
-		"	background-color: rgb(255, 0, 127);"
+		"	background-color: #d234eb"
 		"}"
 
 		"QScrollBar::sub-line:vertical:pressed {	"
-		"	background-color: rgb(185, 0, 92);"
+		"	background-color: #8e2b9e;"
 		"}"
 
 		"QScrollBar::add-line:vertical {"
@@ -335,11 +335,12 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"	subcontrol-position: bottom;"
 		"	subcontrol-origin: margin;"
 		"}"
+
 		"QScrollBar::add-line:vertical:hover {	"
-		"	background-color: rgb(255, 0, 127);"
+		"	background-color: #d234eb"
 		"}"
 		"QScrollBar::add-line:vertical:pressed {	"
-		"	background-color: rgb(185, 0, 92);"
+		"	background-color: #8e2b9e;"
 		"}"
 
 		"QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
@@ -392,7 +393,11 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		{
 			std::string source, target, turn;
 			m_game->MovePiece(start, position);
-			m_MovesList->addItem(FromMatrixToChessMove(start, position));
+
+			QListWidgetItem* item = new QListWidgetItem();
+			QWidget* design = FromMatrixToChessMove(start, position);
+			m_MovesList->addItem(item);
+			m_MovesList->setItemWidget(item, design);
 		}
 		catch (OutOfBoundsException e)
 		{
@@ -600,19 +605,46 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 	}
 }
 
-QString ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
+QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
 {
+	QWidget* item = new QWidget();
+	QGridLayout* layout = new QGridLayout;
 	std::string source, target, turn;
+	QString path;
+
 	turn = m_game->GetTurn() == EColor::WHITE ? "Black" : "White";
+	path = m_game->GetTurn() == EColor::BLACK ? "res/black.png" : "res/white.png";
+
+	QLabel* turnPicture = new QLabel();
+	QPixmap pic(path);
+	turnPicture->setPixmap(pic.scaled(30, 30));
+	turnPicture->setStyleSheet("border: 1px solid black; padding: 0px; margin: 0px;");
 
 	source += toupper('a' + start.second);
 	source += toupper('1' + (7 - start.first));
+	QLabel* initialPos = new QLabel(QString::fromStdString(source));
+	initialPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
 	
+	QLabel* arrow = new QLabel();
+	QPixmap pic2("res/arrow.png");
+	arrow->setPixmap(pic2.scaled(30, 30));
+	arrow->setStyleSheet("border: none; padding: 0px; margin: 0px;");
+
 	target += toupper('a' + end.second);
 	target += toupper('1' + (7 - end.first));
-	
-	std::string output = turn + ": " + source + " -> " + target;
-	return QString::fromStdString(output);
+	QLabel* targetPos = new QLabel(QString::fromStdString(target));
+	targetPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
+
+	layout->addWidget(turnPicture, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(initialPos, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(arrow, 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(targetPos, 0, 3, Qt::AlignLeft | Qt::AlignVCenter);
+
+	item->setStyleSheet("background: transparent; padding: 0px; margin: 0px;");
+	item->setLayout(layout);
+
+
+	return item;
 }
 
 void ChessUIQt::toggleFullScreen()
