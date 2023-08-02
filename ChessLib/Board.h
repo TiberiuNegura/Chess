@@ -60,16 +60,21 @@ public:
 	bool CanPawnEvolve(Position pos) const;
 	bool IsThreeFold(BoardConfigList boardConfigs, BoardConfig config) const;
 
+
 	Position FindEvolvingPawn(EColor color);
 	PositionList ComputePositionList(Position start) const;
 	BoardConfig GetBoardConfiguration() const;
-	std::string GetFenString() const;
 	TypeList SearchMissingPieces(EColor color) const;
 
 
 	PiecePtr operator[](Position pos);
 
-	std::string MatrixToChessMove(Position start, Position end, bool capture) const;
+	std::string GetFenString() const;
+
+	char SharedLineOrColumn(Position start, Position end) const;
+	char CharifyRow(int row) const;
+	char CharifyColumn(int col) const;
+	std::string MatrixToChessMove(Position start, Position end, bool capture, char lineOrCol) const;
 	Position FindForPGN(char name, Position end, EColor turn, bool isPawn) const;
 
 private:

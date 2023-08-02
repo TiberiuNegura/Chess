@@ -249,9 +249,66 @@ TypeList Board::SearchMissingPieces(EColor color) const
 	return missingPieces;
 }
 
-std::string Board::MatrixToChessMove(Position start, Position end, bool capture) const
+char Board::SharedLineOrColumn(Position start, Position end) const
+{
+	if (auto piece = m_board[start.first][start.second])
+	{
+		auto color = piece->GetColor();
+		auto list = GetMoves(start, color);
+		bool sameColor, sameType, samePosition;
+
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
+			{
+				if (m_board[i][j])
+				{
+					sameColor = (color == m_board[i][j]->GetColor());
+					sameType = (piece->GetType() == m_board[i][j]->GetType());
+					samePosition = (start.first == i && start.second == j);
+
+					if (sameColor && sameType && !samePosition)
+					{
+						auto moves = GetMoves({ i,j }, color);
+
+						for (const auto& move : moves)
+							if (move == end)
+							{
+								if (start.second == j)
+									return CharifyRow(start.first);
+								return CharifyColumn(start.second);
+							}
+					}
+				}
+			}
+	}
+
+	return '-';
+}
+
+char Board::CharifyRow(int row) const
+{
+	return ('1' + (7 - row));
+}
+
+char Board::CharifyColumn(int col) const
+{
+	return ('a' + col);
+}
+
+std::string Board::MatrixToChessMove(Position start, Position end, bool capture, char lineOrCol) const
 {
 	std::string move = "";
+	std::string endString = "";
+	std::string startString = "";
+
+	endString += CharifyColumn(end.second);
+	endString += CharifyRow(end.first);
+
+	startString += CharifyColumn(start.second);
+	startString += CharifyRow(start.first);
+
+
+
 	auto piece = m_board[end.first][end.second];
 	auto enemyColor = (piece->GetColor() == EColor::BLACK) ? EColor::WHITE : EColor::BLACK;
 
@@ -265,11 +322,14 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture)
 
 	if (!piece->Is(EType::PAWN))
 		move += toupper(piece->GetName());
+
+	if (lineOrCol != '-')
+		move += lineOrCol;
+
 	if (capture)
 		move += 'x';
 	
-	move += ('a' + end.second);
-	move += ('1' + (7 - end.first));
+	move += endString;
 
 	if (IsCheck(enemyColor))
 		move += IsCheckmate(enemyColor) ? '#' : '+';
@@ -475,7 +535,7 @@ Position Board::FindKing(EColor color) const
 	throw PieceNotFoundException();
 }
 
-Position Board::FindForPGN(char name, Position end, EColor turn, bool isPawn) const
+Position Board::FindForPGN(char name, Position end, EColor turn, bool isPawn) const // --> trateaza cazu de linie sau coloana
 {
 	if (isPawn)
 		name = 'P';

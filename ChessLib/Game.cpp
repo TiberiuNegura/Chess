@@ -84,17 +84,28 @@ void Game::LoadFromPGN(std::string pgn)
 
 	for (int i = 0; i < pgn.size(); i++)
 	{
-		if (i == 101)
-			i = 101;
+		if (pgnMove.find("Bc8b7") != std::string::npos)
+			i = i;
 		if (pgn[i] == ' ' || (i == pgn.size() - 1))
 		{
+			bool isEvolving = FindSubstring(pgnMove, evolve);
+			char upgrade;
+
+			if (isEvolving)
+			{
+				upgrade = pgnMove[pgnMove.size() - 1];
+				pgnMove.erase(pgnMove.size() - 2);
+			}
+
 			move = ChessMoveToMatrix(pgnMove);
 			MovePiece(move.first, move.second);
-			if (FindSubstring(pgnMove, evolve))
+
+			if (isEvolving)
 			{
-				auto upgradeTo = m_board.CharToType(pgnMove[3]);
+				EType upgradeTo = m_board.CharToType(upgrade);
 				EvolvePawn(upgradeTo);
 			}
+
 			pgnMove.clear();
 		}
 		if (pgn[i] != ' ')
@@ -106,15 +117,28 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 {
 	static const std::set<char> validChars = { 'B' ,'R' ,'Q' ,'K' ,'H' };
 	int row = m_turn == EColor::WHITE ? 7 : 0;
+	Position end, start;
 	
-	int i = validChars.find(move[0]) != validChars.end() ? 1 : 0;
+	bool isPawn = validChars.find(move[0]) != validChars.end() ? false : true;
 
 	/*if(move == "O-O")
 		auto start = m_board.FindForPGN('K', {row, 6}, m_turn, !i);
 	else if(move == "O-O-O")
 		auto start = m_board.FindForPGN('K', { row, 2 }, m_turn, !i);*/
-	Position end = { '8' - move[i + 1], move[i] - 'a' };
-	auto start = m_board.FindForPGN(move[0], end, m_turn, !i);
+
+	end.first = '8' - move[move.size() - 1];
+	end.second = move[move.size() - 2] - 'a';
+
+	if (move.size() == 5)
+	{
+		start.first = '8' - move[2];
+		start.second = move[1] - 'a';
+	}
+	else
+		start = m_board.FindForPGN(move[0], end, m_turn, isPawn);
+
+	
+
 	
 	return { start, end };
 }
@@ -153,8 +177,10 @@ void Game::MovePiece(Position start, Position destination)
 				captures = true;
 			}
 
+			char lineOrCol = m_board.SharedLineOrColumn(start, destination);
+
 			m_board.MovePiece(start, destination);
-			m_moves.push_back(m_board.MatrixToChessMove(start, destination, captures));// --> pgn
+			m_moves.push_back(m_board.MatrixToChessMove(start, destination, captures, lineOrCol));// --> pgn
 			Notify(start, destination);
 			m_board[destination]->SetHasMoved();
 			
@@ -218,7 +244,6 @@ void Game::MovePiece(Position start, Position destination)
 		throw CheckException();
 	throw IllegalMoveException();
 }
-
 
 void Game::UpdateTurn()
 {
