@@ -36,7 +36,7 @@ public:
 	// Constructor
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
-	Game(LoadType type, std::string& string);
+	Game(std::string& fileContent, LoadType fileType);
 
 
 	void LoadFromFEN(std::string fen);

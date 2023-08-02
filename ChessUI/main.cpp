@@ -8,8 +8,6 @@ int main(int argc, char *argv[])
     IGamePtr game = IGame::Produce();
     w->SetGame(game);
     game->AddListener(w);
-
-    w->show();
     w->UpdateBoard();
 
     QObject::connect(w.get(), &ChessUIQt::Exit, &a, &QApplication::quit);

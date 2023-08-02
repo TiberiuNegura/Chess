@@ -64,6 +64,7 @@ public slots:
 	char PieceToChar(IPiecePtr piece) const;
 	void OnCopyButtonClicked();
 	void OnHistoryClicked(QListWidgetItem* item);
+	void centerOnScreen();
 	
 
 protected:
@@ -76,7 +77,6 @@ signals:
 private:
 	QString FromMatrixToChessMove(Position start, Position end) const;
 	void toggleFullScreen();
-	void centerOnScreen();
 
 private:
 	std::array<std::array<GridButton*, 8>, 8> m_grid;

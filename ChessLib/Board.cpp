@@ -11,18 +11,14 @@ Board::Board()
 	Init();
 }
 
-Board::Board(LoadType type, std::string& string)
+Board::Board(std::string& fileContent, LoadType fileType)
 {
 	Reset();
-	switch (type)
-	{
-	case LoadType::PGN:
+	if (fileType == LoadType::PGN)
 		Init();
-		break;
-	case LoadType::FEN:
-		LoadFromFEN(string);
-		break;
-	}
+	else if (fileType == LoadType::FEN)
+		LoadFromFEN(fileContent);
+
 }
 
 EColor Board::CharToColor(char c) const

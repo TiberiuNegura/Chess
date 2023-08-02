@@ -1,6 +1,7 @@
 #include <map>
 #include <set>
 #include <regex>
+#include <fstream>
 
 #include "Game.h"
 #include "Board.h"
@@ -13,9 +14,23 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
-IGamePtr IGame::Produce(LoadType type, std::string string)
+IGamePtr IGame::Produce(std::string path)
 {
-	return std::make_shared<Game>(type, string);
+	std::ifstream file(path);
+
+	if (file.good())
+	{
+		std::string fileContent;
+		getline(file, fileContent);
+
+		if (path.find(".pgn") != std::string::npos)
+			return std::make_shared<Game>(fileContent, LoadType::PGN);
+
+		else if (path.find(".fen") != std::string::npos)
+			return std::make_shared<Game>(fileContent, LoadType::FEN);
+	}
+
+	return {};
 }
 
 // Constructor
@@ -34,25 +49,27 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 }
 
-Game::Game(LoadType type, std::string& string)
-	: m_board(type, string)
+Game::Game(std::string& fileContent, LoadType fileType)
+	: m_board(fileContent, fileType)
 	, m_state(EGameState::Playing)
 {
-	switch (type)
+
+	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
+	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
+
+	switch (fileType)
 	{
 	case LoadType::PGN:
-		LoadFromPGN(string);
+		LoadFromPGN(fileContent);
 		break;
 	case LoadType::FEN:
-		LoadFromFEN(string);
+		LoadFromFEN(fileContent);
 		break;
 	}
 }
 
 void Game::LoadFromFEN(std::string fen)
 {
-	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
-	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
 	m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
 }
 

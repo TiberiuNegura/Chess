@@ -12,6 +12,8 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
 	Init(mainGridLayout);
+	show();
+	centerOnScreen();
 }
 
 ChessUIQt::~ChessUIQt()
@@ -35,14 +37,13 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 	mainWidget->setLayout(mainGridLayout);
 
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-	//resize(size() * 1.8);
-	centerOnScreen();
 
 	this->setCentralWidget(mainWidget);
 }
 
 void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 {
+
 	// Title bar
 	QWidget* titleBar = new QWidget();
 	titleBar->setFixedHeight(40); // Set a fixed height for the title bar
@@ -272,17 +273,88 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"   border: none;" // Add a thin border
 		"   color: white;" // Set the text color to white
 		"}"
+
 		"QListWidget::item {"
 		"   padding: 5px;" // Add padding to the list items
 		"}"
+
 		"QListWidget::item:hover {"
 		"   background-color: #d234eb;" // Highlighted background color on hover
 		"}"
+
+		"QListWidget::item:selected {"
+		"   background-color: #d234eb" // Highlighted background color on hover
+		"}"
+
+		"QListWidget QScrollBar:vertical {"
+		"	border: none;"
+		"	background: rgb(45, 45, 68);"
+		"	width: 14px;"
+		"	margin: 15px 0 15px 0;"
+		"	border-radius: 0px;"
+		"}"
+
+		"QScrollBar::handle:vertical {	"
+		"	background-color: rgb(80, 80, 122);"
+		"	min-height: 30px;"
+		"	border-radius: 7px;"
+		"}"
+
+		"QScrollBar::handle:vertical:hover{	"
+		"	background-color: rgb(255, 0, 127);"
+		"}"
+
+		"QScrollBar::handle:vertical:pressed {	"
+		"	background-color: rgb(185, 0, 92);"
+		"}"
+
+		"QScrollBar::sub-line:vertical {"
+		"	border: none;"
+		"	background-color: rgb(59, 59, 90);"
+		"	height: 15px;"
+		"	border-top-left-radius: 7px;"
+		"	border-top-right-radius: 7px;"
+		"	subcontrol-position: top;"
+		"	subcontrol-origin: margin;"
+		"}"
+
+		"QScrollBar::sub-line:vertical:hover {	"
+		"	background-color: rgb(255, 0, 127);"
+		"}"
+
+		"QScrollBar::sub-line:vertical:pressed {	"
+		"	background-color: rgb(185, 0, 92);"
+		"}"
+
+		"QScrollBar::add-line:vertical {"
+		"	border: none;"
+		"	background-color: rgb(59, 59, 90);"
+		"	height: 15px;"
+		"	border-bottom-left-radius: 7px;"
+		"	border-bottom-right-radius: 7px;"
+		"	subcontrol-position: bottom;"
+		"	subcontrol-origin: margin;"
+		"}"
+		"QScrollBar::add-line:vertical:hover {	"
+		"	background-color: rgb(255, 0, 127);"
+		"}"
+		"QScrollBar::add-line:vertical:pressed {	"
+		"	background-color: rgb(185, 0, 92);"
+		"}"
+
+		"QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
+		"	background: none;"
+		"}"
+
+		"QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+		"	background: none;"
+		"}"
+
 	);
 
 	QFont listFont;
-	listFont.setFamily("Arial");
-	listFont.setPointSize(12);
+	listFont.setFamily("Segoe UI");
+	listFont.setPointSize(20);
 	m_MovesList->setFont(listFont); // --> schimba pt history
 
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
@@ -415,12 +487,9 @@ void ChessUIQt::OnSaveButtonClicked()
 void ChessUIQt::OnLoadButtonClicked()
 {
 	QString desktopPath = QDir::homePath() + "/Downloads";
-	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "Fen Files (*.fen);; Pgn Files(*.pgn);;All Files (*)");
-	QFile file(filePath);
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "PGN Files(*.pgn);; FEN Files(*.fen);;All Files (*)");
+	if (filePath.isEmpty())
 		return;
-	QTextStream in(&file);
-	QString line = in.readLine();
 
 
 	m_game->Restart();
@@ -429,36 +498,36 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_whitePieces->clear();
 	m_blackPieces->clear();
 	m_MovesList->clear();
+
+	m_game = IGame::Produce(filePath.toStdString());
 	
-	TypeList whitePieces = m_game->GetBlackMissingPieces();
-	TypeList blackPieces = m_game->GetWhiteMissingPieces();
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
 
-	if (filePath.contains(".fen"))
-	{
-		m_game = IGame::Produce(LoadType::FEN, line.toStdString());
-		for (auto& pieceType : whitePieces)
-		{
-			QListWidgetItem* capturedPiece = new QListWidgetItem();
-			QString imagePath = "res/b";
-			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-			QPixmap pixmap(imagePath);
-			capturedPiece->setIcon(QIcon(pixmap));
-			m_whitePieces->addItem(capturedPiece);
-		}
-		for (auto& pieceType : blackPieces)
-		{
-			QListWidgetItem* capturedPiece = new QListWidgetItem();
-			QString imagePath = "res/w";
-			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-			QPixmap pixmap(imagePath);
-			capturedPiece->setIcon(QIcon(pixmap));
-			m_blackPieces->addItem(capturedPiece);
-		}
-	}
-	else if (filePath.contains(".pgn"))
-		m_game = IGame::Produce(LoadType::PGN, line.toStdString());
+
+	TypeList whitePieces = m_game->GetBlackMissingPieces();
+	TypeList blackPieces = m_game->GetWhiteMissingPieces();
+
 	m_game->AddListener(shared_from_this());
+	
+
+	for (auto& pieceType : whitePieces)
+	{
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/b";
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_whitePieces->addItem(capturedPiece);
+	}
+	for (auto& pieceType : blackPieces)
+	{
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/w";
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_blackPieces->addItem(capturedPiece);
+	}
 
 	UpdateBoard();
 }
@@ -474,7 +543,10 @@ void ChessUIQt::OnRestartButtonClicked()
 		m_whitePieces->clear();
 		m_blackPieces->clear();	
 		UpdateBoard();
+
 	}
+
+
 	
 }
 

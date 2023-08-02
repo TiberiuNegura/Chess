@@ -39,7 +39,7 @@ class IGame
 {
 public:
 	static IGamePtr Produce(); 
-	static IGamePtr Produce(LoadType type, std::string string);
+	static IGamePtr Produce(std::string path);
 
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
