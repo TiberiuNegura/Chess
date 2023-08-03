@@ -613,7 +613,7 @@ QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
 	QString path;
 
 	turn = m_game->GetTurn() == EColor::WHITE ? "Black" : "White";
-	path = m_game->GetTurn() == EColor::BLACK ? "res/black.png" : "res/white.png";
+	path = m_game->GetTurn() == EColor::BLACK ? "res/white.png" : "res/black.png";
 
 	QLabel* turnPicture = new QLabel();
 	QPixmap pic(path);
