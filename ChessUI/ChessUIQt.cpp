@@ -472,16 +472,7 @@ void ChessUIQt::OnSaveButtonClicked()
 		QString desktopPath = QDir::homePath() + "/Downloads";
 		QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "PGN Files (*.pgn)");
 
-		if (!filePath.isEmpty()) {
-			QFile newFile(filePath);
-			if (!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
-				return;
-
-			QTextStream outStream(&newFile);
-			outStream << QString::fromStdString(m_game->GetPGN());
-
-			newFile.close();
-		}
+		m_game->SavePGN(filePath.toStdString());
 	}
 	else if (saveOptionDialog.clickedButton() == cancelButton) {
 		// User clicked Cancel, do nothing or handle it as required

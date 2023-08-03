@@ -5,6 +5,7 @@
 #include "IGame.h"
 #include "Board.h"
 #include "IGameListener.h"
+#include "PGN.h"
 
 using ListenerList = std::vector<ListenerWeakPtr>;
 
@@ -56,8 +57,8 @@ public:
 	TypeList GetWhiteMissingPieces() const override;
 	TypeList GetBlackMissingPieces() const override;
 	std::string GetFenString() const override;
-	std::string GetPgnMove() const override;
 	std::string GetPGN() const;
+	void SavePGN(std::string path) const override;
 	
 	// tie invitation
 	void MakeTieRequest() override;
@@ -95,5 +96,6 @@ private:
 	TypeList m_whiteMissing, m_blackMissing;
 	MovesList m_moves;
 	ListenerList m_listeners;
+	PGN m_pgn;
 };
 

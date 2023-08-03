@@ -114,6 +114,12 @@
     <ClInclude Include="IGameListener.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="PGN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidFileException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pawn.cpp">
@@ -172,6 +178,12 @@
     </ClCompile>
     <ClCompile Include="PawnEvolveException.cpp">
       <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="PGN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidFileException.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

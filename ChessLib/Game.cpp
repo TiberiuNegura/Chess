@@ -8,6 +8,7 @@
 
 #include "CheckException.h"
 #include "InvalidOptionException.h"
+#include "InvalidFileException.h"
 
 IGamePtr IGame::Produce()
 {
@@ -16,20 +17,11 @@ IGamePtr IGame::Produce()
 
 IGamePtr IGame::Produce(std::string path)
 {
-	std::ifstream file(path);
-
-	if (file.good())
-	{
-		std::string fileContent;
-		getline(file, fileContent);
-
-		if (path.find(".pgn") != std::string::npos)
-			return std::make_shared<Game>(fileContent, LoadType::PGN);
-
-		else if (path.find(".fen") != std::string::npos)
-			return std::make_shared<Game>(fileContent, LoadType::FEN);
-	}
-
+	if (path.find(".pgn") != std::string::npos)
+		return std::make_shared<Game>(path, LoadType::PGN);
+	else if (path.find(".fen") != std::string::npos) 
+		return std::make_shared<Game>(path, LoadType::FEN);
+	
 	return {};
 }
 
@@ -74,8 +66,15 @@ void Game::LoadFromFEN(std::string fen)
 	m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
 }
 
-void Game::LoadFromPGN(std::string pgn)
+void Game::LoadFromPGN(std::string path)
 {
+	std::string pgn;
+
+	if (m_pgn.Load(path))
+		pgn = m_pgn.Get();
+	else
+		throw InvalidFileException();
+
 	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
 	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
 	std::string pgnMove;
@@ -83,8 +82,6 @@ void Game::LoadFromPGN(std::string pgn)
 
 	for (int i = 0; i < pgn.size(); i++)
 	{
-		if (pgnMove == "Kc1")
-			i = i;
 		if (pgn[i] == ' ' || (i == pgn.size() - 1))
 		{
 			int row = m_turn == EColor::WHITE ? 7 : 0;
@@ -177,7 +174,7 @@ void Game::MovePiece(Position start, Position destination)
 			std::string lineOrCol = m_board.SharedLineOrColumn(start, destination);
 
 			m_board.MovePiece(start, destination);
-			m_moves.push_back(m_board.MatrixToChessMove(start, destination, captures, lineOrCol));// --> pgn
+			m_pgn.Add(m_board.MatrixToChessMove(start, destination, captures, lineOrCol)); // pgn
 			Notify(start, destination);
 			m_board[destination]->SetHasMoved();
 			
@@ -306,26 +303,14 @@ std::string Game::GetFenString() const
 	return output;
 }
 
-std::string Game::GetPgnMove() const
-{
-	return m_moves[m_moves.size() - 1];
-}
-
 std::string Game::GetPGN() const
 {
-	std::string pgn;
-	int counter = 2;
-	for (int i = 0; i < m_moves.size(); i++) 
-	{
-		if (i%2 == 0)
-			pgn += std::to_string(counter/2) + ". ";
-		pgn += m_moves[i];
-		pgn += " ";
+	return m_pgn.GetString();
+}
 
-		counter++;
-	}
-
-	return pgn;
+void Game::SavePGN(std::string path) const
+{
+	m_pgn.Save(path);
 }
 
 void Game::MakeTieRequest()
@@ -367,25 +352,26 @@ bool Game::IsPawnEvolving() const
 void Game::EvolvePawn(EType pieceType)
 {
 	Position piecePos = m_board.FindEvolvingPawn(m_turn);
+	auto last = m_pgn.Back();
 	
 	if (pieceType == EType::BISHOP)
 	{
-		m_moves[m_moves.size() - 1] += "=B";
+		last += "=B";
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
 	}
 	else if (pieceType == EType::QUEEN)
 	{
-		m_moves[m_moves.size() - 1] += "=Q";
+		last += "=Q";
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
 	}
 	else if (pieceType == EType::ROOK)
 	{
-		m_moves[m_moves.size() - 1] += "=R";
+		last += "=R";
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
 	}
 	else if (pieceType ==  EType::HORSE)
 	{
-		m_moves[m_moves.size() - 1] += "=H";
+		last += "=H";
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
 	}
 	else 
@@ -395,13 +381,13 @@ void Game::EvolvePawn(EType pieceType)
 	bool opponentInCheck = m_board.IsCheck(m_turn);
 	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 
-	if(opponentInCheck)
-		m_moves[m_moves.size() - 1] += "+";
+	if (opponentInCheck)
+		last += "+";
 	if (opponentInCheckmate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
 	else if (m_board.IsCheckmate(m_turn)) 
 	{
-		m_moves[m_moves.size() - 1] += "#";
+		last += "#";
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 	}
 	else
@@ -439,6 +425,7 @@ void Game::Restart()
 	m_blackMissing.clear();
 	m_moves.clear();
 	m_boardConfigs.clear();
+	//m_pgn.clear() -> to be implemented
 
 	Notify(Response::RESTART);
 }
