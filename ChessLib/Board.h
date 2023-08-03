@@ -71,14 +71,16 @@ public:
 
 	std::string GetFenString() const;
 
-	char SharedLineOrColumn(Position start, Position end) const;
+	std::string SharedLineOrColumn(Position start, Position end) const;
 	char CharifyRow(int row) const;
 	char CharifyColumn(int col) const;
-	std::string MatrixToChessMove(Position start, Position end, bool capture, char lineOrCol) const;
+	std::string MatrixToChessMove(Position start, Position end, bool capture, std::string lineOrCol) const;
 	Position FindForPGN(char name, Position end, EColor turn, char lineOrCol = ' ') const;
 
 private:
 	Position FindKing(EColor color) const;
+
+	Position FindStart(char name, Position end, EColor turn, Position pos) const;
 
 private:
 	Matrix m_board;

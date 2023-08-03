@@ -38,7 +38,7 @@ Game::Game()
 	: m_turn(EColor::WHITE)
 	, m_state(EGameState::Playing)
 {
-	boardConfigs.push_back(m_board.GetBoardConfiguration());
+	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
 
 Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
@@ -56,6 +56,7 @@ Game::Game(std::string& fileContent, LoadType fileType)
 
 	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
 	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
+	m_turn = EColor::WHITE;
 
 	switch (fileType)
 	{
@@ -75,8 +76,6 @@ void Game::LoadFromFEN(std::string fen)
 
 void Game::LoadFromPGN(std::string pgn)
 {
-	m_turn = EColor::WHITE;
-
 	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
 	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
 	std::string pgnMove;
@@ -84,28 +83,35 @@ void Game::LoadFromPGN(std::string pgn)
 
 	for (int i = 0; i < pgn.size(); i++)
 	{
-		if (pgnMove.find("Bc8b7") != std::string::npos)
+		if (pgnMove == "Kc1")
 			i = i;
 		if (pgn[i] == ' ' || (i == pgn.size() - 1))
 		{
+			int row = m_turn == EColor::WHITE ? 7 : 0;
 			bool isEvolving = FindSubstring(pgnMove, evolve);
 			char upgrade;
 
-			if (isEvolving)
+			if (pgnMove == "O-O")
+				MovePiece({ row, 4 }, {row, 6});
+			else if (pgnMove == "O-O-O")
+				MovePiece({ row, 4 }, { row, 2 });
+			else
 			{
-				upgrade = pgnMove[pgnMove.size() - 1];
-				pgnMove.erase(pgnMove.size() - 2);
+				if (isEvolving)
+				{
+					upgrade = pgnMove[pgnMove.size() - 1];
+					pgnMove.erase(pgnMove.size() - 2);
+				}
+
+				move = ChessMoveToMatrix(pgnMove);
+				MovePiece(move.first, move.second);
+
+				if (isEvolving)
+				{
+					EType upgradeTo = m_board.CharToType(upgrade);
+					EvolvePawn(upgradeTo);
+				}
 			}
-
-			move = ChessMoveToMatrix(pgnMove);
-			MovePiece(move.first, move.second);
-
-			if (isEvolving)
-			{
-				EType upgradeTo = m_board.CharToType(upgrade);
-				EvolvePawn(upgradeTo);
-			}
-
 			pgnMove.clear();
 		}
 		if (pgn[i] != ' ')
@@ -116,14 +122,7 @@ void Game::LoadFromPGN(std::string pgn)
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
 	static const std::set<char> validChars = { 'B' ,'R' ,'Q' ,'K' ,'H' };
-	int row = m_turn == EColor::WHITE ? 7 : 0;
 	Position end, start;
-	
-
-	/*if(move == "O-O")
-		auto start = m_board.FindForPGN('K', {row, 6}, m_turn, !i);
-	else if(move == "O-O-O")
-		auto start = m_board.FindForPGN('K', { row, 2 }, m_turn, !i);*/
 
 	end.first = '8' - move[move.size() - 1];
 	end.second = move[move.size() - 2] - 'a';
@@ -137,9 +136,6 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 		start = m_board.FindForPGN(move[0], end, m_turn, move[1]);
 	else
 		start = m_board.FindForPGN(move[0], end, m_turn);
-
-	
-
 	
 	return { start, end };
 }
@@ -178,7 +174,7 @@ void Game::MovePiece(Position start, Position destination)
 				captures = true;
 			}
 
-			char lineOrCol = m_board.SharedLineOrColumn(start, destination);
+			std::string lineOrCol = m_board.SharedLineOrColumn(start, destination);
 
 			m_board.MovePiece(start, destination);
 			m_moves.push_back(m_board.MatrixToChessMove(start, destination, captures, lineOrCol));// --> pgn
@@ -231,8 +227,8 @@ void Game::MovePiece(Position start, Position destination)
 				UpdateState(EGameState::Playing);
 
 			BoardConfig configuration = m_board.GetBoardConfiguration();
-			boardConfigs.push_back(configuration);
-			if (m_board.IsThreeFold(boardConfigs, configuration))
+			m_boardConfigs.push_back(configuration);
+			if (m_board.IsThreeFold(m_boardConfigs, configuration))
 			{
 				UpdateState(EGameState::Tie);
 				Notify(Response::TIE);
@@ -318,13 +314,12 @@ std::string Game::GetPgnMove() const
 std::string Game::GetPGN() const
 {
 	std::string pgn;
-	int counter = 1;
-	for (size_t i = 0; i < m_moves.size() - 1; i += 2) 
+	int counter = 2;
+	for (int i = 0; i < m_moves.size(); i++) 
 	{
-		pgn += std::to_string(counter) + ". ";
+		if (i%2 == 0)
+			pgn += std::to_string(counter/2) + ". ";
 		pgn += m_moves[i];
-		pgn += " ";
-		pgn += m_moves[i + 1];
 		pgn += " ";
 
 		counter++;
@@ -400,10 +395,15 @@ void Game::EvolvePawn(EType pieceType)
 	bool opponentInCheck = m_board.IsCheck(m_turn);
 	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 
+	if(opponentInCheck)
+		m_moves[m_moves.size() - 1] += "+";
 	if (opponentInCheckmate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
-	else if (m_board.IsCheckmate(m_turn))
+	else if (m_board.IsCheckmate(m_turn)) 
+	{
+		m_moves[m_moves.size() - 1] += "#";
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
+	}
 	else
 		UpdateState(EGameState::Playing);
 
@@ -437,6 +437,9 @@ void Game::Restart()
 	m_state = EGameState::Playing;
 	m_whiteMissing.clear();
 	m_blackMissing.clear();
+	m_moves.clear();
+	m_boardConfigs.clear();
+
 	Notify(Response::RESTART);
 }
 

@@ -249,22 +249,31 @@ TypeList Board::SearchMissingPieces(EColor color) const
 	return missingPieces;
 }
 
-char Board::SharedLineOrColumn(Position start, Position end) const
+std::string Board::SharedLineOrColumn(Position start, Position end) const
 {
+	std::string output = "";
+
+	bool sameColumn = false;
+	bool sameRow = false;
+	bool sameAttackPosition = false;
+	
 	if (auto piece = m_board[start.first][start.second])
 	{
 		auto color = piece->GetColor();
 		auto list = GetMoves(start, color);
-		bool sameColor, sameType, samePosition;
+
+		if (piece->Is(EType::PAWN))
+			return output;
+
 
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 			{
 				if (m_board[i][j])
 				{
-					sameColor = (color == m_board[i][j]->GetColor());
-					sameType = (piece->GetType() == m_board[i][j]->GetType());
-					samePosition = (start.first == i && start.second == j);
+					bool sameColor = (color == m_board[i][j]->GetColor());
+					bool sameType = (piece->GetType() == m_board[i][j]->GetType());
+					bool samePosition = (start.first == i && start.second == j);
 
 					if (sameColor && sameType && !samePosition)
 					{
@@ -273,16 +282,29 @@ char Board::SharedLineOrColumn(Position start, Position end) const
 						for (const auto& move : moves)
 							if (move == end)
 							{
+								sameAttackPosition = true;
+
+								if (start.first == i)
+									sameRow = true;
 								if (start.second == j)
-									return CharifyRow(start.first);
-								return CharifyColumn(start.second);
+									sameColumn = true;
 							}
 					}
 				}
 			}
 	}
 
-	return '-';
+	if (sameColumn && sameRow)
+	{
+		output += CharifyColumn(start.second);
+		output += CharifyRow(start.first);
+	}
+	else if (sameColumn)
+		output = CharifyRow(start.first);
+	else if (sameRow || sameAttackPosition)
+		output = CharifyColumn(start.second);
+
+	return output;
 }
 
 char Board::CharifyRow(int row) const
@@ -295,7 +317,7 @@ char Board::CharifyColumn(int col) const
 	return ('a' + col);
 }
 
-std::string Board::MatrixToChessMove(Position start, Position end, bool capture, char lineOrCol) const
+std::string Board::MatrixToChessMove(Position start, Position end, bool capture, std::string lineOrCol) const
 {
 	std::string move = "";
 	std::string endString = "";
@@ -304,30 +326,29 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture,
 	endString += CharifyColumn(end.second);
 	endString += CharifyRow(end.first);
 
-	startString += CharifyColumn(start.second);
-	startString += CharifyRow(start.first);
-
-
-
 	auto piece = m_board[end.first][end.second];
 	auto enemyColor = (piece->GetColor() == EColor::BLACK) ? EColor::WHITE : EColor::BLACK;
 
 	int castlingRow = piece->GetColor() == EColor::BLACK ? 0 : 7;
 
-	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 0))
+	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 6))
 		return "O-O";
 
-	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 7))
+	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 2))
 		return "O-O-O";
 
 	if (!piece->Is(EType::PAWN))
 		move += toupper(piece->GetName());
 
-	if (lineOrCol != '-')
+	if (lineOrCol != "")
 		move += lineOrCol;
 
 	if (capture)
+	{
+		if (piece->Is(EType::PAWN))
+			move += CharifyColumn(start.second);
 		move += 'x';
+	}
 	
 	move += endString;
 
@@ -479,9 +500,9 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	}
 	
 	// Castling validation
-	if (piece->Is(EType::KING))
+	int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
+	if (piece->Is(EType::KING) && piecePos == std::make_pair(row, 4))
 	{
-		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
 		auto castlingLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 2));
 
@@ -493,7 +514,6 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 
 		if (!kingMoveRight && castlingRight != positions.end()) // if King can't move right, castle can't happen
 			positions.erase(castlingRight);
-
 	}
 	
 
@@ -521,6 +541,7 @@ void Board::Init()
 
 void Board::Reset()
 {
+	m_moves.clear();
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 			m_board[i][j].reset();
@@ -535,38 +556,59 @@ Position Board::FindKing(EColor color) const
 	throw PieceNotFoundException();
 }
 
+Position Board::FindStart(char name, Position end, EColor turn, Position pos) const
+{
+	auto piece = m_board[pos.first][pos.second];
+	if (piece && piece->GetName() == name && piece->Is(turn))
+	{
+		auto list = GetMoves(pos, turn);
+		for (const auto& move : list)
+			if (move == end)
+				return pos;
+	}
+
+	return { -1,-1 };
+}
+
 Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol) const // --> trateaza cazu de linie sau coloana
 {
 	if (islower(name))
 		name = 'P';
 
-	int row, column;
 
 	if (isdigit(lineOrCol)) // is row
 	{
-		row = '8' - lineOrCol;
-		column = 0;
+		int row = '8' - lineOrCol;
+		for (int column = 0; column < 8; column++)
+		{
+			auto startPos = FindStart(name, end, turn, { row, column });
+			if (startPos != std::make_pair(-1, -1))
+				return startPos;
+		}
+
+
 	}
-	else if (isalpha(lineOrCol))
+	else if (isalpha(lineOrCol)) // is column
 	{
-		row = 0;
-		column = lineOrCol - 'a';
+		int column = lineOrCol - 'a';
+		for (int row = 0; row < 8; row++)
+		{
+			auto startPos = FindStart(name, end, turn, { row, column });
+			if (startPos != std::make_pair(-1, -1))
+				return startPos;
+		}
 	}
 	else
-		row = column = 0;
-
-	for (; row < 8; row++)
 	{
-		for (; column < 8; column++)
-			if (m_board[row][column] && m_board[row][column]->GetName() == name && m_board[row][column]->Is(turn))
+		for (int row = 0; row < 8; row++)
+			for (int column = 0; column < 8; column++)
 			{
-				auto list = GetMoves({ row,column }, turn);
-				for (const auto& move : list)
-					if (move == end)
-						return { row, column };
+				auto startPos = FindStart(name, end, turn, { row, column });
+				if (startPos != std::make_pair(-1, -1))
+					return startPos;
 			}
-		column = 0;
 	}
+
 
 	return {};
 }

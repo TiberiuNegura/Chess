@@ -91,7 +91,7 @@ private:
 	Board m_board;
 	EColor m_turn;
 	EGameState m_state;
-	BoardConfigList boardConfigs;
+	BoardConfigList m_boardConfigs;
 	TypeList m_whiteMissing, m_blackMissing;
 	MovesList m_moves;
 	ListenerList m_listeners;
