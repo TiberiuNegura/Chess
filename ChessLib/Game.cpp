@@ -119,7 +119,6 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 	int row = m_turn == EColor::WHITE ? 7 : 0;
 	Position end, start;
 	
-	bool isPawn = validChars.find(move[0]) != validChars.end() ? false : true;
 
 	/*if(move == "O-O")
 		auto start = m_board.FindForPGN('K', {row, 6}, m_turn, !i);
@@ -134,8 +133,10 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 		start.first = '8' - move[2];
 		start.second = move[1] - 'a';
 	}
+	else if (move.size() == 4)
+		start = m_board.FindForPGN(move[0], end, m_turn, move[1]);
 	else
-		start = m_board.FindForPGN(move[0], end, m_turn, isPawn);
+		start = m_board.FindForPGN(move[0], end, m_turn);
 
 	
 

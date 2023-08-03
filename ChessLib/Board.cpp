@@ -535,21 +535,39 @@ Position Board::FindKing(EColor color) const
 	throw PieceNotFoundException();
 }
 
-Position Board::FindForPGN(char name, Position end, EColor turn, bool isPawn) const // --> trateaza cazu de linie sau coloana
+Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol) const // --> trateaza cazu de linie sau coloana
 {
-	if (isPawn)
+	if (islower(name))
 		name = 'P';
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j] && (toupper(m_board[i][j]->GetName()) == name))
+
+	int row, column;
+
+	if (isdigit(lineOrCol)) // is row
+	{
+		row = '8' - lineOrCol;
+		column = 0;
+	}
+	else if (isalpha(lineOrCol))
+	{
+		row = 0;
+		column = lineOrCol - 'a';
+	}
+	else
+		row = column = 0;
+
+	for (; row < 8; row++)
+	{
+		for (; column < 8; column++)
+			if (m_board[row][column] && m_board[row][column]->GetName() == name && m_board[row][column]->Is(turn))
 			{
-				auto list = GetMoves({ i,j }, turn);
+				auto list = GetMoves({ row,column }, turn);
 				for (const auto& move : list)
 					if (move == end)
-						return { i, j };
+						return { row, column };
 			}
-		}
+		column = 0;
+	}
+
 	return {};
 }
 

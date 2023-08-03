@@ -75,7 +75,7 @@ public:
 	char CharifyRow(int row) const;
 	char CharifyColumn(int col) const;
 	std::string MatrixToChessMove(Position start, Position end, bool capture, char lineOrCol) const;
-	Position FindForPGN(char name, Position end, EColor turn, bool isPawn) const;
+	Position FindForPGN(char name, Position end, EColor turn, char lineOrCol = ' ') const;
 
 private:
 	Position FindKing(EColor color) const;
