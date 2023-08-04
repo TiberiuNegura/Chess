@@ -5,7 +5,6 @@
 #include "IGame.h"
 #include "Board.h"
 #include "IGameListener.h"
-#include "PGN.h"
 
 using ListenerList = std::vector<ListenerWeakPtr>;
 

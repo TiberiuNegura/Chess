@@ -157,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BoardTests.cpp" />
     <ClCompile Include="ComputePositionListTests.cpp" />
+    <ClCompile Include="PGNTests.cpp" />
     <ClCompile Include="PossibleMovesTests.cpp" />
   </ItemGroup>
   <ItemGroup>

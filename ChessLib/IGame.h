@@ -4,6 +4,7 @@
 #include "IGameListener.h"
 #include "PGN.h"
 
+
 #include "CheckException.h"
 #include "ChessException.h"
 #include "EmptyPositionException.h"

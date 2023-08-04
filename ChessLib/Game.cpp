@@ -54,7 +54,9 @@ PGN Game::MakeBackup() const
 
 void Game::LoadBackup(PGN backup)
 {
-	
+	Restart();
+	m_pgn = backup;
+	LoadFromPGN(backup.GetString(), true);
 }
 
 bool Game::LoadFromFormat(std::string path)
