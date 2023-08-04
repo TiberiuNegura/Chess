@@ -5,7 +5,13 @@
 
 PGN::PGN()
 {
-
+	SetEvent("?");
+	SetSite("?");
+	SetDate("????.??.??");
+	SetRound("?");
+	SetWhite("?", "?");
+	SetBlack("?", "?");
+	SetResult("*");
 }
 
 
@@ -80,7 +86,12 @@ bool PGN::Save(std::string path) const
 
 	if (fileRead.good())
 	{
-		fileRead << GetString();
+		for (auto& header : m_headers)
+		{
+			std::string fields[7] = { "Event", "Site", "Date", "Round", "White", "Black", "Result" };
+			fileRead << "[" + fields[(int)header.first] + " \"" + header.second + "\"]\n";
+		}
+		fileRead << std::endl << GetString();
 		return true;
 	}
 
@@ -147,6 +158,7 @@ std::string PGN::GetString() const
 
 		counter++;
 	}
+	pgn.pop_back(); // removes the last empty space
 
 	return pgn;
 }

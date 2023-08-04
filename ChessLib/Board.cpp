@@ -1,5 +1,6 @@
 #include <unordered_set>
 #include <unordered_map>
+#include <fstream>
 
 #include "Board.h"
 #include "Piece.h"
@@ -11,13 +12,13 @@ Board::Board()
 	Init();
 }
 
-Board::Board(std::string& fileContent, LoadType fileType)
+Board::Board(std::string& path, LoadType fileType)
 {
 	Reset();
 	if (fileType == LoadType::PGN)
 		Init();
 	else if (fileType == LoadType::FEN)
-		LoadFromFEN(fileContent);
+		LoadFromFEN(path);
 
 }
 
@@ -70,8 +71,13 @@ Board::Board(const Matrix& mat)
 	m_board = mat;
 }
 
-void Board::LoadFromFEN(std::string& fen)
+void Board::LoadFromFEN(std::string& path)
 {
+	std::ifstream fileRead(path);
+
+	std::string fen;
+	fileRead >> fen;
+
 	int row = 0, column = 0;
 	for (auto& c : fen)
 	{

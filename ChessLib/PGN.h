@@ -25,11 +25,9 @@ public:
 
 	PGN();
 
-
 	bool Load(std::string path);
 	void parseTags(const std::string& tagText);
 	std::string Get() const;
-
 
 	bool Save(std::string path) const;
 	void Add(std::string move);
@@ -42,7 +40,6 @@ public:
 	PGN* SetResult(std::string result);
 	std::string GetString() const;
 	std::vector<std::string> GetMoves() const;
-
 
 	Headers StringToHeader(std::string header) const;
 	std::string Back();
