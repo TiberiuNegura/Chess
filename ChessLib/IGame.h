@@ -56,6 +56,8 @@ public:
 	virtual void LoadBackup(PGN backup) = 0;
 	virtual bool LoadFromFormat(std::string path) = 0;
 
+	virtual void PreviewPastConfig(int moveIndex) = 0;
+
 
 	// tie invitation
 	virtual void MakeTieRequest() = 0;

@@ -573,11 +573,28 @@ void ChessUIQt::OnCopyButtonClicked()
 	clipboard->setText(config);
 }
 
+void ChessUIQt::BoardLock(bool enable)
+{
+	for (int row = 0; row < 8; row++)
+	{
+		for (int column = 0; column < 8; column++)
+		{
+			m_grid[row][column]->setEnabled(enable);
+		}
+	}
+}
+
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 {
 	int index = m_MovesList->currentRow();
+	if (index == m_MovesList->count() - 1)
+		BoardLock(true);
+	else
+		BoardLock(false);
+
+	m_game->PreviewPastConfig(index);
+	UpdateBoard();
 	
-	//TODO ...
 }
 
 void ChessUIQt::mousePressEvent(QMouseEvent* event)

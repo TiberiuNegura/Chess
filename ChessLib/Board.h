@@ -50,6 +50,7 @@ public:
 
 	void MovePiece(Position start, Position end);
 	void SetPosition(PiecePtr toRevert, Position pos);
+	void SetBoardConfiguration(BoardConfig board);
 
 	bool IsCastlingPossible(ECastling option, EColor color) const;
 	bool IsEmptyPosition(Position p) const;

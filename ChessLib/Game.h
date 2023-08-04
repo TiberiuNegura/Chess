@@ -47,6 +47,8 @@ public:
 	void LoadFromPGN(std::string pgn, bool loadFromBackup = false);
 	Move ChessMoveToMatrix(const std::string& move);
 
+	void PreviewPastConfig(int moveIndex) override;
+
 
 	void MovePiece(Position start, Position destination) override;
 	void UpdateTurn();

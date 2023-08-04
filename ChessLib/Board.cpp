@@ -201,6 +201,25 @@ BoardConfig Board::GetBoardConfiguration() const
 	return config;
 }
 
+void Board::SetBoardConfiguration(BoardConfig board)
+{
+	for (int index = 0; index < 256; index += 4)
+	{
+		int bits[4] = { index, index + 1, index + 2, index + 3 };
+
+		int color = board[bits[0]];
+		int type = board[bits[1]] + 2 * board[bits[2]] + 4 * board[bits[3]];
+
+		int row = (index / 4 / 8);
+		int column = (index / 4 % 8);
+
+		if ((EType)type == EType::EMPTY)
+			m_board[row][column] = nullptr;
+		else 
+			m_board[row][column] = Piece::Produce((EType) type, (EColor) color);
+	}
+}
+
 std::string Board::GetFenString() const
 {
 	std::string output;

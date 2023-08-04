@@ -174,6 +174,12 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 }
 
 
+void Game::PreviewPastConfig(int moveIndex)
+{
+	BoardConfig config = m_boardConfigs[++moveIndex];
+	m_board.SetBoardConfiguration(config);
+}
+
 void Game::MovePiece(Position start, Position destination)
 {
 	if (IsGameOver())
