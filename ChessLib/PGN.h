@@ -44,6 +44,7 @@ public:
 
 	Headers StringToHeader(std::string header) const;
 	std::string Back();
+	void Clear();
 
 private:
 	std::string m_pgn;

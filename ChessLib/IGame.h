@@ -2,6 +2,7 @@
 
 #include "IPiece.h"
 #include "IGameListener.h"
+#include "PGN.h"
 
 #include "CheckException.h"
 #include "ChessException.h"
@@ -39,8 +40,7 @@ class IGame
 {
 public:
 	static IGamePtr Produce(); 
-	static IGamePtr Produce(std::string path);
-
+	static IGamePtr Produce(PGN backup);
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
 	// Getters
@@ -49,7 +49,7 @@ public:
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual std::string GetFenString() const = 0;
 	virtual TypeList GetMissingPieces(EColor color) const = 0;
-	virtual std::string GetPGN() const = 0;
+	virtual PGN GetPGN() const = 0;
 	virtual void SavePGN(std::string path) const = 0;
 
 	virtual PGN MakeBackup() const = 0;

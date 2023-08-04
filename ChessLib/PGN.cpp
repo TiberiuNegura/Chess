@@ -163,7 +163,7 @@ std::string PGN::GetString() const
 
 		counter++;
 	}
-	pgn.pop_back(); // removes the last empty space
+	//pgn.pop_back(); // removes the last empty space
 
 	return pgn;
 }
@@ -171,6 +171,13 @@ std::string PGN::GetString() const
 std::string PGN::Back()
 {
 	return m_moves[m_moves.size() - 1];
+}
+
+void PGN::Clear()
+{
+	m_headers.clear();
+	m_moves.clear();
+	m_pgn.clear();
 }
 
 std::vector<std::string> PGN::GetMoves() const

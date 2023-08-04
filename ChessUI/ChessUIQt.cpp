@@ -480,7 +480,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	QString desktopPath = QDir::homePath() + "/Downloads";
 	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "PGN Files(*.pgn);; FEN Files(*.fen);;All Files (*)");
 
-	
+	auto backup = m_game->GetPGN();
 
 	m_game->Restart();
 	if (m_game)
@@ -489,8 +489,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_blackPieces->clear();
 	m_MovesList->clear();
 
-
-	m_game = IGame::Produce();
+	m_game = IGame::Produce(backup);
 	m_game->AddListener(shared_from_this());
 
 

@@ -565,6 +565,9 @@ Position Board::FindKing(EColor color) const
 
 Position Board::FindStart(char name, Position end, EColor turn, Position pos) const
 {
+	if (IsOutOfBounds(pos) || IsOutOfBounds(end))
+		throw OutOfBoundsException();
+
 	auto piece = m_board[pos.first][pos.second];
 	if (piece && piece->GetName() == name && piece->Is(turn))
 	{

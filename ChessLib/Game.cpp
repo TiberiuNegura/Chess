@@ -15,6 +15,10 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
+IGamePtr IGame::Produce(PGN backup)
+{
+	return std::make_shared<Game>(backup);
+}
 
 // Constructor
 Game::Game()
@@ -34,6 +38,15 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 }
 
+Game::Game(const PGN& backup)
+	: m_pgn(backup)
+	, m_turn(EColor::WHITE)
+	, m_state(EGameState::Playing)
+	, m_isLoading(false)
+{
+
+}
+
 PGN Game::MakeBackup() const
 {
 	return m_pgn;
@@ -46,9 +59,10 @@ void Game::LoadBackup(PGN backup)
 
 bool Game::LoadFromFormat(std::string path)
 {
-
+	PGN backup = m_pgn;
 	try
 	{
+		Restart();
 		if (path.find(".pgn") != std::string::npos)
 			LoadFromPGN(path);
 		else
@@ -56,8 +70,12 @@ bool Game::LoadFromFormat(std::string path)
 				LoadFromFEN(path);
 		
 	}
-	catch (ChessException e)
+	catch (...)
 	{
+		Restart();
+		LoadFromPGN(backup.GetString(), true);
+		m_pgn = backup;
+
 		return false;
 	}
 
@@ -77,15 +95,20 @@ void Game::LoadFromFEN(std::string path)
 	}
 }
 
-void Game::LoadFromPGN(std::string path)
+void Game::LoadFromPGN(std::string path, bool loadFromBackup)
 {
 	m_isLoading = true;
 	std::string pgn;
 
-	if (m_pgn.Load(path))
-		pgn = m_pgn.Get();
+	if (!loadFromBackup)
+	{
+		if (m_pgn.Load(path))
+			pgn = m_pgn.Get();
+		else
+			throw InvalidFileException();
+	}
 	else
-		throw InvalidFileException();
+		pgn = path;
 
 	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
 	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
@@ -313,9 +336,9 @@ std::string Game::GetFenString() const
 	return output;
 }
 
-std::string Game::GetPGN() const
+PGN Game::GetPGN() const
 {
-	return m_pgn.GetString();
+	return m_pgn;
 }
 
 void Game::SavePGN(std::string path) const
@@ -432,9 +455,8 @@ void Game::Restart()
 	m_state = EGameState::Playing;
 	m_whiteMissing.clear();
 	m_blackMissing.clear();
-	m_moves.clear();
 	m_boardConfigs.clear();
-	//m_pgn.clear() -> to be implemented
+	m_pgn.Clear();
 
 	Notify(Response::RESTART);
 }
