@@ -15,20 +15,12 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
-IGamePtr IGame::Produce(std::string path)
-{
-	if (path.find(".pgn") != std::string::npos)
-		return std::make_shared<Game>(path, LoadType::PGN);
-	else if (path.find(".fen") != std::string::npos) 
-		return std::make_shared<Game>(path, LoadType::FEN);
-	
-	return {};
-}
 
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
 	, m_state(EGameState::Playing)
+	, m_isLoading(false)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -37,37 +29,57 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	: m_board(mat)
 	, m_turn(turn)
 	, m_state(state)
+	, m_isLoading(false)
 {
 
 }
 
-Game::Game(std::string& fileContent, LoadType fileType)
-	: m_board(fileContent, fileType)
-	, m_state(EGameState::Playing)
+PGN Game::MakeBackup() const
+{
+	return m_pgn;
+}
+
+void Game::LoadBackup(PGN backup)
+{
+	
+}
+
+bool Game::LoadFromFormat(std::string path)
 {
 
-	m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
-	m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
-	m_turn = EColor::WHITE;
-
-	switch (fileType)
+	try
 	{
-	case LoadType::PGN:
-		LoadFromPGN(fileContent);
-		break;
-	case LoadType::FEN:
-		LoadFromFEN(fileContent);
-		break;
+		if (path.find(".pgn") != std::string::npos)
+			LoadFromPGN(path);
+		else
+			if (path.find(".fen") != std::string::npos)
+				LoadFromFEN(path);
+		
 	}
+	catch (ChessException e)
+	{
+		return false;
+	}
+
+	return true;
 }
 
-void Game::LoadFromFEN(std::string fen)
+void Game::LoadFromFEN(std::string path)
 {
-	m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
+	
+	std::ifstream file(path);
+	if (file.good())
+	{
+		std::string fen;
+		file >> fen;
+		file.close();
+		m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
+	}
 }
 
 void Game::LoadFromPGN(std::string path)
 {
+	m_isLoading = true;
 	std::string pgn;
 
 	if (m_pgn.Load(path))
@@ -114,6 +126,7 @@ void Game::LoadFromPGN(std::string path)
 		if (pgn[i] != ' ')
 			pgnMove += pgn[i];
 	}
+	m_isLoading = false;
 }
 
 Move Game::ChessMoveToMatrix(const std::string& move)
@@ -190,7 +203,8 @@ void Game::MovePiece(Position start, Position destination)
 			if (m_board.CanPawnEvolve(destination))
 			{
 				UpdateState(EGameState::PawnEvolving);
-				Notify(Response::PAWN_UPGRADE);
+				if (!m_isLoading)
+					Notify(Response::PAWN_UPGRADE);
 				return;
 			}
 
@@ -285,15 +299,11 @@ PositionList Game::GetMoves(Position piecePos) const
 	return m_board.GetMoves(piecePos, m_turn);
 }
 
-TypeList Game::GetWhiteMissingPieces() const
+TypeList Game::GetMissingPieces(EColor color) const
 {
-	return m_whiteMissing;
+	return color == EColor::WHITE ? m_whiteMissing : m_blackMissing;;
 }
 
-TypeList Game::GetBlackMissingPieces() const
-{
-	return m_blackMissing;
-}
 
 std::string Game::GetFenString() const
 {
@@ -352,26 +362,25 @@ bool Game::IsPawnEvolving() const
 void Game::EvolvePawn(EType pieceType)
 {
 	Position piecePos = m_board.FindEvolvingPawn(m_turn);
-	auto last = m_pgn.Back();
 	
 	if (pieceType == EType::BISHOP)
 	{
-		last += "=B";
+		m_pgn.CompleteLastMove("=B");
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
 	}
 	else if (pieceType == EType::QUEEN)
 	{
-		last += "=Q";
+		m_pgn.CompleteLastMove("=Q");
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
 	}
 	else if (pieceType == EType::ROOK)
 	{
-		last += "=R";
+		m_pgn.CompleteLastMove("=R");
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
 	}
 	else if (pieceType ==  EType::HORSE)
 	{
-		last += "=H";
+		m_pgn.CompleteLastMove("=H");
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
 	}
 	else 
@@ -382,12 +391,12 @@ void Game::EvolvePawn(EType pieceType)
 	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 
 	if (opponentInCheck)
-		last += "+";
+		m_pgn.CompleteLastMove("+");
 	if (opponentInCheckmate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
 	else if (m_board.IsCheckmate(m_turn)) 
 	{
-		last += "#";
+		m_pgn.CompleteLastMove("#");
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 	}
 	else

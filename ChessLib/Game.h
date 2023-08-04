@@ -40,6 +40,10 @@ public:
 	Game(std::string& fileContent, LoadType fileType);
 
 
+	PGN MakeBackup() const override;
+	void LoadBackup(PGN backup) override;
+
+	bool LoadFromFormat(std::string path) override;
 	void LoadFromFEN(std::string fen);
 	void LoadFromPGN(std::string pgn);
 	Move ChessMoveToMatrix(const std::string& move);
@@ -54,8 +58,7 @@ public:
 	EColor GetTurn() const override;
 	EGameState GetState() const;
 	PositionList GetMoves(Position piecePos) const override;
-	TypeList GetWhiteMissingPieces() const override;
-	TypeList GetBlackMissingPieces() const override;
+	TypeList GetMissingPieces(EColor color) const override;
 	std::string GetFenString() const override;
 	std::string GetPGN() const;
 	void SavePGN(std::string path) const override;
@@ -97,5 +100,6 @@ private:
 	MovesList m_moves;
 	ListenerList m_listeners;
 	PGN m_pgn;
+	bool m_isLoading;
 };
 

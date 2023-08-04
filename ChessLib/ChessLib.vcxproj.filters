@@ -118,7 +118,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InvalidFileException.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +183,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InvalidFileException.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Exception</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

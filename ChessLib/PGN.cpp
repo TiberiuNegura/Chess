@@ -103,6 +103,11 @@ void PGN::Add(std::string move)
 	m_moves.push_back(move);
 }
 
+void PGN::CompleteLastMove(std::string move)
+{
+	m_moves[m_moves.size() - 1] += move;
+}
+
 PGN* PGN::SetEvent(std::string event)
 {
 	m_headers[Headers::EVENT] = event;

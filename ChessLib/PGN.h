@@ -31,6 +31,7 @@ public:
 
 	bool Save(std::string path) const;
 	void Add(std::string move);
+	void CompleteLastMove(std::string move);
 	PGN* SetEvent(std::string event);
 	PGN* SetSite(std::string site);
 	PGN* SetDate(std::string date);

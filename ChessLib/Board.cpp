@@ -77,6 +77,7 @@ void Board::LoadFromFEN(std::string& path)
 
 	std::string fen;
 	fileRead >> fen;
+	fileRead.close();
 
 	int row = 0, column = 0;
 	for (auto& c : fen)
