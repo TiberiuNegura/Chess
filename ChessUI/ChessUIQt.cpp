@@ -514,6 +514,9 @@ void ChessUIQt::OnLoadButtonClicked()
 		m_MovesList->setItemWidget(item, design);
 	}
 
+	if (m_game->IsGameOver())
+		OnGameOver();
+
 	UpdateBoard();
 }
 

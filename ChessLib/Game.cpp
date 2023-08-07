@@ -455,6 +455,7 @@ void Game::Restart()
 	m_blackMissing.clear();
 	m_boardConfigs.clear();
 	m_pgn.Clear();
+	m_gameMoves.clear();
 
 	Notify(Response::RESTART);
 }
