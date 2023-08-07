@@ -120,6 +120,9 @@
     <ClInclude Include="InvalidFileException.h">
       <Filter>Header Files\API\Exception</Filter>
     </ClInclude>
+    <ClInclude Include="FileUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pawn.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="InvalidFileException.cpp">
       <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtils.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

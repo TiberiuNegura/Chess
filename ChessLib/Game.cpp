@@ -5,6 +5,7 @@
 
 #include "Game.h"
 #include "Board.h"
+#include "FileUtils.h"
 
 #include "CheckException.h"
 #include "InvalidOptionException.h"
@@ -62,14 +63,19 @@ void Game::LoadBackup(PGN backup)
 bool Game::LoadFromFormat(std::string path)
 {
 	PGN backup = m_pgn;
+
 	try
 	{
+		if (!FileUtils::HasExtension(path, "pgn") && !FileUtils::HasExtension(path, "fen"))
+			return false;
+
 		Restart();
-		if (path.find(".pgn") != std::string::npos)
+
+		if (FileUtils::HasExtension(path, "pgn"))
 			LoadFromPGN(path);
-		else
-			if (path.find(".fen") != std::string::npos)
-				LoadFromFEN(path);
+
+		if (FileUtils::HasExtension(path, "fen"))
+			LoadFromFEN(path);
 		
 	}
 	catch (...)

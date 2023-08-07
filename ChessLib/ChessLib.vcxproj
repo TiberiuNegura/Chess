@@ -143,6 +143,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="CheckException.h" />
     <ClInclude Include="EmptyPositionException.h" />
+    <ClInclude Include="FileUtils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ChessException.h" />
     <ClInclude Include="GameOverException.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CheckException.cpp" />
     <ClCompile Include="EmptyPositionException.cpp" />
+    <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverException.cpp" />
     <ClCompile Include="Horse.cpp" />
