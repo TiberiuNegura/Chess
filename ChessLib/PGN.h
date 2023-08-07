@@ -30,17 +30,10 @@ public:
 	// LOADING
 	bool Load(std::string path);
 
-	std::string GetFullPgn() const;
+	std::string GetMovesString() const;
 
 	// CREATING A NEW PGN
-	// TODO PGN* SetHeader(EHeaderType headerType, const std::string& value); 
-	PGN* SetEvent(std::string event);
-	PGN* SetSite(std::string site);
-	PGN* SetDate(std::string date);
-	PGN* SetRound(std::string round);
-	PGN* SetWhite(std::string firstName, std::string lastName);
-	PGN* SetBlack(std::string firstName, std::string lastName);
-	PGN* SetResult(std::string result);
+	PGN* SetHeader(EHeaderType headerType, const std::string& value); 
 
 	void Add(std::string move);
 	void AppendToLastMove(std::string move);
@@ -48,7 +41,6 @@ public:
 
 	bool Save(std::string path) const;
 	
-	// ??????????????
 	std::string ComputeMovesPgn() const;
 	
 	// FOR BOTH

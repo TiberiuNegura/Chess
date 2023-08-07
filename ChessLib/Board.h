@@ -9,7 +9,6 @@
 
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
-using Move = std::pair<Position, Position>;
 
 using CharBoardRepresentation = std::array<std::array<char, 8>, 8>;
 using Matrix = std::array<std::array<PiecePtr, 8>, 8>;

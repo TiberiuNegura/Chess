@@ -75,7 +75,7 @@ signals:
 	void Exit();
 
 private:
-	QWidget* FromMatrixToChessMove(Position start, Position end) const;
+	QWidget* FromMatrixToChessMove(Position start, Position end, int color = 2) const;
 	void toggleFullScreen();
 
 private:

@@ -36,14 +36,10 @@ public:
 	// Constructor
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
-	Game(const PGN& backup);
-
-	PGN MakeBackup() const override;
-	void LoadBackup(PGN backup) override;
 
 	bool LoadFromFormat(std::string path) override;
 	void LoadFromFEN(std::string fen);
-	void LoadFromPGN(std::string pgn, bool loadFromBackup = false);
+	void LoadFromPGN(PGN pgnObj, bool loadFromBackup = false);
 	Move ChessMoveToMatrix(const std::string& move);
 
 	void PreviewPastConfig(int moveIndex) override;
@@ -59,6 +55,7 @@ public:
 	EGameState GetState() const;
 	PositionList GetMoves(Position piecePos) const override;
 	TypeList GetMissingPieces(EColor color) const override;
+	MovesList GetMovesList() const override;
 
 	std::string GetFenString() const override;
 	PGN GetPGN() const override;
@@ -101,6 +98,7 @@ private:
 	TypeList m_whiteMissing, m_blackMissing;
 	ListenerList m_listeners;
 	PGN m_pgn;
-	bool m_isLoading;
+	MovesList m_gameMoves;
+	bool m_sendNotifications;
 };
 

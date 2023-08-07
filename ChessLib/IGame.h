@@ -18,7 +18,6 @@
 
 using IGamePtr = std::shared_ptr<class IGame>;
 using ListenerWeakPtr = std::weak_ptr<IGameListener>;
-using MovesList = std::vector<std::string>;
 
 enum class LoadType
 {
@@ -36,12 +35,13 @@ public:
 
 
 using MatrixPtr = std::shared_ptr<IMatrix>;
+using Move = std::pair<Position, Position>;
+using MovesList = std::vector<Move>;
 
 class IGame
 {
 public:
 	static IGamePtr Produce(); 
-	static IGamePtr Produce(PGN backup);
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
 	// Getters
@@ -49,14 +49,13 @@ public:
 	virtual EColor GetTurn() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual TypeList GetMissingPieces(EColor color) const = 0;
+	virtual MovesList GetMovesList() const = 0;
 
 	virtual std::string GetFenString() const = 0;
 	virtual PGN GetPGN() const = 0;
 	virtual void SavePGN(std::string path) const = 0;
 	virtual void SaveFEN(std::string path) const = 0;
 
-	virtual PGN MakeBackup() const = 0;
-	virtual void LoadBackup(PGN backup) = 0;
 	virtual bool LoadFromFormat(std::string path) = 0;
 	virtual void PreviewPastConfig(int moveIndex) = 0;
 
@@ -85,4 +84,6 @@ public:
 
 	~IGame() = default;
 };
+
+
 

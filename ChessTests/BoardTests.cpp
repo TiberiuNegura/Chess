@@ -738,7 +738,7 @@ TEST(CastlingTest, RookMovedTest)
 TEST(FenStringTest, FromFenToBoard)
 {
 	Game game;
-	game.LoadFromFEN("files/FromFenToBoard1.fen");
+	game.LoadFromFormat("files/FromFenToBoard1.fen");
 	Board board(CharBoardRepresentation{
 		' ', ' ','r',' ',' ','k',' ','r',
 		'p', 'p',' ',' ','b','p','p','p',
@@ -778,7 +778,7 @@ TEST(FenStringTest, FromBoardToFen)
 TEST(PgnStringTest, FromPgnToBoard1)
 {
 	Game game;
-	game.LoadFromPGN("files/FromPgnToBoard1.pgn");
+	game.LoadFromFormat("files/FromPgnToBoard1.pgn");
 	Board board(CharBoardRepresentation{
 		'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 		' ', ' ', ' ', ' ', ' ', 'R', ' ', 'k',
@@ -802,7 +802,7 @@ TEST(PgnStringTest, FromPgnToBoard1)
 TEST(PgnStringTest, FromPgnToBoard2)
 {
 	Game game;
-	game.LoadFromPGN("files/FromPgnToBoard2.pgn");
+	game.LoadFromFormat("files/FromPgnToBoard2.pgn");
 	Board board(CharBoardRepresentation{
 		' ', 'h', 'B', ' ', ' ', 'b', ' ', 'q',
 		'p', ' ', 'p', ' ', ' ', ' ', ' ', ' ',

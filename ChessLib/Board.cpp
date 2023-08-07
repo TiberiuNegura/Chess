@@ -594,6 +594,8 @@ Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol)
 {
 	if (islower(name))
 		name = 'P';
+	else if (name == 'N')
+		name = 'H';
 
 
 	if (isdigit(lineOrCol)) // is row

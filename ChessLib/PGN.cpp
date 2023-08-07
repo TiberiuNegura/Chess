@@ -7,18 +7,25 @@ static const std::vector<std::string> HEADER_FIELDS = { "Event", "Site", "Date",
 
 PGN::PGN()
 {
-	SetEvent("?");
-	SetSite("?");
-	SetDate("????.??.??");
-	SetRound("?");
-	SetWhite("?", "?");
-	SetBlack("?", "?");
-	SetResult("*");
+
+	SetHeader(EHeaderType::Event, "?");
+	SetHeader(EHeaderType::Site, "?");
+	SetHeader(EHeaderType::Date, "????.??.??");
+	SetHeader(EHeaderType::Round, "?");
+	SetHeader(EHeaderType::White, "?");
+	SetHeader(EHeaderType::Black, "?");
+	SetHeader(EHeaderType::Result, "*");
 }
 
-std::string PGN::GetFullPgn() const
+std::string PGN::GetMovesString() const
 {
 	return m_pgn;
+}
+
+PGN* PGN::SetHeader(EHeaderType headerType, const std::string& value)
+{
+	m_headers[headerType] = value;
+	return this;
 }
 
 bool PGN::Load(std::string path)
@@ -46,7 +53,10 @@ bool PGN::Save(std::string path) const
 		file << "[" + HEADER_FIELDS[(int)header.first] + " \"" + header.second + "\"]" << std::endl;
 	file << std::endl; 
 	
-	file << ComputeMovesPgn();
+	std::string pgnMoves = ComputeMovesPgn();
+	pgnMoves.pop_back(); // removes the last empty space
+
+	file << pgnMoves;
 
 	file.close();
 
@@ -63,48 +73,6 @@ void PGN::AppendToLastMove(std::string move)
 	m_moves[m_moves.size() - 1] += move;
 }
 
-PGN* PGN::SetEvent(std::string event)
-{
-	m_headers[EHeaderType::Event] = event;
-	return this;
-}
-
-PGN* PGN::SetSite(std::string site)
-{
-	m_headers[EHeaderType::Site] = site;
-	return this;
-}
-
-PGN* PGN::SetDate(std::string date)
-{
-	m_headers[EHeaderType::Date] = date;
-	return this;
-}
-
-PGN* PGN::SetRound(std::string round)
-{
-	m_headers[EHeaderType::Round] = round;
-	return this;
-}
-
-PGN* PGN::SetWhite(std::string firstName, std::string lastName)
-{
-	m_headers[EHeaderType::White] = lastName + ", " + firstName;
-	return this;
-}
-
-PGN* PGN::SetBlack(std::string firstName, std::string lastName)
-{
-	m_headers[EHeaderType::White] = lastName + ", " + firstName;
-	return this;
-}
-
-PGN* PGN::SetResult(std::string result)
-{
-	m_headers[EHeaderType::Result] = result;
-	return this;
-}
-
 std::string PGN::ComputeMovesPgn() const
 {
 	std::string pgn = "";
@@ -117,7 +85,6 @@ std::string PGN::ComputeMovesPgn() const
 		pgn += ( m_moves[i] + " ");
 	}
 
-	//pgn.pop_back(); // removes the last empty space
 
 	return pgn;
 }

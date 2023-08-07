@@ -16,16 +16,11 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
-IGamePtr IGame::Produce(PGN backup)
-{
-	return std::make_shared<Game>(backup);
-}
-
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
 	, m_state(EGameState::Playing)
-	, m_isLoading(false)
+	, m_sendNotifications(true)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -34,36 +29,14 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	: m_board(mat)
 	, m_turn(turn)
 	, m_state(state)
-	, m_isLoading(false)
+	, m_sendNotifications(true)
 {
 
-}
-
-Game::Game(const PGN& backup)
-	: m_pgn(backup)
-	, m_turn(EColor::WHITE)
-	, m_state(EGameState::Playing)
-	, m_isLoading(false)
-{
-
-}
-
-PGN Game::MakeBackup() const
-{
-	return m_pgn;
-}
-
-void Game::LoadBackup(PGN backup)
-{
-	Restart();
-	m_pgn = backup;
-	LoadFromPGN(backup.ComputeMovesPgn(), true);
 }
 
 bool Game::LoadFromFormat(std::string path)
 {
-	PGN backup = m_pgn;
-
+	PGN currentPGN = m_pgn;
 	try
 	{
 		if (!FileUtils::HasAnyExtension(path, "pgn", "fen"))
@@ -72,7 +45,10 @@ bool Game::LoadFromFormat(std::string path)
 		Restart();
 
 		if (FileUtils::HasAnyExtension(path, "pgn"))
-			LoadFromPGN(path);
+		{
+			if (m_pgn.Load(path))
+				LoadFromPGN(m_pgn);
+		}
 
 		if (FileUtils::HasAnyExtension(path, "fen"))
 			LoadFromFEN(path);
@@ -81,9 +57,7 @@ bool Game::LoadFromFormat(std::string path)
 	catch (...)
 	{
 		Restart();
-		LoadFromPGN(backup.ComputeMovesPgn(), true);
-		m_pgn = backup;
-
+		LoadFromPGN(currentPGN, true);
 		return false;
 	}
 
@@ -92,7 +66,6 @@ bool Game::LoadFromFormat(std::string path)
 
 void Game::LoadFromFEN(std::string path)
 {
-	
 	std::ifstream file(path);
 	if (file.good())
 	{
@@ -106,23 +79,15 @@ void Game::LoadFromFEN(std::string path)
 	}
 }
 
-void Game::LoadFromPGN(std::string path, bool loadFromBackup)
+void Game::LoadFromPGN(PGN pgnObj, bool loadFromBackup)
 {
-	m_isLoading = true;
-	std::string pgn;
+	m_sendNotifications = false;
 
-	if (!loadFromBackup)
-	{
-		if (m_pgn.Load(path))
-			pgn = m_pgn.GetFullPgn();
-		else
-			throw InvalidFileException();
-	}
-	else
-		pgn = path;
+	std::string pgn = loadFromBackup ? pgnObj.ComputeMovesPgn() : pgnObj.GetMovesString();
 
-	static const std::set<std::string> evolve = { "=Q","=B","=H","=R" };
+	static const std::set<std::string> evolve = { "=Q","=B","=H","=R", "=N"};
 	pgn = std::regex_replace(pgn, std::regex("\\b\\d+\\. |[+#x]"), "");
+
 	std::string pgnMove;
 	Move move;
 
@@ -151,6 +116,8 @@ void Game::LoadFromPGN(std::string path, bool loadFromBackup)
 
 				if (isEvolving)
 				{
+					if (upgrade == 'N')
+						upgrade = 'H';
 					EType upgradeTo = m_board.CharToType(upgrade);
 					EvolvePawn(upgradeTo);
 				}
@@ -160,12 +127,11 @@ void Game::LoadFromPGN(std::string path, bool loadFromBackup)
 		if (pgn[i] != ' ')
 			pgnMove += pgn[i];
 	}
-	m_isLoading = false;
+	m_sendNotifications = true;
 }
 
 Move Game::ChessMoveToMatrix(const std::string& move)
 {
-	static const std::set<char> validChars = { 'B' ,'R' ,'Q' ,'K' ,'H' };
 	Position end, start;
 
 	end.first = '8' - move[move.size() - 1];
@@ -229,6 +195,7 @@ void Game::MovePiece(Position start, Position destination)
 			m_board.MovePiece(start, destination);
 			m_pgn.Add(m_board.MatrixToChessMove(start, destination, captures, lineOrCol)); // pgn
 			Notify(start, destination);
+			m_gameMoves.emplace_back(start, destination);
 			m_board[destination]->SetHasMoved();
 			
 			// Castling condition
@@ -240,11 +207,13 @@ void Game::MovePiece(Position start, Position destination)
 					m_board.MovePiece({ start.first, 7 }, { start.first, 5 });
 			}
 
+			BoardConfig configuration = m_board.GetBoardConfiguration();
+			m_boardConfigs.push_back(configuration);
+
 			if (m_board.CanPawnEvolve(destination))
 			{
 				UpdateState(EGameState::PawnEvolving);
-				if (!m_isLoading)
-					Notify(Response::PAWN_UPGRADE);
+				Notify(Response::PAWN_UPGRADE);
 				return;
 			}
 
@@ -277,8 +246,6 @@ void Game::MovePiece(Position start, Position destination)
 			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
 
-			BoardConfig configuration = m_board.GetBoardConfiguration();
-			m_boardConfigs.push_back(configuration);
 			if (m_board.IsThreeFold(m_boardConfigs, configuration))
 			{
 				UpdateState(EGameState::Tie);
@@ -344,6 +311,11 @@ TypeList Game::GetMissingPieces(EColor color) const
 	return color == EColor::WHITE ? m_whiteMissing : m_blackMissing;;
 }
 
+
+MovesList Game::GetMovesList() const
+{
+	return m_gameMoves;
+}
 
 std::string Game::GetFenString() const
 {
@@ -508,6 +480,8 @@ void Game::RemoveListener(IGameListener* listener)
 
 void Game::Notify(Response response)
 {
+	if (!m_sendNotifications)
+		return;
 	for (auto listener : m_listeners)
 	{
 		switch (response)
@@ -535,12 +509,16 @@ void Game::Notify(Response response)
 
 void Game::Notify(Position start, Position end)
 {
+	if (!m_sendNotifications)
+		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnMovePiece(start, end);
 }
 
 void Game::Notify(EType pieceType, EColor pieceColor)
 {
+	if (!m_sendNotifications)
+		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
 } // TODO: test

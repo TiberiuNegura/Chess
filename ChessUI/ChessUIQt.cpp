@@ -476,16 +476,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_blackPieces->clear();
 	m_MovesList->clear();
 
-	if (m_game)
-		m_game->RemoveListener(this);
-
-	auto backup = m_game->MakeBackup();
-
-	m_game = IGame::Produce();
-	m_game->AddListener(shared_from_this());
-
-	if (!m_game->LoadFromFormat(filePath.toStdString()) || filePath == "")
-		m_game->LoadBackup(backup);
+	bool success = m_game->LoadFromFormat(filePath.toStdString());
 		
 	
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
@@ -494,26 +485,33 @@ void ChessUIQt::OnLoadButtonClicked()
 	TypeList whitePieces = m_game->GetMissingPieces(EColor::BLACK);
 	TypeList blackPieces = m_game->GetMissingPieces(EColor::WHITE);
 
-	if (filePath.contains(".fen"))
+	for (auto& pieceType : whitePieces)
 	{
-		for (auto& pieceType : whitePieces)
-		{
-			QListWidgetItem* capturedPiece = new QListWidgetItem();
-			QString imagePath = "res/b";
-			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-			QPixmap pixmap(imagePath);
-			capturedPiece->setIcon(QIcon(pixmap));
-			m_whitePieces->addItem(capturedPiece);
-		}
-		for (auto& pieceType : blackPieces)
-		{
-			QListWidgetItem* capturedPiece = new QListWidgetItem();
-			QString imagePath = "res/w";
-			imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
-			QPixmap pixmap(imagePath);
-			capturedPiece->setIcon(QIcon(pixmap));
-			m_blackPieces->addItem(capturedPiece);
-		}
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/b";
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_whitePieces->addItem(capturedPiece);
+	}
+	for (auto& pieceType : blackPieces)
+	{
+		QListWidgetItem* capturedPiece = new QListWidgetItem();
+		QString imagePath = "res/w";
+		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
+		QPixmap pixmap(imagePath);
+		capturedPiece->setIcon(QIcon(pixmap));
+		m_blackPieces->addItem(capturedPiece);
+	}
+
+	MovesList moves = m_game->GetMovesList();
+	int color = -1;
+	for (auto& move : moves)
+	{
+		QListWidgetItem* item = new QListWidgetItem();
+		QWidget* design = FromMatrixToChessMove(move.first, move.second, ++color%2);
+		m_MovesList->addItem(item);
+		m_MovesList->setItemWidget(item, design);
 	}
 
 	UpdateBoard();
@@ -580,7 +578,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 	else
 		BoardLock(false);
 
-	m_game->PreviewPastConfig(index);
+	m_game->PreviewPastConfig(index-1);
 	UpdateBoard();
 	
 }
@@ -601,15 +599,23 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 	}
 }
 
-QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end) const
+QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int color) const
 {
 	QWidget* item = new QWidget();
 	QGridLayout* layout = new QGridLayout;
 	std::string source, target, turn;
 	QString path;
+	EColor turnColor;
+	if (color == 0)
+		turnColor = EColor::WHITE;
+	else if (color == 1)
+		turnColor = EColor::BLACK;
+	else
+		turnColor = m_game->GetTurn();
 
-	turn = m_game->GetTurn() == EColor::WHITE ? "Black" : "White";
-	path = m_game->GetTurn() == EColor::BLACK ? "res/black.png" : "res/white.png";
+	turn = turnColor == EColor::WHITE ? "Black" : "White";
+	path = turnColor == EColor::BLACK ? "res/black.png" : "res/white.png";
+
 
 	QLabel* turnPicture = new QLabel();
 	QPixmap pic(path);
