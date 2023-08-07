@@ -66,15 +66,15 @@ bool Game::LoadFromFormat(std::string path)
 
 	try
 	{
-		if (!FileUtils::HasExtension(path, "pgn") && !FileUtils::HasExtension(path, "fen"))
+		if (!FileUtils::HasAnyExtension(path, "pgn", "fen"))
 			return false;
 
 		Restart();
 
-		if (FileUtils::HasExtension(path, "pgn"))
+		if (FileUtils::HasAnyExtension(path, "pgn"))
 			LoadFromPGN(path);
 
-		if (FileUtils::HasExtension(path, "fen"))
+		if (FileUtils::HasAnyExtension(path, "fen"))
 			LoadFromFEN(path);
 		
 	}
