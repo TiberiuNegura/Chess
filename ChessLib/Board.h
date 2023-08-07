@@ -54,7 +54,7 @@ public:
 	bool IsEmptyPosition(Position p) const;
 	static bool IsOutOfBounds(Position p);
 	bool IsCheck(EColor color) const;
-	bool IsCheckmate(EColor color) const;
+	bool IsStalemate(EColor color) const;
 	bool CanBeCaptured(Position pos, EColor color) const;
 	bool CanPawnEvolve(Position pos) const;
 	bool IsThreeFold(BoardConfigList boardConfigs, BoardConfig config) const;

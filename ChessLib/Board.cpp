@@ -12,16 +12,6 @@ Board::Board()
 	Init();
 }
 
-Board::Board(std::string& path, LoadType fileType)
-{
-	Reset();
-	if (fileType == LoadType::PGN)
-		Init();
-	else if (fileType == LoadType::FEN)
-		LoadFromFEN(path);
-
-}
-
 EColor Board::CharToColor(char c) const
 {
 	return (islower(c) ? EColor::BLACK : EColor::WHITE);
@@ -370,9 +360,9 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture,
 	move += endString;
 
 	if (IsCheck(enemyColor))
-		move += IsCheckmate(enemyColor) ? '#' : '+';
+		move += IsStalemate(enemyColor) ? '#' : '+';
 	else
-		if (IsCheckmate(enemyColor))
+		if (IsStalemate(enemyColor))
 			move += '#';
 
 	return move;
@@ -590,7 +580,7 @@ Position Board::FindStart(char name, Position end, EColor turn, Position pos) co
 	return { -1,-1 };
 }
 
-Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol) const // --> trateaza cazu de linie sau coloana
+Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol) const
 {
 	if (islower(name))
 		name = 'P';
@@ -640,7 +630,7 @@ BoardPtr Board::Clone() const
 	return std::make_shared<Board>(m_board);
 }
 
-bool Board::IsCheckmate(EColor color) const
+bool Board::IsStalemate(EColor color) const
 {
 	for (int row = 0; row < 8; row++)
 		for (int column = 0; column < 8; column++)

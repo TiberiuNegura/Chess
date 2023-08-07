@@ -219,18 +219,18 @@ void Game::MovePiece(Position start, Position destination)
 
 			UpdateTurn();
 			bool opponentInCheck = m_board.IsCheck(m_turn);
-			bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
+			bool opponentInStalemate = m_board.IsStalemate(m_turn);
 			if (opponentInCheck)
 			{
 				UpdateState(EGameState::Check);
 				Notify(Response::CHECK);
 			}
-			if (opponentInCheckmate && !opponentInCheck)
+			if (opponentInStalemate && !opponentInCheck)
 			{
 				UpdateState(EGameState::Tie);
 				Notify(Response::TIE);
 			}
-			else if (opponentInCheckmate)
+			else if (opponentInStalemate)
 			{
 				if (m_turn == EColor::BLACK)
 				{
@@ -409,13 +409,13 @@ void Game::EvolvePawn(EType pieceType)
 
 	UpdateTurn();
 	bool opponentInCheck = m_board.IsCheck(m_turn);
-	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
+	bool opponentInStalemate = m_board.IsStalemate(m_turn);
 
 	if (opponentInCheck)
 		m_pgn.AppendToLastMove("+");
-	if (opponentInCheckmate && !opponentInCheck)
+	if (opponentInStalemate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
-	else if (m_board.IsCheckmate(m_turn)) 
+	else if (m_board.IsStalemate(m_turn)) 
 	{
 		m_pgn.AppendToLastMove("#");
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
