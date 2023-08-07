@@ -25,32 +25,32 @@ bool PGN::Load(std::string path)
 {
 	std::ifstream file(path);
 
-	if (file.good())
-	{
-		std::string line;
-		while (std::getline(file, line))
-			ParseTags(line);
-		return true;
-	}
+	if (!file.good())
+		return false;
 
-	return false;
+	std::string line;
+	while (std::getline(file, line))
+		ParseTags(line);
+
+	return true;
 }
 
 bool PGN::Save(std::string path) const
 {
-	std::ofstream fileRead(path);
+	std::ofstream file(path);
 
-	if (fileRead.good())
-	{
-		for (auto& header : m_headers)
-		{
-			fileRead << "[" + HEADER_FIELDS[(int)header.first] + " \"" + header.second + "\"]\n";
-		}
-		fileRead << std::endl << GetString();
-		return true;
-	}
+	if (!file.good())
+		return false;
 
-	return false;
+	for (auto& header : m_headers)
+		file << "[" + HEADER_FIELDS[(int)header.first] + " \"" + header.second + "\"]" << std::endl;
+	file << std::endl; 
+	
+	file << ComputeMovesPgn();
+
+	file.close();
+
+	return true;
 }
 
 void PGN::Add(std::string move)
@@ -58,7 +58,7 @@ void PGN::Add(std::string move)
 	m_moves.push_back(move);
 }
 
-void PGN::CompleteLastMove(std::string move)
+void PGN::AppendToLastMove(std::string move)
 {
 	m_moves[m_moves.size() - 1] += move;
 }
@@ -105,19 +105,18 @@ PGN* PGN::SetResult(std::string result)
 	return this;
 }
 
-std::string PGN::GetString() const
+std::string PGN::ComputeMovesPgn() const
 {
 	std::string pgn = "";
-	int counter = 2;
+
 	for (int i = 0; i < m_moves.size(); i++)
 	{
 		if (i % 2 == 0)
-			pgn += std::to_string(counter / 2) + ". ";
-		pgn += m_moves[i];
-		pgn += " ";
+			pgn += std::to_string(i / 2 + 1) + ". ";
 
-		counter++;
+		pgn += ( m_moves[i] + " ");
 	}
+
 	//pgn.pop_back(); // removes the last empty space
 
 	return pgn;

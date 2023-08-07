@@ -56,7 +56,7 @@ void Game::LoadBackup(PGN backup)
 {
 	Restart();
 	m_pgn = backup;
-	LoadFromPGN(backup.GetString(), true);
+	LoadFromPGN(backup.ComputeMovesPgn(), true);
 }
 
 bool Game::LoadFromFormat(std::string path)
@@ -75,7 +75,7 @@ bool Game::LoadFromFormat(std::string path)
 	catch (...)
 	{
 		Restart();
-		LoadFromPGN(backup.GetString(), true);
+		LoadFromPGN(backup.ComputeMovesPgn(), true);
 		m_pgn = backup;
 
 		return false;
@@ -408,22 +408,22 @@ void Game::EvolvePawn(EType pieceType)
 	
 	if (pieceType == EType::BISHOP)
 	{
-		m_pgn.CompleteLastMove("=B");
+		m_pgn.AppendToLastMove("=B");
 		m_board.Set(piecePos, Piece::Produce(EType::BISHOP, m_turn));
 	}
 	else if (pieceType == EType::QUEEN)
 	{
-		m_pgn.CompleteLastMove("=Q");
+		m_pgn.AppendToLastMove("=Q");
 		m_board.Set(piecePos, Piece::Produce(EType::QUEEN, m_turn));
 	}
 	else if (pieceType == EType::ROOK)
 	{
-		m_pgn.CompleteLastMove("=R");
+		m_pgn.AppendToLastMove("=R");
 		m_board.Set(piecePos, Piece::Produce(EType::ROOK, m_turn));
 	}
 	else if (pieceType ==  EType::HORSE)
 	{
-		m_pgn.CompleteLastMove("=H");
+		m_pgn.AppendToLastMove("=H");
 		m_board.Set(piecePos, Piece::Produce(EType::HORSE, m_turn));
 	}
 	else 
@@ -434,12 +434,12 @@ void Game::EvolvePawn(EType pieceType)
 	bool opponentInCheckmate = m_board.IsCheckmate(m_turn);
 
 	if (opponentInCheck)
-		m_pgn.CompleteLastMove("+");
+		m_pgn.AppendToLastMove("+");
 	if (opponentInCheckmate && !opponentInCheck)
 		UpdateState(EGameState::Tie);
 	else if (m_board.IsCheckmate(m_turn)) 
 	{
-		m_pgn.CompleteLastMove("#");
+		m_pgn.AppendToLastMove("#");
 		m_turn == EColor::BLACK ? UpdateState(EGameState::WhiteWon) : UpdateState(EGameState::BlackWon);
 	}
 	else
