@@ -450,16 +450,8 @@ void ChessUIQt::OnSaveButtonClicked()
 		QString desktopPath = QDir::homePath() + "/Downloads";
 		QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", desktopPath + "/" + defaultFileName, "FEN Files (*.fen)");
 
-		if (!filePath.isEmpty()) {
-			QFile newFile(filePath);
-			if (!newFile.open(QIODevice::WriteOnly | QIODevice::Text))
-				return;
+		m_game->SaveFEN(filePath.toStdString());
 
-			QTextStream outStream(&newFile);
-			outStream << QString::fromStdString(m_game->GetFenString());
-
-			newFile.close();
-		}
 	}
 	else if (saveOptionDialog.clickedButton() == saveAsPgnButton) {
 		// Save as PGN
@@ -492,10 +484,8 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_game = IGame::Produce();
 	m_game->AddListener(shared_from_this());
 
-	if (!m_game->LoadFromFormat(filePath.toStdString()))
-	{
+	if (!m_game->LoadFromFormat(filePath.toStdString()) || filePath == "")
 		m_game->LoadBackup(backup);
-	}
 		
 	
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
@@ -571,13 +561,13 @@ void ChessUIQt::OnCopyButtonClicked()
 	clipboard->setText(config);
 }
 
-void ChessUIQt::BoardLock(bool enable)
+void ChessUIQt::BoardLock(bool disabled)
 {
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++)
 		{
-			m_grid[row][column]->setEnabled(enable);
+			m_grid[row][column]->setEnabled(disabled);
 		}
 	}
 }
@@ -729,24 +719,27 @@ void ChessUIQt::ShowPromoteOptions()
 	dialog.setModal(true);
 
 	bool ok;
-	QString item = QInputDialog::getItem(this, tr("Pawn promote"),
-		tr("Promote pawn to: "), options, 0, false, &ok);
-
-	if (ok && !item.isEmpty())
+	do
 	{
-		if (item == "Rook")
-			m_game->EvolvePawn(EType::ROOK);
-		else if (item == "Bishop")
-			m_game->EvolvePawn(EType::BISHOP);
-		else if (item == "Queen")
-			m_game->EvolvePawn(EType::QUEEN);
-		else if (item == "Horse")
-			m_game->EvolvePawn(EType::HORSE);
+		QString item = QInputDialog::getItem(this, tr("Pawn promote"),
+			tr("Promote pawn to: "), options, 0, false, &ok);
 
-		QMessageBox notification;
-		notification.setText("You selected " + item);
-		notification.exec();
-	}
+		if (ok && !item.isEmpty())
+		{
+			if (item == "Rook")
+				m_game->EvolvePawn(EType::ROOK);
+			else if (item == "Bishop")
+				m_game->EvolvePawn(EType::BISHOP);
+			else if (item == "Queen")
+				m_game->EvolvePawn(EType::QUEEN);
+			else if (item == "Horse")
+				m_game->EvolvePawn(EType::HORSE);
+
+			QMessageBox notification;
+			notification.setText("You selected " + item);
+			notification.exec();
+		}
+	} while (ok == false);
 }
 
 QString ChessUIQt::GetTurnMessage()

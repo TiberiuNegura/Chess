@@ -62,7 +62,7 @@ public slots:
 	void OnDrawButtonClicked();
 	char PieceToChar(IPiecePtr piece) const;
 	void OnCopyButtonClicked();
-	void BoardLock(bool enable);
+	void BoardLock(bool disabled);
 	void OnHistoryClicked(QListWidgetItem* item);
 	void centerOnScreen();
 	

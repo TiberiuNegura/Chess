@@ -31,7 +31,6 @@ public:
 	Board(std::string& path, LoadType fileType);
 
 	void LoadFromFEN(std::string& fen);
-	void LoadFromPGN(std::string& pgn);
 
 	EColor CharToColor(char c) const;
 	EType CharToType(char c) const;

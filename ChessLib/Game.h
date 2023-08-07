@@ -59,10 +59,12 @@ public:
 	EGameState GetState() const;
 	PositionList GetMoves(Position piecePos) const override;
 	TypeList GetMissingPieces(EColor color) const override;
+
 	std::string GetFenString() const override;
 	PGN GetPGN() const override;
 	void SavePGN(std::string path) const override;
-	
+	void SaveFEN(std::string path) const override;
+
 	// tie invitation
 	void MakeTieRequest() override;
 	bool IsTieRequest() const override;

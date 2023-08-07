@@ -71,13 +71,9 @@ Board::Board(const Matrix& mat)
 	m_board = mat;
 }
 
-void Board::LoadFromFEN(std::string& path)
+void Board::LoadFromFEN(std::string& fen)
 {
-	std::ifstream fileRead(path);
-
-	std::string fen;
-	fileRead >> fen;
-	fileRead.close();
+	Reset();
 
 	int row = 0, column = 0;
 	for (auto& c : fen)
@@ -103,11 +99,6 @@ void Board::LoadFromFEN(std::string& path)
 			column++;
 		}
 	}
-}
-
-void Board::LoadFromPGN(std::string& pgn)
-{
-	
 }
 
 const Matrix& Board::GetMatrix() const

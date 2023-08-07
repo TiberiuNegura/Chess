@@ -735,31 +735,29 @@ TEST(CastlingTest, RookMovedTest)
 	EXPECT_THROW(game.MovePiece({ 0, 4 }, { 0, 6 }), IllegalMoveException);
 }
 
-//TEST(FenStringTest, FromFenToBoard)
-//{
-//	std::string fen = "2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w";
-//	Game game;
-//	game.LoadFromFEN(fen);
-//	Board board(CharBoardRepresentation{
-//		' ', ' ','r',' ',' ','k',' ','r',
-//		'p', 'p',' ',' ','b','p','p','p',
-//		' ', ' ',' ','p',' ',' ',' ',' ',
-//		' ', ' ',' ',' ',' ',' ','B',' ',
-//		'P', 'Q','B',' ','h',' ','b',' ',
-//		' ', ' ',' ',' ',' ',' ',' ',' ',
-//		' ', 'P',' ',' ',' ','P',' ','P',
-//		' ',' ','K',' ',' ',' ','H',' '
-//		});
-//	for (int row = 0; row < 8; row++)
-//		for (int column = 0; column < 8; column++)
-//		{
-//			if(board.Get({ row,column }) && game.GetBoard()->GetElement({ row, column }))
-//				EXPECT_TRUE(board.Get({row,column})->Is(game.GetBoard()->GetElement({ row, column })->GetType()));
-//		}
-//	EXPECT_TRUE(game.GetTurn() == EColor::WHITE);
-//}
+TEST(FenStringTest, FromFenToBoard)
+{
+	Game game;
+	game.LoadFromFEN("files/FromFenToBoard1.fen");
+	Board board(CharBoardRepresentation{
+		' ', ' ','r',' ',' ','k',' ','r',
+		'p', 'p',' ',' ','b','p','p','p',
+		' ', ' ',' ','p',' ',' ',' ',' ',
+		' ', ' ',' ',' ',' ',' ','b',' ',
+		'P', 'Q','B',' ','h',' ','b',' ',
+		' ', ' ',' ',' ',' ',' ',' ',' ',
+		' ', 'P',' ',' ',' ','P',' ','P',
+		' ', ' ','K',' ',' ',' ','H',' '
+		});
 
-// the fen needs a refactor because of the pgn changes
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+		{
+			if (board.Get({ row,column }) && game.GetBoard()->GetElement({ row, column }))
+				EXPECT_TRUE(board.Get({ row,column })->Is(game.GetBoard()->GetElement({ row, column })->GetType()));
+		}
+	EXPECT_TRUE(game.GetTurn() == EColor::WHITE);
+}
 
 TEST(FenStringTest, FromBoardToFen)
 {
@@ -776,3 +774,52 @@ TEST(FenStringTest, FromBoardToFen)
 
 	EXPECT_EQ(game.GetFenString(), "2r2k1r/pp2bppp/3p4/6B1/PQB1h1b1/8/1P3P1P/2K3H1 w");
 }
+
+TEST(PgnStringTest, FromPgnToBoard1)
+{
+	Game game;
+	game.LoadFromPGN("files/FromPgnToBoard1.pgn");
+	Board board(CharBoardRepresentation{
+		'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+		' ', ' ', ' ', ' ', ' ', 'R', ' ', 'k',
+		' ', ' ', ' ', 'P', ' ', 'Q', ' ', ' ',
+		' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ',
+		' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ',
+		' ', ' ', ' ', ' ', 'B', 'H', ' ', ' ',
+		' ', ' ', ' ', ' ', 'P', 'P', ' ', ' ',
+		' ', 'b', ' ', ' ', 'K', 'B', ' ', ' '
+		});
+
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+		{
+			if (board.Get({ row,column }) && game.GetBoard()->GetElement({ row, column }))
+				EXPECT_TRUE(board.Get({ row,column })->Is(game.GetBoard()->GetElement({ row, column })->GetType()));
+		}
+	EXPECT_TRUE(game.GetState() == EGameState::WhiteWon);
+}
+
+TEST(PgnStringTest, FromPgnToBoard2)
+{
+	Game game;
+	game.LoadFromPGN("files/FromPgnToBoard2.pgn");
+	Board board(CharBoardRepresentation{
+		' ', 'h', 'B', ' ', ' ', 'b', ' ', 'q',
+		'p', ' ', 'p', ' ', ' ', ' ', ' ', ' ',
+		'B', ' ', 'B', ' ', ' ', ' ', ' ', ' ',
+		' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ',
+		' ', ' ', ' ', ' ', 'p', ' ', ' ', 'k',
+		' ', ' ', ' ', ' ', 'P', ' ', ' ', 'p',
+		' ', 'P', ' ', 'P', 'B', 'P', ' ', 'P',
+		'R', 'H', 'B', 'Q', 'K', ' ', 'H', 'R'
+		});
+
+	for (int row = 0; row < 8; row++)
+		for (int column = 0; column < 8; column++)
+		{
+			if (board.Get({ row,column }) && game.GetBoard()->GetElement({ row, column }))
+				EXPECT_TRUE(board.Get({ row,column })->Is(game.GetBoard()->GetElement({ row, column })->GetType()));
+		}
+	EXPECT_TRUE(game.GetTurn() == EColor::BLACK);
+}
+

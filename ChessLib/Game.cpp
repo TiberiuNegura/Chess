@@ -91,8 +91,11 @@ void Game::LoadFromFEN(std::string path)
 	if (file.good())
 	{
 		std::string fen;
-		file >> fen;
+
+		std::getline(file, fen);
 		file.close();
+
+		m_board.LoadFromFEN(fen);
 		m_turn = fen.back() == 'w' ? EColor::WHITE : EColor::BLACK;
 	}
 }
@@ -125,9 +128,9 @@ void Game::LoadFromPGN(std::string path, bool loadFromBackup)
 			bool isEvolving = FindSubstring(pgnMove, evolve);
 			char upgrade;
 
-			if (pgnMove == "O-O")
+			if (pgnMove == "O-O" || pgnMove == "0-0")
 				MovePiece({ row, 4 }, {row, 6});
-			else if (pgnMove == "O-O-O")
+			else if (pgnMove == "O-O-O" || pgnMove == "0-0-0")
 				MovePiece({ row, 4 }, { row, 2 });
 			else
 			{
@@ -352,6 +355,15 @@ PGN Game::GetPGN() const
 void Game::SavePGN(std::string path) const
 {
 	m_pgn.Save(path);
+}
+
+void Game::SaveFEN(std::string path) const
+{
+	std::ofstream file(path);
+	if (file.good())
+	{
+		file << GetFenString();
+	}
 }
 
 void Game::MakeTieRequest()
