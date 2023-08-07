@@ -504,12 +504,14 @@ void ChessUIQt::OnLoadButtonClicked()
 		m_blackPieces->addItem(capturedPiece);
 	}
 
+	// Create history list
 	MovesList moves = m_game->GetMovesList();
+	
 	int color = -1;
 	for (auto& move : moves)
 	{
 		QListWidgetItem* item = new QListWidgetItem();
-		QWidget* design = FromMatrixToChessMove(move.first, move.second, ++color%2);
+		QWidget* design = FromMatrixToChessMove(move.first, move.second, ++color % 2);
 		m_MovesList->addItem(item);
 		m_MovesList->setItemWidget(item, design);
 	}
@@ -602,49 +604,49 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 	}
 }
 
-QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int color) const
+QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int color)
 {
-	QWidget* item = new QWidget();
-	QGridLayout* layout = new QGridLayout;
-	std::string source, target, turn;
-	QString path;
-	EColor turnColor;
+	EColor turnColor = m_game->GetTurn();
 	if (color == 0)
 		turnColor = EColor::WHITE;
 	else if (color == 1)
 		turnColor = EColor::BLACK;
-	else
-		turnColor = m_game->GetTurn();
 
-	turn = turnColor == EColor::WHITE ? "Black" : "White";
-	path = turnColor == EColor::BLACK ? "res/black.png" : "res/white.png";
+	std::string turn = turnColor == EColor::WHITE ? "Black" : "White";
 
+	static QPixmap pixmap_white = QPixmap("res/white.png").scaled(30, 30);
+	static QPixmap pixmap_black = QPixmap("res/black.png").scaled(30, 30);
 
 	QLabel* turnPicture = new QLabel();
-	QPixmap pic(path);
-	turnPicture->setPixmap(pic.scaled(30, 30));
+	turnPicture->setPixmap(turnColor == EColor::WHITE ? pixmap_white : pixmap_black);
 	turnPicture->setStyleSheet("border: 1px solid black; padding: 0px; margin: 0px;");
 
+	std::string source;
 	source += toupper('a' + start.second);
 	source += toupper('1' + (7 - start.first));
+
 	QLabel* initialPos = new QLabel(QString::fromStdString(source));
 	initialPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
 	
+	static QPixmap pixmap = QPixmap("res/arrow.png").scaled(30, 30);
+
 	QLabel* arrow = new QLabel();
-	QPixmap pic2("res/arrow.png");
-	arrow->setPixmap(pic2.scaled(30, 30));
+	arrow->setPixmap(pixmap);
 	arrow->setStyleSheet("border: none; padding: 0px; margin: 0px;");
 
+	std::string target;
 	target += toupper('a' + end.second);
 	target += toupper('1' + (7 - end.first));
 	QLabel* targetPos = new QLabel(QString::fromStdString(target));
 	targetPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
 
+	QGridLayout* layout = new QGridLayout;
 	layout->addWidget(turnPicture, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(initialPos, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(arrow, 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(targetPos, 0, 3, Qt::AlignLeft | Qt::AlignVCenter);
 
+	QWidget* item = new QWidget();
 	item->setStyleSheet("background: transparent; padding: 0px; margin: 0px;");
 	item->setLayout(layout);
 
