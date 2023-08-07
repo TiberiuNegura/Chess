@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 
+static const std::vector<std::string> HEADER_FIELDS = { "Event", "Site", "Date", "Round", "White", "Black", "Result" };
+
 PGN::PGN()
 {
 	SetEvent("?");
@@ -14,53 +16,7 @@ PGN::PGN()
 	SetResult("*");
 }
 
-
-Headers PGN::StringToHeader(std::string key) const
-{
-	std::string keys[7] = { "Event", "Site", "Date", "Round", "White", "Black", "Result" };
-	
-	for (int index = 0; index < 7; index++)
-		if (keys[index] == key)
-			return (Headers) index;
-	return Headers::UNKNOWN;
-}
-
-void PGN::parseTags(const std::string& tagText) 
-{
-	Fields fields;
-	std::istringstream iss(tagText);
-	std::string line;
-	std::getline(iss, line);
-	
-	if (line.empty())
-			return;
-
-	if (line[0] == '[')
-	{
-		line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
-		size_t pos = line.find_first_of("\"");
-
-		if (pos != std::string::npos)
-		{
-			Headers header = StringToHeader(line.substr(1, pos - 1));
-
-			line = line.substr(pos + 1);
-			pos = line.find_first_of("\"");
-
-			if (pos != std::string::npos)
-			{
-				std::string value = line.substr(0, pos);
-				m_headers[header] = value;
-			}
-		}
-	}
-	else
-	{
-		m_pgn += line + " ";
-	}
-}
-
-std::string PGN::Get() const
+std::string PGN::GetFullPgn() const
 {
 	return m_pgn;
 }
@@ -73,7 +29,7 @@ bool PGN::Load(std::string path)
 	{
 		std::string line;
 		while (std::getline(file, line))
-			parseTags(line);
+			ParseTags(line);
 		return true;
 	}
 
@@ -88,8 +44,7 @@ bool PGN::Save(std::string path) const
 	{
 		for (auto& header : m_headers)
 		{
-			std::string fields[7] = { "Event", "Site", "Date", "Round", "White", "Black", "Result" };
-			fileRead << "[" + fields[(int)header.first] + " \"" + header.second + "\"]\n";
+			fileRead << "[" + HEADER_FIELDS[(int)header.first] + " \"" + header.second + "\"]\n";
 		}
 		fileRead << std::endl << GetString();
 		return true;
@@ -110,43 +65,43 @@ void PGN::CompleteLastMove(std::string move)
 
 PGN* PGN::SetEvent(std::string event)
 {
-	m_headers[Headers::EVENT] = event;
+	m_headers[EHeaderType::Event] = event;
 	return this;
 }
 
 PGN* PGN::SetSite(std::string site)
 {
-	m_headers[Headers::SITE] = site;
+	m_headers[EHeaderType::Site] = site;
 	return this;
 }
 
 PGN* PGN::SetDate(std::string date)
 {
-	m_headers[Headers::DATE] = date;
+	m_headers[EHeaderType::Date] = date;
 	return this;
 }
 
 PGN* PGN::SetRound(std::string round)
 {
-	m_headers[Headers::ROUND] = round;
+	m_headers[EHeaderType::Round] = round;
 	return this;
 }
 
 PGN* PGN::SetWhite(std::string firstName, std::string lastName)
 {
-	m_headers[Headers::WHITE] = lastName + ", " + firstName;
+	m_headers[EHeaderType::White] = lastName + ", " + firstName;
 	return this;
 }
 
 PGN* PGN::SetBlack(std::string firstName, std::string lastName)
 {
-	m_headers[Headers::WHITE] = lastName + ", " + firstName;
+	m_headers[EHeaderType::White] = lastName + ", " + firstName;
 	return this;
 }
 
 PGN* PGN::SetResult(std::string result)
 {
-	m_headers[Headers::RESULT] = result;
+	m_headers[EHeaderType::Result] = result;
 	return this;
 }
 
@@ -168,11 +123,6 @@ std::string PGN::GetString() const
 	return pgn;
 }
 
-std::string PGN::Back()
-{
-	return m_moves[m_moves.size() - 1];
-}
-
 void PGN::Clear()
 {
 	m_headers.clear();
@@ -180,7 +130,51 @@ void PGN::Clear()
 	m_pgn.clear();
 }
 
-std::vector<std::string> PGN::GetMoves() const
+MoveCollection PGN::GetMoves() const
 {
 	return m_moves;
+}
+
+EHeaderType PGN::ParseHeaderName(const std::string& headerName)
+{
+	for (int index = 0; index < HEADER_FIELDS.size(); index++)
+		if (HEADER_FIELDS[index] == headerName)
+			return (EHeaderType)index;
+
+	return EHeaderType::Unknown;
+}
+
+void PGN::ParseTags(const std::string& tagText)
+{
+	FieldsCollection fields;
+	std::istringstream iss(tagText);
+	std::string line;
+	std::getline(iss, line);
+
+	if (line.empty())
+		return;
+
+	if (line[0] == '[')
+	{
+		line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
+		size_t pos = line.find_first_of("\"");
+
+		if (pos != std::string::npos)
+		{
+			EHeaderType header = ParseHeaderName(line.substr(1, pos - 1));
+
+			line = line.substr(pos + 1);
+			pos = line.find_first_of("\"");
+
+			if (pos != std::string::npos)
+			{
+				std::string value = line.substr(0, pos);
+				m_headers[header] = value;
+			}
+		}
+	}
+	else
+	{
+		m_pgn += line + " ";
+	}
 }

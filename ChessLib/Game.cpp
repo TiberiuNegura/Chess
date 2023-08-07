@@ -108,7 +108,7 @@ void Game::LoadFromPGN(std::string path, bool loadFromBackup)
 	if (!loadFromBackup)
 	{
 		if (m_pgn.Load(path))
-			pgn = m_pgn.Get();
+			pgn = m_pgn.GetFullPgn();
 		else
 			throw InvalidFileException();
 	}

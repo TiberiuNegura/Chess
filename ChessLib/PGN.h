@@ -5,19 +5,21 @@
 #include <map>
 
 
-enum class Headers
+enum class EHeaderType
 {
-	EVENT,
-	SITE,
-	DATE,
-	ROUND,
-	WHITE,
-	BLACK,
-	RESULT,
-	UNKNOWN
+	Event,
+	Site,
+	Date,
+	Round,
+	White,
+	Black,
+	Result,
+	Unknown
 };
 
-using Fields = std::map<Headers, std::string>;
+using MoveString = std::string;
+using MoveCollection = std::vector<MoveString>;
+using FieldsCollection = std::map<EHeaderType, std::string>;
 
 class PGN
 {
@@ -26,12 +28,15 @@ public:
 	PGN();
 
 	bool Load(std::string path);
-	void parseTags(const std::string& tagText);
-	std::string Get() const;
+	
+	std::string GetFullPgn() const;
 
-	bool Save(std::string path) const;
 	void Add(std::string move);
+	bool Save(std::string path) const;
+	
 	void CompleteLastMove(std::string move);
+	
+	// TODO PGN* SetHeader(EHeaderType headerType, const std::string& value); 
 	PGN* SetEvent(std::string event);
 	PGN* SetSite(std::string site);
 	PGN* SetDate(std::string date);
@@ -39,16 +44,23 @@ public:
 	PGN* SetWhite(std::string firstName, std::string lastName);
 	PGN* SetBlack(std::string firstName, std::string lastName);
 	PGN* SetResult(std::string result);
+	
 	std::string GetString() const;
-	std::vector<std::string> GetMoves() const;
+	
+	MoveCollection GetMoves() const;
 
-	Headers StringToHeader(std::string header) const;
-	std::string Back();
 	void Clear();
 
 private:
+
+	static EHeaderType ParseHeaderName(const std::string& header);
+	
+	void ParseTags(const std::string& tagText);
+
+private:
 	std::string m_pgn;
-	Fields m_headers;
-	std::vector<std::string> m_moves;
+
+	FieldsCollection m_headers;
+	MoveCollection m_moves;
 };
 
