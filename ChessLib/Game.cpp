@@ -21,6 +21,8 @@ Game::Game()
 	: m_turn(EColor::WHITE)
 	, m_state(EGameState::Playing)
 	, m_sendNotifications(true)
+	, m_whiteTimer(600)
+	, m_blackTimer(600)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -30,9 +32,12 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	, m_turn(turn)
 	, m_state(state)
 	, m_sendNotifications(true)
+	, m_blackTimer(600)
+	, m_whiteTimer(600)
 {
 
 }
+
 
 bool Game::LoadFromFormat(std::string path)
 {
@@ -159,6 +164,7 @@ void Game::PreviewPastConfig(int moveIndex)
 
 void Game::MovePiece(Position start, Position destination)
 {
+
 	if (IsGameOver())
 		throw GameOverException();
 
@@ -456,8 +462,23 @@ void Game::Restart()
 	m_boardConfigs.clear();
 	m_pgn.Clear();
 	m_gameMoves.clear();
-
+	m_timer.RemoveListener(this);
 	Notify(Response::RESTART);
+}
+
+void Game::PlayPauseTimer()
+{
+	if (!m_timer.GetListenerSize())
+	{
+		m_timer.AddListener(shared_from_this());
+		m_timer.Start(1000);
+	}
+	m_timer.PlayPause();
+}
+
+void Game::StopTimer()
+{
+	m_timer.Stop();
 }
 
 void Game::AddListener(ListenerWeakPtr listener)
@@ -522,5 +543,33 @@ void Game::Notify(EType pieceType, EColor pieceColor)
 		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
-} // TODO: test
+} 
+
+void Game::Notify(int whiteTimer, int blackTimer)
+{
+	if (!m_sendNotifications)
+		return;
+	for (auto listener : m_listeners)
+		listener.lock()->OnTimePass(whiteTimer, blackTimer);
+}
+
+
+void Game::OnSecondPass()
+{
+	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
+	if (!m_blackTimer)
+	{
+		UpdateState(EGameState::WhiteWon);
+		Notify(Response::WHITE_WON);
+		m_timer.RemoveListener(this);
+	}
+	else if (!m_whiteTimer)
+	{
+		UpdateState(EGameState::BlackWon);
+		Notify(Response::BLACK_WON);
+		m_timer.RemoveListener(this);
+	}
+	else
+		Notify(m_whiteTimer, m_blackTimer);
+}
 

@@ -51,6 +51,7 @@ public:
 	virtual TypeList GetMissingPieces(EColor color) const = 0;
 	virtual MovesList GetMovesList() const = 0;
 
+	// Game storage formats
 	virtual std::string GetFenString() const = 0;
 	virtual PGN GetPGN() const = 0;
 	virtual void SavePGN(std::string path) const = 0;
@@ -75,8 +76,11 @@ public:
 	virtual bool BlackWon() const = 0;
 	virtual bool WhiteWon() const = 0;
 	virtual bool IsGameOver() const = 0;
-
 	virtual void Restart() = 0;
+
+	// Timer
+	virtual void PlayPauseTimer() = 0;
+	virtual void StopTimer() = 0;
 
 	// for observer
 	virtual void AddListener(ListenerWeakPtr listener) = 0;

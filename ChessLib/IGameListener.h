@@ -14,6 +14,7 @@ public:
 	virtual void OnMovePiece(Position start, Position end) = 0;
 	virtual void OnPieceCapture(EType pieceType, EColor pieceColor) = 0;
 	virtual void OnRestart() = 0;
+	virtual void OnTimePass(int whiteTimer, int blackTimer) = 0;
 
 
 	virtual ~IGameListener() = default;

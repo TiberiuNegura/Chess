@@ -34,11 +34,13 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 	InitializeButtons(mainGridLayout);
 	InitializeHistory(mainGridLayout);
 	InitializeTitleBar(mainGridLayout);
+	InitializeTimers(mainGridLayout);
 	mainWidget->setLayout(mainGridLayout);
 
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
 	this->setCentralWidget(mainWidget);
+
 }
 
 void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
@@ -89,7 +91,6 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 		"   background-color: #4a5c56;" // Highlighted background color on hover
 		"}"
 	);
-	//connect(m_expandButton, &QPushButton::clicked, this, &ChessUIQt::toggleFullScreen);
 	connect(m_expandButton, &QPushButton::clicked, this, &ChessUIQt::toggleFullScreen);
 
 	// Close button
@@ -106,7 +107,8 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 		"   background-color: #4a5c56;" // Highlighted background color on hover
 		"}"
 	);
-	connect(exitButton, &QPushButton::clicked, this, &QWidget::close);
+	connect(exitButton, &QPushButton::clicked, this, &ChessUIQt::CloseApp);
+	//	&QWidget::close
 
 	// Status message label
 	m_StatusMessage = new QLabel();
@@ -240,24 +242,40 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	QGridLayout* timerGrid = new QGridLayout();
 
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("00:00:00");
+	m_BlackTimer = new QLabel("00:00");
 
 	QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
-	//TODO Create slot and connect button
+	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnTimerButtonClicked);
 
-	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
-	m_WhiteTimer = new QLabel("00:00:00");
+	QLabel* whiteTimerLbl = new QLabel("White timer: ");
+	m_WhiteTimer = new QLabel("00:00");
 
-	timerContainer->setFixedWidth(400);
+	timerContainer->setStyleSheet(
+		"QPushButton {"
+		"   background-color: #21201d;" // Normal background color
+		"   color: white; "
+		"}"
+		"QPushButton:hover {"
+		"   background-color: #d234eb;" // Highlighted background color on hover
+		"}"
+	);
+	
+	pauseTimerBtn->setStyleSheet("border: none; margin: 4px 2px; padding: 7px 7px;");
 
 	timerGrid->addWidget(blackTimerLbl, 0, 0);
 	timerGrid->addWidget(m_BlackTimer, 0, 1);
-	timerGrid->addWidget(pauseTimerBtn, 0, 2);
-	timerGrid->addWidget(whiteTimerLbl, 0, 3);
-	timerGrid->addWidget(m_WhiteTimer, 0, 4);
+	timerGrid->addWidget(pauseTimerBtn, 1, 0, 1, 2);
+	timerGrid->addWidget(whiteTimerLbl, 2, 0);
+	timerGrid->addWidget(m_WhiteTimer, 2, 1);
+
+	blackTimerLbl->setStyleSheet("color: white;");
+	whiteTimerLbl->setStyleSheet("color: white;");
+	m_BlackTimer->setStyleSheet("color: white;");
+	m_WhiteTimer->setStyleSheet("color: white;");
+
 
 	timerContainer->setLayout(timerGrid);
-	mainGridLayout->addWidget(timerContainer, 2, 0, Qt::AlignCenter);
+	mainGridLayout->addWidget(timerContainer, 3, 1, Qt::AlignCenter);
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
@@ -537,6 +555,11 @@ void ChessUIQt::OnRestartButtonClicked()
 	
 }
 
+void ChessUIQt::OnTimerButtonClicked()
+{
+	m_game->PlayPauseTimer();
+}
+
 void ChessUIQt::OnDrawButtonClicked()
 {
 	m_game->MakeTieRequest();
@@ -666,6 +689,12 @@ void ChessUIQt::toggleFullScreen()
 		showFullScreen();
 		m_expandButton->setIcon(QIcon("res/restore.png"));
 	}
+}
+
+void ChessUIQt::CloseApp()
+{
+	m_game->StopTimer();
+	QWidget::close();
 }
 
 void ChessUIQt::centerOnScreen()
@@ -858,6 +887,26 @@ void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 void ChessUIQt::SetGame(IGamePtr game)
 {
 	m_game = game;
+}
+
+static QString ConvertTime(int seconds)
+{
+	QString timeString = "";
+
+	timeString.push_back(QString::number(seconds/60));
+	timeString.push_back(":");
+	if (seconds % 60 < 10)
+		timeString.push_back("0");
+	timeString.push_back(QString::number(seconds%60));
+
+	return timeString;
+}
+
+void ChessUIQt::OnTimePass(int whiteTimer, int blackTimer)
+{
+	m_WhiteTimer->setText(ConvertTime(whiteTimer));
+	m_BlackTimer->setText(ConvertTime(blackTimer));
+	qDebug() << whiteTimer << " " << blackTimer;
 }
 
 char ChessUIQt::PieceToChar(IPiecePtr piece) const

@@ -5,6 +5,8 @@
 #include "IGame.h"
 #include "Board.h"
 #include "IGameListener.h"
+#include "ITimerListener.h"
+#include "Timer.h"
 
 using ListenerList = std::vector<ListenerWeakPtr>;
 
@@ -30,7 +32,7 @@ enum class Response
 	RESTART
 };
 
-class Game : public IGame
+class Game : public IGame, public ITimerListener, public std::enable_shared_from_this<Game>
 {
 public:
 	// Constructor
@@ -78,8 +80,10 @@ public:
 	bool WhiteWon() const override;
 	bool IsGameOver() const override;
 	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
-
 	void Restart() override;
+
+	void PlayPauseTimer() override;
+	void StopTimer() override;
 
 	void AddListener(ListenerWeakPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
@@ -87,8 +91,9 @@ public:
 	void Notify(Response response);
 	void Notify(Position start, Position end);
 	void Notify(EType pieceType, EColor pieceColor);
+	void Notify(int whiteTimer, int blackTimer);
 
-
+	void OnSecondPass() override;
 
 private:
 	Board m_board;
@@ -100,5 +105,8 @@ private:
 	PGN m_pgn;
 	MovesList m_gameMoves;
 	bool m_sendNotifications;
+	Timer m_timer;
+	int m_whiteTimer, m_blackTimer;
+
 };
 

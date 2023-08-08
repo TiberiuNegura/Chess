@@ -52,6 +52,7 @@ public:
 	void OnRestart() override;
 	void OnPieceCapture(EType pieceType, EColor pieceColor) override;
 	void SetGame(IGamePtr game);
+	void OnTimePass(int whiteTimer, int blackTimer) override;
 
 public slots:
 	void OnButtonClicked(const Position& position);
@@ -59,6 +60,7 @@ public slots:
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
 	void OnRestartButtonClicked();
+	void OnTimerButtonClicked();
 	void OnDrawButtonClicked();
 	char PieceToChar(IPiecePtr piece) const;
 	void OnCopyButtonClicked();
@@ -77,6 +79,7 @@ signals:
 private:
 	QWidget* FromMatrixToChessMove(Position start, Position end, int color = 2);
 	void toggleFullScreen();
+	void CloseApp();
 
 private:
 	std::array<std::array<GridButton*, 8>, 8> m_grid;

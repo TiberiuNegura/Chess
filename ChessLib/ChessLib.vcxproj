@@ -154,6 +154,7 @@
     <ClInclude Include="InvalidFileException.h" />
     <ClInclude Include="InvalidOptionException.h" />
     <ClInclude Include="IPiece.h" />
+    <ClInclude Include="ITimerListener.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="OutOfBoundsException.h" />
     <ClInclude Include="Pawn.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Queen.h" />
     <ClInclude Include="Rook.h" />
     <ClInclude Include="TieRequestException.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
@@ -188,6 +190,7 @@
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
     <ClCompile Include="TieRequestException.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
