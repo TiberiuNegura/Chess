@@ -31,10 +31,8 @@ void ChessUIQt::Init(QGridLayout* mainGridLayout)
 	InitializeBoard(mainGridLayout);
 	InitializePlayers(mainGridLayout, EColor::BLACK);
 	InitializePlayers(mainGridLayout, EColor::WHITE);
-	InitializeButtons(mainGridLayout);
-	InitializeHistory(mainGridLayout);
+	InitializePanel(mainGridLayout);
 	InitializeTitleBar(mainGridLayout);
-	InitializeTimers(mainGridLayout);
 	mainWidget->setLayout(mainGridLayout);
 
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
@@ -54,7 +52,8 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	QGridLayout* titleBarGrid = new QGridLayout(titleBar);
 
 	// Title text
-	QLabel* title = new QLabel("Chess.ro");
+	QLabel* title = new QLabel();
+	title->setPixmap(QPixmap("res/logo.png"));
 	QFont titleFont = title->font();
 	titleFont.setPointSize(16);
 	titleFont.setBold(true);
@@ -184,22 +183,18 @@ QPushButton& SetIcon(QPushButton* button, QString path)
 {
 	QPixmap pixmap(path);
 	QIcon ButtonIcon(pixmap);
+	button->setContentsMargins(0, 0, 0, 0);
 	button->setIcon(ButtonIcon);
 	button->setIconSize({40, 40});
-	button->setStyleSheet("border: none; margin: 4px 2px; padding: 7px 7px;");
+	button->setStyleSheet("border: none; padding: 7px 7px; margin: 1px;");
 
 	return *button;
 }
 
-void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
+QWidget* ChessUIQt::InitializeButtons()
 {
-	QPushButton* saveButton = new QPushButton();
-	QPushButton* loadButton = new QPushButton();
-	QPushButton* restartButton = new QPushButton();
-	QPushButton* drawButton = new QPushButton();
-	QPushButton* copyButton = new QPushButton();
+	QWidget* buttonContainer = new QWidget;
 
-	QWidget* buttonContainer = new QWidget();
 	buttonContainer->setStyleSheet(
 		"QPushButton {"
 		"   background-color: #21201d;" // Normal background color
@@ -209,6 +204,13 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 		"   background-color: #d234eb;" // Highlighted background color on hover
 		"}"
 	);
+
+	QPushButton* saveButton = new QPushButton();
+	QPushButton* loadButton = new QPushButton();
+	QPushButton* restartButton = new QPushButton();
+	QPushButton* drawButton = new QPushButton();
+	QPushButton* copyButton = new QPushButton();
+
 	QGridLayout* btnGrid = new QGridLayout();
 
 
@@ -232,11 +234,13 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	connect(copyButton, &QPushButton::pressed, this, &ChessUIQt::OnCopyButtonClicked);
 
 	btnGrid->setSpacing(0);
+	btnGrid->setContentsMargins(0, 0, 0, 0);
+
 	buttonContainer->setLayout(btnGrid);
-	mainGridLayout->addWidget(buttonContainer, 1, 1);
+	return buttonContainer;
 }
 
-void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
+QWidget* ChessUIQt::InitializeTimers()
 {
 	QWidget* timerContainer = new QWidget();
 	QGridLayout* timerGrid = new QGridLayout();
@@ -275,14 +279,18 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 
 	timerContainer->setLayout(timerGrid);
-	mainGridLayout->addWidget(timerContainer, 3, 1, Qt::AlignCenter);
+	return timerContainer;
 }
 
-void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
+
+QWidget* ChessUIQt::InitializeHistory()
 {
 	m_MovesList = new QListWidget();
 	m_MovesList->setMinimumWidth(100);
 	m_MovesList->setMaximumWidth(350);
+
+	m_MovesList->setContentsMargins(0, 0, 0, 0);
+	m_MovesList->setSpacing(0);
 
 	// Set a custom style for the history list
 	m_MovesList->setStyleSheet(
@@ -374,10 +382,29 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	QFont listFont;
 	listFont.setFamily("Segoe UI");
 	listFont.setPointSize(20);
-	m_MovesList->setFont(listFont); // --> schimba pt history
+	m_MovesList->setFont(listFont); 
+	
 
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	mainGridLayout->addWidget(m_MovesList, 2, 1);
+
+	return m_MovesList;
+}
+
+void ChessUIQt::InitializePanel(QGridLayout* mainGridLayout)
+{
+	QWidget* container = new QWidget;
+
+	QGridLayout* layout = new QGridLayout();
+
+	QWidget* buttons = InitializeButtons();
+	QWidget* timers = InitializeTimers();
+	QWidget* history = InitializeHistory();
+
+	layout->addWidget(buttons, 0, 0);
+	layout->addWidget(timers, 1, 0);
+	layout->addWidget(history, 2, 0);
+	container->setLayout(layout);
+	mainGridLayout->addWidget(container, 1, 1, 2, 1);
 }
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
@@ -391,6 +418,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 			m_grid[row][column] = new GridButton({ row,column }, EType::EMPTY, EColor::NONE);
 			chessGridLayout->addWidget(m_grid[row][column], row, column, 1, 1);
 			chessGridLayout->setSpacing(0);
+			chessGridLayout->setContentsMargins(0, 0, 0, 0);
 			connect(m_grid[row][column], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
 		}
 	}
@@ -487,6 +515,7 @@ void ChessUIQt::OnSaveButtonClicked()
 
 void ChessUIQt::OnLoadButtonClicked()
 {
+	auto status = m_game->Status();
 	QString desktopPath = QDir::homePath() + "/Downloads";
 	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "PGN Files(*.pgn);; FEN Files(*.fen);;All Files (*)");
 
@@ -534,7 +563,7 @@ void ChessUIQt::OnLoadButtonClicked()
 		m_MovesList->setItemWidget(item, design);
 	}
 
-	if (m_game->IsGameOver())
+	if (status->IsGameOver())
 		OnGameOver();
 
 	UpdateBoard();
@@ -629,7 +658,7 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 
 QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int color)
 {
-	EColor turnColor = m_game->GetTurn();
+	EColor turnColor = m_game->Status()->GetTurn();
 	if (color == 0)
 		turnColor = EColor::WHITE;
 	else if (color == 1)
@@ -731,7 +760,7 @@ void ChessUIQt::UpdateBoard()
 			m_grid[i][j]->setHighlighted(EHighlight::NONE);
 		}
 	}
-	if (!m_game->IsGameOver())
+	if (!m_game->Status()->IsGameOver())
 		m_StatusMessage->setText(GetTurnMessage());
 }
 
@@ -784,30 +813,31 @@ void ChessUIQt::ShowPromoteOptions()
 
 QString ChessUIQt::GetTurnMessage()
 {
-	return m_game->GetTurn() == EColor::BLACK ? "Black's turn\n" : "White's turn\n";
+	return m_game->Status()->GetTurn() == EColor::BLACK ? "Black's turn\n" : "White's turn\n";
 }
 
 QString ChessUIQt::GameTurnToString()
 {
 	QString turn = "EColor::";
-	turn += m_game->GetTurn() == EColor::WHITE ? "WHITE" : "BLACK";
+	turn += m_game->Status()->GetTurn() == EColor::WHITE ? "WHITE" : "BLACK";
 	return turn;
 }
 
 QString ChessUIQt::GameStateToString()
 {
+	auto status = m_game->Status();
 	QString state = "EGameState::";
-	if (m_game->IsCheck())
+	if (status->IsCheck())
 		state += "Check";
-	else if (m_game->IsTieRequest())
+	else if (status->IsTieRequest())
 		state += "TieRequest";
-	else if (m_game->IsPawnEvolving())
+	else if (status->IsPawnEvolving())
 		state += "PawnEvolving";
-	else if (m_game->IsTie())
+	else if (status->IsTie())
 		state += "Tie";
-	else if (m_game->BlackWon())
+	else if (status->BlackWon())
 		state += "BlackWon";
-	else if (m_game->WhiteWon())
+	else if (status->WhiteWon())
 		state += "WhiteWon";
 	else
 		state += "Playing";
@@ -816,11 +846,12 @@ QString ChessUIQt::GameStateToString()
 
 void ChessUIQt::OnGameOver()
 {
-	if (m_game->BlackWon())
+	auto status = m_game->Status();
+	if (status->BlackWon())
 		m_StatusMessage->setText("Black won the game!\n");
-	else if (m_game->WhiteWon())
+	else if (status->WhiteWon())
 		m_StatusMessage->setText("White won the game!\n");
-	else if (m_game->IsTie())
+	else if (status->IsTie())
 		m_StatusMessage->setText("Tie!");
 }
 
@@ -837,6 +868,7 @@ void ChessUIQt::OnPawnEvolve()
 
 void ChessUIQt::OnTieRequest()
 {
+	auto status = m_game->Status();
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 

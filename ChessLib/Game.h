@@ -32,7 +32,7 @@ enum class Response
 	RESTART
 };
 
-class Game : public IGame, public ITimerListener, public std::enable_shared_from_this<Game>
+class Game : public IGame, public ITimerListener, public std::enable_shared_from_this<Game>, public IGameStatus
 {
 public:
 	// Constructor
@@ -59,10 +59,15 @@ public:
 	TypeList GetMissingPieces(EColor color) const override;
 	MovesList GetMovesList() const override;
 
-	std::string GetFenString() const override;
-	PGN GetPGN() const override;
+	std::string GetFenString() const;
+	PGN GetPGN() const;
 	void SavePGN(std::string path) const override;
 	void SaveFEN(std::string path) const override;
+
+	// -----------------------
+	// IGameStatus.h
+
+	const IGameStatus* Status() const override;
 
 	// tie invitation
 	void MakeTieRequest() override;
@@ -79,8 +84,11 @@ public:
 	bool BlackWon() const override;
 	bool WhiteWon() const override;
 	bool IsGameOver() const override;
-	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
 	void Restart() override;
+
+	// -----------------------
+
+	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
 
 	void PlayPauseTimer() override;
 	void StopTimer() override;

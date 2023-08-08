@@ -27,7 +27,6 @@ public:
 	Board();
 	Board(CharBoardRepresentation alternateMat);
 	Board(const Matrix& mat);
-	Board(std::string& path, LoadType fileType);
 
 	void LoadFromFEN(std::string& fen);
 

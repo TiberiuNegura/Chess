@@ -56,7 +56,11 @@ bool Game::LoadFromFormat(std::string path)
 		}
 
 		if (FileUtils::HasAnyExtension(path, "fen"))
+		{
 			LoadFromFEN(path);
+			m_whiteMissing = m_board.SearchMissingPieces(EColor::WHITE);
+			m_blackMissing = m_board.SearchMissingPieces(EColor::BLACK);
+		}
 		
 	}
 	catch (...)
@@ -350,6 +354,11 @@ void Game::SaveFEN(std::string path) const
 	}
 }
 
+const IGameStatus* Game::Status() const
+{
+	return this;
+}
+
 void Game::MakeTieRequest()
 {
 	UpdateState(EGameState::TieRequest);
@@ -462,7 +471,12 @@ void Game::Restart()
 	m_boardConfigs.clear();
 	m_pgn.Clear();
 	m_gameMoves.clear();
-	m_timer.RemoveListener(this);
+	
+	StopTimer();
+
+	m_blackTimer = 600;
+	m_whiteTimer = 600;
+
 	Notify(Response::RESTART);
 }
 
@@ -557,6 +571,7 @@ void Game::Notify(int whiteTimer, int blackTimer)
 void Game::OnSecondPass()
 {
 	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
+	Notify(m_whiteTimer, m_blackTimer);
 	if (!m_blackTimer)
 	{
 		UpdateState(EGameState::WhiteWon);
@@ -569,7 +584,5 @@ void Game::OnSecondPass()
 		Notify(Response::BLACK_WON);
 		m_timer.RemoveListener(this);
 	}
-	else
-		Notify(m_whiteTimer, m_blackTimer);
 }
 

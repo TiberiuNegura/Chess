@@ -28,9 +28,10 @@ public:
 	void Init(QGridLayout* mainGridLayout);
 	void InitializeTitleBar(QGridLayout* mainGridLayout);
 	void InitializePlayers(QGridLayout* mainGridLayout, EColor color);
-	void InitializeButtons(QGridLayout* mainGridLayout);
-	void InitializeTimers(QGridLayout* mainGridLayout);
-	void InitializeHistory(QGridLayout* mainGridLayout);
+	QWidget* InitializeButtons();
+	QWidget* InitializeTimers();
+	QWidget* InitializeHistory();
+	void InitializePanel(QGridLayout* mainGridLayout);
 	void InitializeBoard(QGridLayout* mainGridLayout);
 	void UpdateHistory();
 	void UpdateBoard();

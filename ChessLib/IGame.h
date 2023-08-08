@@ -1,20 +1,11 @@
 #pragma once
 
+#include "IGameStatus.h"
 #include "IPiece.h"
 #include "IGameListener.h"
 #include "PGN.h"
 
-
-#include "CheckException.h"
-#include "ChessException.h"
-#include "EmptyPositionException.h"
-#include "GameOverException.h"
-#include "IllegalMoveException.h"
-#include "InvalidOptionException.h"
-#include "OutOfBoundsException.h"
-#include "PawnEvolveException.h"
-#include "PieceNotFoundException.h"
-#include "TieRequestException.h"
+#include "AllChessExceptions.h"
 
 using IGamePtr = std::shared_ptr<class IGame>;
 using ListenerWeakPtr = std::weak_ptr<IGameListener>;
@@ -42,41 +33,31 @@ class IGame
 {
 public:
 	static IGamePtr Produce(); 
+
+
 	virtual void MovePiece(Position start, Position destination) = 0;
 	
 	// Getters
 	virtual MatrixPtr GetBoard() const = 0;
-	virtual EColor GetTurn() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual TypeList GetMissingPieces(EColor color) const = 0;
 	virtual MovesList GetMovesList() const = 0;
 
 	// Game storage formats
-	virtual std::string GetFenString() const = 0;
-	virtual PGN GetPGN() const = 0;
 	virtual void SavePGN(std::string path) const = 0;
 	virtual void SaveFEN(std::string path) const = 0;
-
 	virtual bool LoadFromFormat(std::string path) = 0;
+
 	virtual void PreviewPastConfig(int moveIndex) = 0;
 
 
-	// tie invitation
 	virtual void MakeTieRequest() = 0;
-	virtual bool IsTieRequest() const = 0;
 	virtual void TieRequestResponse(bool answer) = 0;
-
-	// pawn evolving
-	virtual bool IsPawnEvolving() const = 0;
 	virtual void EvolvePawn(EType pieceType) = 0;
-
-	// Game over states
-	virtual bool IsCheck() const = 0;
-	virtual bool IsTie() const = 0;
-	virtual bool BlackWon() const = 0;
-	virtual bool WhiteWon() const = 0;
-	virtual bool IsGameOver() const = 0;
 	virtual void Restart() = 0;
+
+	// Game status operations
+	virtual const IGameStatus* Status() const = 0;
 
 	// Timer
 	virtual void PlayPauseTimer() = 0;

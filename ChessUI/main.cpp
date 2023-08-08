@@ -4,6 +4,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setWindowIcon(QIcon("res/logo2.png"));
     std::shared_ptr w = std::make_shared<ChessUIQt>();
     IGamePtr game = IGame::Produce();
     w->SetGame(game);

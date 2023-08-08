@@ -1,62 +1,66 @@
 #include "Timer.h"
 
-Timer::Timer() : isRunning(false), isPaused(false)
+Timer::Timer() 
+	: m_isRunning(false) 
+	, m_isPaused(false)
 {
 
 }
 
+Timer::Timer(const Timer& other)
+	: m_isRunning(other.m_isRunning)
+	, m_isPaused(other.m_isPaused)
+{
+	std::unique_lock<std::mutex> lock_other(other.m_timerMutex);
+}
+
 void Timer::Start(int durationMilliseconds)
 {
-	std::unique_lock<std::mutex> lock(mutex_);
+	std::unique_lock<std::mutex> lock(m_timerMutex);
 
-	if (isRunning) {
+	if (m_isRunning) {
 		return;
 	}
 
-	isRunning = true;
-	isPaused = true;
-	thread_ = std::thread([this, durationMilliseconds]() {
+	m_isRunning = true;
+	m_isPaused = true;
+	m_timerThread = std::thread([this, durationMilliseconds]() {
 		std::chrono::milliseconds interval(durationMilliseconds);
 
-		while (isRunning) {
+		while (m_isRunning) {
 			std::this_thread::sleep_for(interval);
-			if (!isPaused) {
+			if (!m_isPaused) {
 				Notify();
 			}
 		}
 
 		{
-			std::unique_lock<std::mutex> lock(mutex_);
-			isRunning = false;
-			cv_.notify_one();
+			std::unique_lock<std::mutex> lock(m_timerMutex);
+			m_isRunning = false;
+			m_timerCondVariable.notify_one();
 		}
 		});
 }
 
 void Timer::PlayPause()
 {
-	isPaused = !isPaused;
+	m_isPaused = !m_isPaused;
 }
 
 void Timer::Stop()
 {
 	m_listeners.clear();
 	{
-		std::unique_lock<std::mutex> lock(mutex_);
-		isRunning = false;
-		cv_.notify_one();
+		std::unique_lock<std::mutex> lock(m_timerMutex);
+		m_isRunning = false;
+		m_timerCondVariable.notify_one();
 	}
 
-	if (thread_.joinable()) {
-		thread_.join();
+	if (m_timerThread.joinable()) {
+		m_timerThread.join();
 	}
 }
 
-void Timer::Wait()
-{
-	std::unique_lock<std::mutex> lock(mutex_);
-	cv_.wait(lock, [this]() { return !isRunning; });
-}
 
 size_t Timer::GetListenerSize() const
 {

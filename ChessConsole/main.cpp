@@ -1,4 +1,4 @@
-#include "IGame.h"
+#include "Status.h"
 #include "IPiece.h"
 
 #include "color.hpp"
