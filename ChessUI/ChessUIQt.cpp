@@ -243,16 +243,13 @@ QWidget* ChessUIQt::InitializeButtons()
 QWidget* ChessUIQt::InitializeTimers()
 {
 	QWidget* timerContainer = new QWidget();
+
 	QGridLayout* timerGrid = new QGridLayout();
+	timerGrid->setSpacing(0);
+	timerGrid->setContentsMargins(0, 0, 0, 0);
 
-	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("00:00");
-
-	QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
+	QPushButton* pauseTimerBtn = new QPushButton("START");
 	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnTimerButtonClicked);
-
-	QLabel* whiteTimerLbl = new QLabel("White timer: ");
-	m_WhiteTimer = new QLabel("00:00");
 
 	timerContainer->setStyleSheet(
 		"QPushButton {"
@@ -263,19 +260,21 @@ QWidget* ChessUIQt::InitializeTimers()
 		"   background-color: #d234eb;" // Highlighted background color on hover
 		"}"
 	);
+
+
+	m_BlackTimer = new QLabel("00:00");
+	m_WhiteTimer = new QLabel("00:00");
+
 	
-	pauseTimerBtn->setStyleSheet("border: none; margin: 4px 2px; padding: 7px 7px;");
 
-	timerGrid->addWidget(blackTimerLbl, 0, 0);
-	timerGrid->addWidget(m_BlackTimer, 0, 1);
-	timerGrid->addWidget(pauseTimerBtn, 1, 0, 1, 2);
-	timerGrid->addWidget(whiteTimerLbl, 2, 0);
-	timerGrid->addWidget(m_WhiteTimer, 2, 1);
+	pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px;");
 
-	blackTimerLbl->setStyleSheet("color: white;");
-	whiteTimerLbl->setStyleSheet("color: white;");
-	m_BlackTimer->setStyleSheet("color: white;");
-	m_WhiteTimer->setStyleSheet("color: white;");
+	timerGrid->addWidget(m_BlackTimer, 0, 1, 1, 2, Qt::AlignCenter);
+	timerGrid->addWidget(pauseTimerBtn, 0, 3, Qt::AlignCenter);
+	timerGrid->addWidget(m_WhiteTimer, 0, 4, 1, 2, Qt::AlignCenter);
+
+	m_BlackTimer->setStyleSheet("color: white; font-size: 25px;");
+	m_WhiteTimer->setStyleSheet("color: white; font-size: 25px;");
 
 
 	timerContainer->setLayout(timerGrid);
