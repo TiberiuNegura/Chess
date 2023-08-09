@@ -17,7 +17,7 @@ enum class EGameState
 	BlackWon,
 	WhiteWon,
 	Check,
-	Pause
+	Paused
 };
 
 enum class EResponse
@@ -47,15 +47,17 @@ public:
 	void TieRequestResponse(bool answer) override;
 	void EvolvePawn(EType PieceType) override;
 
+	void Start() override;
 	void Pause() override;
 	void Resume() override;
 	void Stop() override;
 	void Restart() override;
 
+	bool HadStarted() const override;
+	bool IsPaused() const override;
+
 	const IGameStatus* Status() const override;
 
-	void PlayPauseTimer() override;
-	bool IsTimerPaused() const override;
 
 	void SavePGN(const std::string& path) const override;
 	void SaveFEN(const std::string& path) const override;

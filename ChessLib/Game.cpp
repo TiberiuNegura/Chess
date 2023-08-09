@@ -19,8 +19,8 @@ IGamePtr IGame::Produce()
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
-	, m_currentState(EGameState::Playing)
-	, m_lastState(EGameState::Playing)
+	, m_currentState(EGameState::Paused)
+	, m_lastState(EGameState::Paused)
 	, m_bEnableNotifications(true)
 	, m_whiteTimer(30)
 	, m_blackTimer(30)
@@ -168,14 +168,26 @@ void Game::PreviewPastConfig(int moveIndex)
 	m_board.SetBoardConfiguration(config);
 }
 
+void Game::Start()
+{
+	if (!m_timer.HadStarted())
+	{
+		m_timer.AddListener(shared_from_this());
+		m_timer.Start(1000);
+	}
+	m_currentState = EGameState::Playing;
+}
+
 void Game::Pause()
 {
 	m_lastState = m_currentState;
-	m_currentState = EGameState::Pause;
+	m_timer.Pause();
+	m_currentState = EGameState::Paused;
 }
 
 void Game::Resume()
 {
+	m_timer.Resume();
 	m_currentState = m_lastState;
 }
 
@@ -183,6 +195,17 @@ void Game::Stop()
 {
 	m_timer.Stop();
 }
+
+bool Game::HadStarted() const
+{
+	return m_timer.HadStarted();
+}
+
+bool Game::IsPaused() const
+{
+	return m_currentState == EGameState::Paused;
+}
+
 
 void Game::MovePiece(Position start, Position destination)
 {
@@ -330,6 +353,8 @@ EGameState Game::GetState() const
 PositionList Game::GetMoves(Position piecePos) const
 {
 	if (IsGameOver())
+		return PositionList();
+	else if (IsPaused())
 		return PositionList();
 	return m_board.GetMoves(piecePos, m_turn);
 }
@@ -483,7 +508,7 @@ void Game::Restart()
 	m_board.Reset();
 	m_board.Init();
 	m_turn = EColor::WHITE;
-	m_currentState = EGameState::Playing;
+	m_currentState = EGameState::Paused;
 	m_whiteMissing.clear();
 	m_blackMissing.clear();
 	m_boardConfigs.clear();
@@ -496,21 +521,6 @@ void Game::Restart()
 	m_whiteTimer = 600;
 
 	Notify(EResponse::Restart);
-}
-
-void Game::PlayPauseTimer()
-{
-	if (!m_timer.GetListenerSize())
-	{
-		m_timer.AddListener(shared_from_this());
-		m_timer.Start(1000);
-	}
-	m_timer.PlayPause();
-}
-
-bool Game::IsTimerPaused() const
-{
-	return m_timer.IsPaused();
 }
 
 void Game::AddListener(ListenerWeakPtr listener)

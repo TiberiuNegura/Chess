@@ -249,7 +249,7 @@ QWidget* ChessUIQt::InitializeTimers()
 	timerGrid->setContentsMargins(0, 0, 0, 0);
 
 	m_pauseTimerBtn = new QPushButton("START");
-	connect(m_pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnTimerButtonClicked);
+	connect(m_pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 
 	timerContainer->setStyleSheet(
 		"QPushButton {"
@@ -594,13 +594,25 @@ void ChessUIQt::OnRestartButtonClicked()
 	
 }
 
-void ChessUIQt::OnTimerButtonClicked()
+void ChessUIQt::OnPauseButtonClicked()
 {
-	
-	m_game->PlayPauseTimer();
-	m_game->IsTimerPaused() ? m_pauseTimerBtn->setText("RESUME") : m_pauseTimerBtn->setText("PAUSE");
+	if (!m_game->HadStarted())
+	{
+		m_game->Start();
+		m_pauseTimerBtn->setText("PAUSE");
+		return;
+	}
 
-
+	if (m_game->IsPaused())
+	{
+		m_game->Resume();
+		m_pauseTimerBtn->setText("PAUSE");
+	}
+	else
+	{
+		m_game->Pause();
+		m_pauseTimerBtn->setText("RESUME");
+	}
 }
 
 void ChessUIQt::OnDrawButtonClicked()

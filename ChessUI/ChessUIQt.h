@@ -61,7 +61,7 @@ public slots:
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
 	void OnRestartButtonClicked();
-	void OnTimerButtonClicked();
+	void OnPauseButtonClicked();
 	void OnDrawButtonClicked();
 	char PieceToChar(IPiecePtr piece) const;
 	void OnCopyButtonClicked();

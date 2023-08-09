@@ -16,7 +16,7 @@ void Timer::Start(int durationMilliseconds)
 		return;
 
 	m_isRunning = true;
-	m_isPaused = true;
+	m_isPaused = false;
 	m_timerThread = std::thread([this, durationMilliseconds]()
 	{
 		std::chrono::milliseconds interval(durationMilliseconds);
@@ -31,14 +31,20 @@ void Timer::Start(int durationMilliseconds)
 	});
 }
 
-void Timer::PlayPause()
+void Timer::Resume()
 {
-	m_isPaused = !m_isPaused;
+	m_isPaused = false;
+}
+
+void Timer::Pause()
+{
+	m_isPaused = true;
 }
 
 void Timer::Stop()
 {
 	m_listeners.clear();
+
 	{
 		std::unique_lock<std::mutex> lock(m_timerMutex);
 		m_isRunning = false;
@@ -50,9 +56,9 @@ void Timer::Stop()
 }
 
 
-size_t Timer::GetListenerSize() const
+bool Timer::HadStarted() const
 {
-	return m_listeners.size();
+	return m_listeners.size() != 0;
 }
 
 

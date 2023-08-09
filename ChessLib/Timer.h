@@ -19,13 +19,14 @@ public:
 	~Timer();
 
 	void Start(int durationMilliseconds);
-	void PlayPause();
+	void Pause();
+	void Resume();
 	void Stop();
 
+	bool HadStarted() const;
 	bool IsPaused() const;
 
 
-	size_t GetListenerSize() const;
 	void AddListener(TimerWeakPtr listener);
 	void RemoveListener(ITimerListener* listener);
 	
