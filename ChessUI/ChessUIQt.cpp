@@ -438,7 +438,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(board, 2, 0);
 }
 
-void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
+void ChessUIQt::OnButtonClicked(const Position& position)
 {
 	//At second click
 	if (m_selectedCell.has_value()) {
@@ -736,7 +736,7 @@ void ChessUIQt::toggleFullScreen()
 
 void ChessUIQt::CloseApp()
 {
-	m_game->StopTimer();
+	m_game->Stop();
 	QWidget::close();
 }
 

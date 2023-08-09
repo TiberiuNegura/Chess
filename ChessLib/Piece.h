@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPiece.h"
+#include "Position.h"
 
 using PiecePtr = std::shared_ptr<class Piece>;
 

@@ -338,10 +338,10 @@ std::string Board::MatrixToChessMove(Position start, Position end, bool capture,
 
 	int castlingRow = piece->GetColor() == EColor::BLACK ? 0 : 7;
 
-	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 6))
+	if (start == Position(castlingRow, 4) && end == Position(castlingRow, 6))
 		return "O-O";
 
-	if (start == std::make_pair(castlingRow, 4) && end == std::make_pair(castlingRow, 2))
+	if (start == Position(castlingRow, 4) && end == Position(castlingRow, 2))
 		return "O-O-O";
 
 	if (!piece->Is(EType::PAWN))
@@ -476,12 +476,12 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	if (piece->Is(EType::KING) && !IsCheck(piece->GetColor()))
 	{
 		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
-		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
+		bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
 
 		if (kingMoveLeft && IsCastlingPossible(ECastling::Left, piece->GetColor()))
 			positions.emplace_back(row, 2);
 
-		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
+		bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5 )) != positions.end();
 
 		if (kingMoveRight && IsCastlingPossible(ECastling::Right, piece->GetColor()))
 			positions.emplace_back(row, 6);
@@ -508,16 +508,16 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	
 	// Castling validation
 	int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
-	if (piece->Is(EType::KING) && piecePos == std::make_pair(row, 4))
+	if (piece->Is(EType::KING) && piecePos == Position(row, 4))
 	{
-		bool kingMoveLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 3)) != positions.end();
-		auto castlingLeft = std::find(positions.begin(), positions.end(), std::make_pair(row, 2));
+		bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
+		auto castlingLeft = std::find(positions.begin(), positions.end(), Position(row, 2));
 
 		if (!kingMoveLeft && castlingLeft != positions.end()) // if King can't move left, castle can't happen
 			positions.erase(castlingLeft);
 
-		bool kingMoveRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 5 )) != positions.end();
-		auto castlingRight = std::find(positions.begin(), positions.end(), std::make_pair(row, 6));
+		bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5 )) != positions.end();
+		auto castlingRight = std::find(positions.begin(), positions.end(), Position(row, 6));
 
 		if (!kingMoveRight && castlingRight != positions.end()) // if King can't move right, castle can't happen
 			positions.erase(castlingRight);
@@ -587,18 +587,15 @@ Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol)
 	else if (name == 'N')
 		name = 'H';
 
-
 	if (isdigit(lineOrCol)) // is row
 	{
 		int row = '8' - lineOrCol;
 		for (int column = 0; column < 8; column++)
 		{
 			auto startPos = FindStart(name, end, turn, { row, column });
-			if (startPos != std::make_pair(-1, -1))
+			if (startPos.IsValid())
 				return startPos;
 		}
-
-
 	}
 	else if (isalpha(lineOrCol)) // is column
 	{
@@ -606,7 +603,7 @@ Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol)
 		for (int row = 0; row < 8; row++)
 		{
 			auto startPos = FindStart(name, end, turn, { row, column });
-			if (startPos != std::make_pair(-1, -1))
+			if (startPos.IsValid())
 				return startPos;
 		}
 	}
@@ -616,11 +613,10 @@ Position Board::FindForPGN(char name, Position end, EColor turn, char lineOrCol)
 			for (int column = 0; column < 8; column++)
 			{
 				auto startPos = FindStart(name, end, turn, { row, column });
-				if (startPos != std::make_pair(-1, -1))
+				if (startPos.IsValid())
 					return startPos;
 			}
 	}
-
 
 	return {};
 }

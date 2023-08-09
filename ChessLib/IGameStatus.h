@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPiece.h"
+#include "Position.h"
 
 using Move = std::pair<Position, Position>;
 using MovesList = std::vector<Move>;
@@ -20,20 +21,15 @@ class IGameStatus
 public:
 	virtual ~IGameStatus() = default;
 
+	virtual EColor GetTurn() const = 0;
 
 	virtual MatrixPtr GetBoard() const = 0;
 	virtual PositionList GetMoves(Position piecePos) const = 0;
 	virtual TypeList GetMissingPieces(EColor color) const = 0;
 	virtual MovesList GetMovesList() const = 0;
 
-	// Current turn
-	virtual EColor GetTurn() const = 0;
-
-	// tie invitation
-	virtual bool IsTieRequest() const = 0;
-
-	// pawn evolving
 	virtual bool IsPawnEvolving() const = 0;
+	virtual bool IsTieRequest() const = 0;
 
 	// Game over states
 	virtual bool IsCheck() const = 0;

@@ -6,9 +6,6 @@
 
 // Notations of STL and memory data structures
 using IPiecePtr = std::shared_ptr<class IPiece>;
-using Position = std::pair<int, int>;
-using PositionList = std::vector<Position>;
-using Directions = std::vector<PositionList>;
 
 // Color enum
 enum class EColor {
@@ -43,8 +40,6 @@ public:
 	virtual bool Is(EType type) const = 0;
 	virtual bool Is(EColor color) const = 0;
 	virtual bool Is(const std::vector<EType>& typeList) const = 0;
-
-
 
 	// Destructor
 	virtual ~IPiece() = default;

@@ -164,6 +164,7 @@
     <ClInclude Include="PGN.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="PieceNotFoundException.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="Rook.h" />
     <ClInclude Include="TieRequestException.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="PGN.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="PieceNotFoundException.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
     <ClCompile Include="TieRequestException.cpp" />

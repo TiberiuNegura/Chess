@@ -11,7 +11,7 @@
 class MoveTests : public testing::Test {
 protected:
 	void SetUp() override {
-		game = Game({
+		game = new Game({
 		'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r',
 		'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
 		' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -23,12 +23,20 @@ protected:
 			}, EColor::WHITE, EGameState::Playing);
 	}
 
+	void TearDown() override
+	{
+		if (game)
+		{
+			delete game;
+		}
+	}
+
 	void ChangeTurn() {
-		game.UpdateTurn();
+		game->UpdateTurn();
 	}
 
 protected:
-	Game game;
+	Game* game;
 };
 
 TEST_F(MoveTests, BlackPawnMoveTest) {
@@ -37,16 +45,16 @@ TEST_F(MoveTests, BlackPawnMoveTest) {
 	Position blackPawn3 = { 1, 3 };
 
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(blackPawn1, { 2, 0 })); // Moving a black pawn
+	EXPECT_NO_THROW(game->MovePiece(blackPawn1, { 2, 0 })); // Moving a black pawn
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(blackPawn2, { 3, 4 }));
+	EXPECT_NO_THROW(game->MovePiece(blackPawn2, { 3, 4 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(blackPawn3, { 3, 3 }));
+	EXPECT_NO_THROW(game->MovePiece(blackPawn3, { 3, 3 }));
 
-	EXPECT_THROW(game.MovePiece({ 2, 0 }, { 3, 0 }), IllegalMoveException); // Illegal move
-	EXPECT_THROW(game.MovePiece({ 3, 3 }, { 2, 3 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 2, 0 }, { 3, 0 }), IllegalMoveException); // Illegal move
+	EXPECT_THROW(game->MovePiece({ 3, 3 }, { 2, 3 }), IllegalMoveException);
 
-	EXPECT_EQ(game.GetTurn(), EColor::WHITE); // Check if it's White's turn
+	EXPECT_EQ(game->GetTurn(), EColor::WHITE); // Check if it's White's turn
 }
 
 TEST_F(MoveTests, WhitePawnMoveTest) {
@@ -54,30 +62,30 @@ TEST_F(MoveTests, WhitePawnMoveTest) {
 	Position whitePawn2 = { 6, 4 };
 	Position whitePawn3 = { 6, 3 };
 
-	EXPECT_NO_THROW(game.MovePiece(whitePawn1, { 4, 1 })); // Moving a white pawn to allow black pawn to capture and block
+	EXPECT_NO_THROW(game->MovePiece(whitePawn1, { 4, 1 })); // Moving a white pawn to allow black pawn to capture and block
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(whitePawn2, { 4, 4 }));
+	EXPECT_NO_THROW(game->MovePiece(whitePawn2, { 4, 4 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(whitePawn3, { 4, 3 }));
+	EXPECT_NO_THROW(game->MovePiece(whitePawn3, { 4, 3 }));
 
-	EXPECT_THROW(game.MovePiece({ 4, 1 }, { 5, 1 }), IllegalMoveException); // Illegal move
-	EXPECT_EQ(game.GetTurn(), EColor::BLACK); // Check if it's Black's turn
+	EXPECT_THROW(game->MovePiece({ 4, 1 }, { 5, 1 }), IllegalMoveException); // Illegal move
+	EXPECT_EQ(game->GetTurn(), EColor::BLACK); // Check if it's Black's turn
 	ChangeTurn();
-	EXPECT_THROW(game.MovePiece({ 4, 4 }, { 5, 4 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 4, 4 }, { 5, 4 }), IllegalMoveException);
 	ChangeTurn();
 
-	game.MovePiece({ 1, 0 }, { 3, 0 });
+	game->MovePiece({ 1, 0 }, { 3, 0 });
 
-	EXPECT_NO_THROW(game.MovePiece({ 4, 1 }, { 3, 0 })); // White pawn captures the black pawn
+	EXPECT_NO_THROW(game->MovePiece({ 4, 1 }, { 3, 0 })); // White pawn captures the black pawn
 
 	// Check if the positions are placed properly after capture
-	EXPECT_EQ(game.GetBoard()->GetElement({ 3, 0 })->GetColor(), EColor::WHITE);
+	EXPECT_EQ(game->GetBoard()->GetElement({ 3, 0 })->GetColor(), EColor::WHITE);
 
 	// Test illegal moves, out of bounds, and empty position
-	EXPECT_THROW(game.MovePiece({ 3, 0 }, { 3, 0 }), IllegalMoveException); // Moving to the same position
-	EXPECT_THROW(game.MovePiece({ 3, 0 }, { 5, 0 }), IllegalMoveException); // Illegal move for a pawn
-	EXPECT_THROW(game.MovePiece({ 6, 2 }, { 8, 4 }), OutOfBoundsException); // Out of bounds move
-	EXPECT_THROW(game.MovePiece({ 2, 0 }, { 1, 0 }), EmptyPositionException); // Empty position
+	EXPECT_THROW(game->MovePiece({ 3, 0 }, { 3, 0 }), IllegalMoveException); // Moving to the same position
+	EXPECT_THROW(game->MovePiece({ 3, 0 }, { 5, 0 }), IllegalMoveException); // Illegal move for a pawn
+	EXPECT_THROW(game->MovePiece({ 6, 2 }, { 8, 4 }), OutOfBoundsException); // Out of bounds move
+	EXPECT_THROW(game->MovePiece({ 2, 0 }, { 1, 0 }), EmptyPositionException); // Empty position
 }
 
 TEST_F(MoveTests, WhiteRookMoveTest)
@@ -86,20 +94,20 @@ TEST_F(MoveTests, WhiteRookMoveTest)
 	Position rook = { 7, 7 };
 	Position target = { 5, 7 };
 
-	EXPECT_THROW(game.MovePiece(rook, target), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(rook, target), IllegalMoveException);
 
-	game.MovePiece({ 6, 7 }, { 4, 7 });
-	game.MovePiece({ 1, 7 }, { 2, 7 });
+	game->MovePiece({ 6, 7 }, { 4, 7 });
+	game->MovePiece({ 1, 7 }, { 2, 7 });
 
-	EXPECT_NO_THROW(game.MovePiece(rook, target));
+	EXPECT_NO_THROW(game->MovePiece(rook, target));
 
-	game.MovePiece({ 2, 7 }, { 3, 7 });
-	game.MovePiece({ 5, 7 }, { 5, 2 });
-	game.MovePiece({ 1, 2 }, { 2, 2 });
+	game->MovePiece({ 2, 7 }, { 3, 7 });
+	game->MovePiece({ 5, 7 }, { 5, 2 });
+	game->MovePiece({ 1, 2 }, { 2, 2 });
 
-	EXPECT_NO_THROW(game.MovePiece({ 5, 2 }, { 2, 2 }));
+	EXPECT_NO_THROW(game->MovePiece({ 5, 2 }, { 2, 2 }));
 	ChangeTurn();
-	EXPECT_THROW(game.MovePiece({ 2, 2 }, { 6, 2 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 2, 2 }, { 6, 2 }), IllegalMoveException);
 }
 
 TEST_F(MoveTests, BlackRookMoveTest)
@@ -108,24 +116,24 @@ TEST_F(MoveTests, BlackRookMoveTest)
 	Position rook = { 0, 0 };
 	Position target = { 2, 0 };
 
-	EXPECT_THROW(game.MovePiece(rook, target), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(rook, target), IllegalMoveException);
 
-	game.MovePiece({ 1, 0 }, { 3, 0 });
-	game.MovePiece({ 6, 0 }, { 5, 0 });
+	game->MovePiece({ 1, 0 }, { 3, 0 });
+	game->MovePiece({ 6, 0 }, { 5, 0 });
 
-	EXPECT_NO_THROW(game.MovePiece(rook, target));
+	EXPECT_NO_THROW(game->MovePiece(rook, target));
 
-	game.MovePiece({ 5, 0 }, { 4, 0 });
-	game.MovePiece({ 2, 0 }, { 2, 5 });
+	game->MovePiece({ 5, 0 }, { 4, 0 });
+	game->MovePiece({ 2, 0 }, { 2, 5 });
 	ChangeTurn();
 
 	// The black rook captures an opposite color piece
-	EXPECT_NO_THROW(game.MovePiece({ 2, 5 }, { 6, 5 }));
+	EXPECT_NO_THROW(game->MovePiece({ 2, 5 }, { 6, 5 }));
 
 	ChangeTurn();
 
 	// The black rook cannot capture a piece of its color
-	EXPECT_THROW(game.MovePiece({ 6, 5 }, { 1, 5 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 6, 5 }, { 1, 5 }), IllegalMoveException);
 }
 
 TEST_F(MoveTests, WhiteBishopMoveTest)
@@ -133,31 +141,31 @@ TEST_F(MoveTests, WhiteBishopMoveTest)
 	Position bishop = { 7, 5 };
 	Position target = { 5, 7 };
 
-	EXPECT_THROW(game.MovePiece(bishop, target), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(bishop, target), IllegalMoveException);
 
-	game.MovePiece({ 6, 6 }, { 4, 6 });
-	game.MovePiece({ 1, 1 }, { 3, 1 });
+	game->MovePiece({ 6, 6 }, { 4, 6 });
+	game->MovePiece({ 1, 1 }, { 3, 1 });
 
-	EXPECT_NO_THROW(game.MovePiece(bishop, target));
+	EXPECT_NO_THROW(game->MovePiece(bishop, target));
 
-	game.MovePiece({ 3, 1 }, { 4, 1 });
-	game.MovePiece({ 4, 6 }, { 3, 6 });
-
-	ChangeTurn();
-
-	EXPECT_NO_THROW(game.MovePiece({ 5, 7 }, { 1, 3 }));
+	game->MovePiece({ 3, 1 }, { 4, 1 });
+	game->MovePiece({ 4, 6 }, { 3, 6 });
 
 	ChangeTurn();
 
-	game.MovePiece({ 6,7 }, { 5,7 });
+	EXPECT_NO_THROW(game->MovePiece({ 5, 7 }, { 1, 3 }));
 
 	ChangeTurn();
 
-	EXPECT_NO_THROW(game.MovePiece({ 1, 3 }, { 0, 2 }));
+	game->MovePiece({ 6,7 }, { 5,7 });
 
 	ChangeTurn();
 
-	EXPECT_THROW(game.MovePiece({ 0, 2 }, { 5, 7 }), IllegalMoveException);
+	EXPECT_NO_THROW(game->MovePiece({ 1, 3 }, { 0, 2 }));
+
+	ChangeTurn();
+
+	EXPECT_THROW(game->MovePiece({ 0, 2 }, { 5, 7 }), IllegalMoveException);
 }
 
 TEST_F(MoveTests, BlackBishopMoveTest)
@@ -166,24 +174,24 @@ TEST_F(MoveTests, BlackBishopMoveTest)
 	Position bishop = { 0, 2 };
 	Position target = { 2, 0 };
 
-	EXPECT_THROW(game.MovePiece(bishop, target), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(bishop, target), IllegalMoveException);
 
-	game.MovePiece({ 1, 1 }, { 2, 1 });
-	game.MovePiece({ 6, 6 }, { 4, 6 });
+	game->MovePiece({ 1, 1 }, { 2, 1 });
+	game->MovePiece({ 6, 6 }, { 4, 6 });
 
-	EXPECT_NO_THROW(game.MovePiece(bishop, target));
-
-	ChangeTurn();
-
-	EXPECT_NO_THROW(game.MovePiece({ 2, 0 }, { 6, 4 }));
+	EXPECT_NO_THROW(game->MovePiece(bishop, target));
 
 	ChangeTurn();
 
-	EXPECT_NO_THROW(game.MovePiece({ 6, 4 }, { 4, 6 }));
+	EXPECT_NO_THROW(game->MovePiece({ 2, 0 }, { 6, 4 }));
+
+	ChangeTurn();
+
+	EXPECT_NO_THROW(game->MovePiece({ 6, 4 }, { 4, 6 }));
 
 	ChangeTurn();
 	 
-	EXPECT_THROW(game.MovePiece({ 4, 6 }, { 1, 3 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 4, 6 }, { 1, 3 }), IllegalMoveException);
 }
 
 TEST_F(MoveTests, WhiteHorseMoveTest)
@@ -191,27 +199,27 @@ TEST_F(MoveTests, WhiteHorseMoveTest)
 	Position whiteHorse = { 0, 1 };
 
 	// White horse cannot move to invalid positions
-	EXPECT_THROW(game.MovePiece(whiteHorse, { 7, 7 }), IllegalMoveException);
-	EXPECT_THROW(game.MovePiece(whiteHorse, { 6, 6 }), IllegalMoveException);
-	EXPECT_THROW(game.MovePiece(whiteHorse, { 5, 7 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(whiteHorse, { 7, 7 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(whiteHorse, { 6, 6 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(whiteHorse, { 5, 7 }), IllegalMoveException);
 
 	// Test valid horse moves
-	game.MovePiece({ 6, 7 }, { 5, 7 });
-	EXPECT_NO_THROW(game.MovePiece(whiteHorse, { 2, 0 }));
-	game.MovePiece({ 5, 7 }, { 4, 7 });
-	EXPECT_NO_THROW(game.MovePiece({ 2, 0 }, { 4, 1 }));
-	game.MovePiece({ 4, 7 }, { 3, 7 });
-	EXPECT_NO_THROW(game.MovePiece({ 4, 1 }, { 6, 0 })); // Captures a white pawn
-	game.MovePiece({ 3, 7 }, { 2, 7 });
+	game->MovePiece({ 6, 7 }, { 5, 7 });
+	EXPECT_NO_THROW(game->MovePiece(whiteHorse, { 2, 0 }));
+	game->MovePiece({ 5, 7 }, { 4, 7 });
+	EXPECT_NO_THROW(game->MovePiece({ 2, 0 }, { 4, 1 }));
+	game->MovePiece({ 4, 7 }, { 3, 7 });
+	EXPECT_NO_THROW(game->MovePiece({ 4, 1 }, { 6, 0 })); // Captures a white pawn
+	game->MovePiece({ 3, 7 }, { 2, 7 });
 
 	// Get a same color pawn near the horse for the exception test
-	game.MovePiece({ 1, 1 }, { 3, 1 });
-	game.MovePiece({ 2, 7 }, { 1, 6 });
-	game.MovePiece({ 3, 1 }, { 4, 1 });
-	game.MovePiece({ 6, 6 }, { 5, 6 });
+	game->MovePiece({ 1, 1 }, { 3, 1 });
+	game->MovePiece({ 2, 7 }, { 1, 6 });
+	game->MovePiece({ 3, 1 }, { 4, 1 });
+	game->MovePiece({ 6, 6 }, { 5, 6 });
 
-	EXPECT_THROW(game.MovePiece({ 6, 0 }, { 4, 1 }), IllegalMoveException); // Same color cannot capture its own pawn
-	EXPECT_THROW(game.MovePiece({ 6, 0 }, { -1, 8 }), OutOfBoundsException); // Move out of bounds
+	EXPECT_THROW(game->MovePiece({ 6, 0 }, { 4, 1 }), IllegalMoveException); // Same color cannot capture its own pawn
+	EXPECT_THROW(game->MovePiece({ 6, 0 }, { -1, 8 }), OutOfBoundsException); // Move out of bounds
 }
 
 TEST_F(MoveTests, BlackHorseMoveTest)
@@ -220,68 +228,68 @@ TEST_F(MoveTests, BlackHorseMoveTest)
 	Position blackHorse = { 0, 1 };
 
 	// Black horse cannot move to invalid positions
-	EXPECT_THROW(game.MovePiece(blackHorse, { 2, 4 }), IllegalMoveException);
-	EXPECT_THROW(game.MovePiece(blackHorse, { 1, 1 }), IllegalMoveException);
-	EXPECT_THROW(game.MovePiece(blackHorse, { 3, 2 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(blackHorse, { 2, 4 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(blackHorse, { 1, 1 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(blackHorse, { 3, 2 }), IllegalMoveException);
 
 	// Test valid horse moves
-	EXPECT_NO_THROW(game.MovePiece(blackHorse, { 2, 0 }));
+	EXPECT_NO_THROW(game->MovePiece(blackHorse, { 2, 0 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 2, 0 }, { 4, 1 }));
+	EXPECT_NO_THROW(game->MovePiece({ 2, 0 }, { 4, 1 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 4, 1 }, { 6, 0 })); // Captures a white pawn
+	EXPECT_NO_THROW(game->MovePiece({ 4, 1 }, { 6, 0 })); // Captures a white pawn
 
 	ChangeTurn();
 
 	// Get a same color pawn near the horse for the exception test
-	game.MovePiece({ 1, 1 }, { 3, 1 });
+	game->MovePiece({ 1, 1 }, { 3, 1 });
 	ChangeTurn();
-	game.MovePiece({ 3, 1 }, { 4, 1 });
+	game->MovePiece({ 3, 1 }, { 4, 1 });
 	ChangeTurn();
 
-	EXPECT_THROW(game.MovePiece({ 6, 0 }, { 4, 1 }), IllegalMoveException); // Same color cannot capture its own pawn
-	EXPECT_THROW(game.MovePiece({ 6, 0 }, { -1, 8 }), OutOfBoundsException); // Move out of bounds
+	EXPECT_THROW(game->MovePiece({ 6, 0 }, { 4, 1 }), IllegalMoveException); // Same color cannot capture its own pawn
+	EXPECT_THROW(game->MovePiece({ 6, 0 }, { -1, 8 }), OutOfBoundsException); // Move out of bounds
 }
 
 TEST_F(MoveTests, BlackKingMoveTest)
 {
 	Position king = { 0, 4 };
 
-	EXPECT_THROW(game.MovePiece(king, { 1, 4 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(king, { 1, 4 }), IllegalMoveException);
 
-	game.MovePiece({ 6, 7 }, { 5, 7 });
-	game.MovePiece({ 1, 4 }, { 3, 4 });
-	game.MovePiece({ 6, 5 }, { 5, 5 });
+	game->MovePiece({ 6, 7 }, { 5, 7 });
+	game->MovePiece({ 1, 4 }, { 3, 4 });
+	game->MovePiece({ 6, 5 }, { 5, 5 });
 
-	EXPECT_NO_THROW(game.MovePiece(king, { 1, 4 }));
-	game.MovePiece({ 5, 7 }, { 4, 7 });
-	EXPECT_NO_THROW(game.MovePiece({ 1, 4 }, { 2, 3 }));
+	EXPECT_NO_THROW(game->MovePiece(king, { 1, 4 }));
+	game->MovePiece({ 5, 7 }, { 4, 7 });
+	EXPECT_NO_THROW(game->MovePiece({ 1, 4 }, { 2, 3 }));
 
-	game.MovePiece({ 4, 7 }, { 3, 7 });
+	game->MovePiece({ 4, 7 }, { 3, 7 });
 
-	EXPECT_THROW(game.MovePiece({ 2, 3 }, { 5, 4 }), IllegalMoveException);
-	EXPECT_EQ(game.GetBoard()->GetElement({ 2, 3 })->GetType(), EType::KING);
+	EXPECT_THROW(game->MovePiece({ 2, 3 }, { 5, 4 }), IllegalMoveException);
+	EXPECT_EQ(game->GetBoard()->GetElement({ 2, 3 })->GetType(), EType::KING);
 }
 
 TEST_F(MoveTests, WhiteKingMoveTest)
 {
 	Position king = { 7, 4 };
 
-	EXPECT_THROW(game.MovePiece(king, { 6, 4 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(king, { 6, 4 }), IllegalMoveException);
 
-	game.MovePiece({ 6, 4 }, { 4, 4 });
+	game->MovePiece({ 6, 4 }, { 4, 4 });
 
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece(king, { 6, 4 }));
+	EXPECT_NO_THROW(game->MovePiece(king, { 6, 4 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 6, 4 }, { 5, 4 }));
+	EXPECT_NO_THROW(game->MovePiece({ 6, 4 }, { 5, 4 }));
 	ChangeTurn();
-	EXPECT_THROW(game.MovePiece({ 5, 4 }, { 4, 4 }), IllegalMoveException);
-	EXPECT_EQ(game.GetBoard()->GetElement({ 5, 4 })->GetType(), EType::KING);
+	EXPECT_THROW(game->MovePiece({ 5, 4 }, { 4, 4 }), IllegalMoveException);
+	EXPECT_EQ(game->GetBoard()->GetElement({ 5, 4 })->GetType(), EType::KING);
 
-	EXPECT_NO_THROW(game.MovePiece({ 5, 4 }, { 4, 5 }));
+	EXPECT_NO_THROW(game->MovePiece({ 5, 4 }, { 4, 5 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 4, 5 }, { 3, 4 }));
+	EXPECT_NO_THROW(game->MovePiece({ 4, 5 }, { 3, 4 }));
 }
 
 TEST_F(MoveTests, WhiteQueenMoveTest)
@@ -289,22 +297,22 @@ TEST_F(MoveTests, WhiteQueenMoveTest)
 	Position whiteQueen = { 7, 3 };
 
 	// White queen cannot move to an invalid position
-	EXPECT_THROW(game.MovePiece(whiteQueen, { 5, 3 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(whiteQueen, { 5, 3 }), IllegalMoveException);
 
 	// Make room for the white queen to move
-	game.MovePiece({ 6, 3 }, { 4, 3 });
-	game.MovePiece({ 1, 3 }, { 3, 3 });
+	game->MovePiece({ 6, 3 }, { 4, 3 });
+	game->MovePiece({ 1, 3 }, { 3, 3 });
 
 	// Test valid queen moves
-	EXPECT_NO_THROW(game.MovePiece(whiteQueen, { 5, 3 }));
-	EXPECT_NO_THROW(game.MovePiece({ 0, 3 }, { 2, 3 }));
-	EXPECT_THROW(game.MovePiece({ 5, 3 }, { 1, 5 }), IllegalMoveException);
-	EXPECT_NO_THROW(game.MovePiece({ 5, 3 }, { 5, 0 }));
+	EXPECT_NO_THROW(game->MovePiece(whiteQueen, { 5, 3 }));
+	EXPECT_NO_THROW(game->MovePiece({ 0, 3 }, { 2, 3 }));
+	EXPECT_THROW(game->MovePiece({ 5, 3 }, { 1, 5 }), IllegalMoveException);
+	EXPECT_NO_THROW(game->MovePiece({ 5, 3 }, { 5, 0 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 5, 0 }, { 2, 3 }));
+	EXPECT_NO_THROW(game->MovePiece({ 5, 0 }, { 2, 3 }));
 
 	// Test queen capturing a piece
-	EXPECT_TRUE(game.GetBoard()->GetElement({ 2, 3 })->Is(EType::QUEEN));
+	EXPECT_TRUE(game->GetBoard()->GetElement({ 2, 3 })->Is(EType::QUEEN));
 }
 
 // Test for the black queen
@@ -314,23 +322,23 @@ TEST_F(MoveTests, BlackQueenMoveTest)
 	Position blackQueen = { 0, 3 };
 
 	// Black queen cannot move to an invalid position
-	EXPECT_THROW(game.MovePiece(blackQueen, { 2, 3 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece(blackQueen, { 2, 3 }), IllegalMoveException);
 
 	// Make room for the black queen to move
-	game.MovePiece({ 1, 3 }, { 3, 3 });
+	game->MovePiece({ 1, 3 }, { 3, 3 });
 	ChangeTurn();
 
 	// Test valid queen moves
-	EXPECT_NO_THROW(game.MovePiece(blackQueen, { 2, 3 }));
+	EXPECT_NO_THROW(game->MovePiece(blackQueen, { 2, 3 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 2, 3 }, { 2, 0 }));
+	EXPECT_NO_THROW(game->MovePiece({ 2, 3 }, { 2, 0 }));
 	ChangeTurn();
-	EXPECT_NO_THROW(game.MovePiece({ 2, 0 }, { 6, 0 }));
+	EXPECT_NO_THROW(game->MovePiece({ 2, 0 }, { 6, 0 }));
 	ChangeTurn();
-	EXPECT_THROW(game.MovePiece({ 6, 0 }, { 1, 0 }), IllegalMoveException);
+	EXPECT_THROW(game->MovePiece({ 6, 0 }, { 1, 0 }), IllegalMoveException);
 
 
-	EXPECT_TRUE(game.GetBoard()->GetElement({ 6, 0 })->Is(EType::QUEEN));
+	EXPECT_TRUE(game->GetBoard()->GetElement({ 6, 0 })->Is(EType::QUEEN));
 }
 
 TEST(CastlingTest, WhiteLeftTest)

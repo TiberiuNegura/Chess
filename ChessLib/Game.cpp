@@ -19,10 +19,11 @@ IGamePtr IGame::Produce()
 // Constructor
 Game::Game()
 	: m_turn(EColor::WHITE)
-	, m_state(EGameState::Playing)
-	, m_sendNotifications(true)
-	, m_whiteTimer(600)
-	, m_blackTimer(600)
+	, m_currentState(EGameState::Playing)
+	, m_lastState(EGameState::Playing)
+	, m_bEnableNotifications(true)
+	, m_whiteTimer(30)
+	, m_blackTimer(30)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -30,8 +31,9 @@ Game::Game()
 Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	: m_board(mat)
 	, m_turn(turn)
-	, m_state(state)
-	, m_sendNotifications(true)
+	, m_currentState(state)
+	, m_lastState(state)
+	, m_bEnableNotifications(true)
 	, m_blackTimer(600)
 	, m_whiteTimer(600)
 {
@@ -90,7 +92,7 @@ void Game::LoadFromFEN(std::string path)
 
 void Game::LoadFromPGN(PGN pgnObj, bool loadFromBackup)
 {
-	m_sendNotifications = false;
+	m_bEnableNotifications = false;
 
 	std::string pgn = loadFromBackup ? pgnObj.ComputeMovesPgn() : pgnObj.GetMovesString();
 
@@ -136,7 +138,7 @@ void Game::LoadFromPGN(PGN pgnObj, bool loadFromBackup)
 		if (pgn[i] != ' ')
 			pgnMove += pgn[i];
 	}
-	m_sendNotifications = true;
+	m_bEnableNotifications = true;
 }
 
 Move Game::ChessMoveToMatrix(const std::string& move)
@@ -164,6 +166,22 @@ void Game::PreviewPastConfig(int moveIndex)
 {
 	BoardConfig config = m_boardConfigs[++moveIndex];
 	m_board.SetBoardConfiguration(config);
+}
+
+void Game::Pause()
+{
+	m_lastState = m_currentState;
+	m_currentState = EGameState::Pause;
+}
+
+void Game::Resume()
+{
+	m_currentState = m_lastState;
+}
+
+void Game::Stop()
+{
+	m_timer.Stop();
 }
 
 void Game::MovePiece(Position start, Position destination)
@@ -277,7 +295,7 @@ void Game::UpdateTurn()
 
 void Game::UpdateState(EGameState state)
 {
-	m_state = state;
+	m_currentState = state;
 }
 
 class CustomMatrix : public IMatrix
@@ -306,7 +324,7 @@ EColor Game::GetTurn() const
 
 EGameState Game::GetState() const
 {
-	return m_state;
+	return m_currentState;
 }
 
 PositionList Game::GetMoves(Position piecePos) const
@@ -372,27 +390,27 @@ void Game::TieRequestResponse(bool answer)
 
 bool Game::IsTie() const
 {
-	return m_state == EGameState::Tie;
+	return m_currentState == EGameState::Tie;
 }
 
 bool Game::BlackWon() const
 {
-	return m_state == EGameState::BlackWon;
+	return m_currentState == EGameState::BlackWon;
 }
 
 bool Game::WhiteWon() const
 {
-	return m_state == EGameState::WhiteWon;
+	return m_currentState == EGameState::WhiteWon;
 }
 
 bool Game::IsTieRequest() const
 {
-	return m_state == EGameState::TieRequest;
+	return m_currentState == EGameState::TieRequest;
 }
 
 bool Game::IsPawnEvolving() const
 {
-	return m_state == EGameState::PawnEvolving;
+	return m_currentState == EGameState::PawnEvolving;
 }
 
 void Game::EvolvePawn(EType pieceType)
@@ -442,7 +460,7 @@ void Game::EvolvePawn(EType pieceType)
 
 bool Game::IsCheck() const
 {
-	return m_state == EGameState::Check;
+	return m_currentState == EGameState::Check;
 }
 
 bool Game::IsGameOver() const
@@ -465,14 +483,14 @@ void Game::Restart()
 	m_board.Reset();
 	m_board.Init();
 	m_turn = EColor::WHITE;
-	m_state = EGameState::Playing;
+	m_currentState = EGameState::Playing;
 	m_whiteMissing.clear();
 	m_blackMissing.clear();
 	m_boardConfigs.clear();
 	m_pgn.Clear();
 	m_gameMoves.clear();
 	
-	StopTimer();
+	m_timer.Stop();
 
 	m_blackTimer = 600;
 	m_whiteTimer = 600;
@@ -488,11 +506,6 @@ void Game::PlayPauseTimer()
 		m_timer.Start(1000);
 	}
 	m_timer.PlayPause();
-}
-
-void Game::StopTimer()
-{
-	m_timer.Stop();
 }
 
 bool Game::IsTimerPaused() const
@@ -521,7 +534,7 @@ void Game::RemoveListener(IGameListener* listener)
 
 void Game::Notify(EResponse response)
 {
-	if (!m_sendNotifications)
+	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
 	{
@@ -550,7 +563,7 @@ void Game::Notify(EResponse response)
 
 void Game::Notify(Position start, Position end)
 {
-	if (!m_sendNotifications)
+	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnMovePiece(start, end);
@@ -558,7 +571,7 @@ void Game::Notify(Position start, Position end)
 
 void Game::Notify(EType pieceType, EColor pieceColor)
 {
-	if (!m_sendNotifications)
+	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
@@ -566,7 +579,7 @@ void Game::Notify(EType pieceType, EColor pieceColor)
 
 void Game::Notify(int whiteTimer, int blackTimer)
 {
-	if (!m_sendNotifications)
+	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
 		listener.lock()->OnTimePass(whiteTimer, blackTimer);

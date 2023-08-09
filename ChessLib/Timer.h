@@ -12,31 +12,33 @@ using TimerListenerList = std::vector<TimerWeakPtr>;
 class Timer {
 public:
 	Timer();
-	Timer(const Timer& other);
 
-	Timer& operator=(const Timer& other);
+	Timer(const Timer& other) = delete;
+	Timer& operator=(const Timer& other) = delete;
+
+	~Timer();
 
 	void Start(int durationMilliseconds);
 	void PlayPause();
 	void Stop();
 
-	size_t GetListenerSize() const;
-
 	bool IsPaused() const;
 
 
-	~Timer();
-
+	size_t GetListenerSize() const;
 	void AddListener(TimerWeakPtr listener);
 	void RemoveListener(ITimerListener* listener);
+	
 	void Notify();
 
 private:
-	mutable std::mutex m_timerMutex;
-	std::condition_variable m_timerCondVariable;
 	std::thread m_timerThread;
+	std::condition_variable m_timerCondVariable;
+	mutable std::mutex m_timerMutex;
+
 	bool m_isRunning;
 	bool m_isPaused;
+
 	TimerListenerList m_listeners;
 
 };

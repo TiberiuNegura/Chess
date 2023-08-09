@@ -1,15 +1,14 @@
 #pragma once
 
 #include "IPiece.h"
-#include "CheckException.h"
 
 #include <vector>
 #include <memory>
+#include <string>
 
 class IGameListener
 {
 public:
-
 	virtual void OnGameOver() = 0;
 	virtual void OnCheck(std::string msg) = 0;
 	virtual void OnPawnEvolve() = 0;
@@ -18,7 +17,6 @@ public:
 	virtual void OnPieceCapture(EType pieceType, EColor pieceColor) = 0;
 	virtual void OnRestart() = 0;
 	virtual void OnTimePass(int whiteTimer, int blackTimer) = 0;
-
 
 	virtual ~IGameListener() = default;
 };
