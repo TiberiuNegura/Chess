@@ -4,11 +4,9 @@
 
 #include "IGame.h"
 #include "Board.h"
-#include "IGameListener.h"
 #include "ITimerListener.h"
 #include "Timer.h"
-
-using ListenerList = std::vector<ListenerWeakPtr>;
+#include "PGN.h"
 
 enum class EGameState
 {
@@ -21,15 +19,15 @@ enum class EGameState
 	Check
 };
 
-enum class Response
+enum class EResponse
 {
-	CHECK,
-	PAWN_UPGRADE,
-	TIE_REQUEST,
-	WHITE_WON,
-	BLACK_WON,
-	TIE,
-	RESTART
+	Check,
+	PawnUpgrade,
+	TieRequest,
+	WhiteWon,
+	BlackWon,
+	Tie,
+	Restart
 };
 
 class Game : public IGame, public ITimerListener, public std::enable_shared_from_this<Game>, public IGameStatus
@@ -93,7 +91,7 @@ public:
 	void AddListener(ListenerWeakPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
 	
-	void Notify(Response response);
+	void Notify(EResponse response);
 	void Notify(Position start, Position end);
 	void Notify(EType pieceType, EColor pieceColor);
 	void Notify(int whiteTimer, int blackTimer);

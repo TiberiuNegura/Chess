@@ -223,7 +223,7 @@ void Game::MovePiece(Position start, Position destination)
 			if (m_board.CanPawnEvolve(destination))
 			{
 				UpdateState(EGameState::PawnEvolving);
-				Notify(Response::PAWN_UPGRADE);
+				Notify(EResponse::PawnUpgrade);
 				return;
 			}
 
@@ -233,24 +233,24 @@ void Game::MovePiece(Position start, Position destination)
 			if (opponentInCheck)
 			{
 				UpdateState(EGameState::Check);
-				Notify(Response::CHECK);
+				Notify(EResponse::Check);
 			}
 			if (opponentInStalemate && !opponentInCheck)
 			{
 				UpdateState(EGameState::Tie);
-				Notify(Response::TIE);
+				Notify(EResponse::Tie);
 			}
 			else if (opponentInStalemate)
 			{
 				if (m_turn == EColor::BLACK)
 				{
 					UpdateState(EGameState::WhiteWon);
-					Notify(Response::WHITE_WON);
+					Notify(EResponse::WhiteWon);
 				}
 				else
 				{
 					UpdateState(EGameState::BlackWon);
-					Notify(Response::BLACK_WON);
+					Notify(EResponse::BlackWon);
 				}
 			}
 			else if (!opponentInCheck)
@@ -259,7 +259,7 @@ void Game::MovePiece(Position start, Position destination)
 			if (m_board.IsThreeFold(m_boardConfigs, configuration))
 			{
 				UpdateState(EGameState::Tie);
-				Notify(Response::TIE);
+				Notify(EResponse::Tie);
 			}
 			return;
 		}
@@ -362,7 +362,7 @@ const IGameStatus* Game::Status() const
 void Game::MakeTieRequest()
 {
 	UpdateState(EGameState::TieRequest);
-	Notify(Response::TIE_REQUEST);
+	Notify(EResponse::TieRequest);
 }
 
 void Game::TieRequestResponse(bool answer)
@@ -477,7 +477,7 @@ void Game::Restart()
 	m_blackTimer = 600;
 	m_whiteTimer = 600;
 
-	Notify(Response::RESTART);
+	Notify(EResponse::Restart);
 }
 
 void Game::PlayPauseTimer()
@@ -519,7 +519,7 @@ void Game::RemoveListener(IGameListener* listener)
 	));
 }
 
-void Game::Notify(Response response)
+void Game::Notify(EResponse response)
 {
 	if (!m_sendNotifications)
 		return;
@@ -527,21 +527,21 @@ void Game::Notify(Response response)
 	{
 		switch (response)
 		{
-		case Response::CHECK:
+		case EResponse::Check:
 			listener.lock()->OnCheck(CheckException().what());
 				break;
-		case Response::PAWN_UPGRADE:
+		case EResponse::PawnUpgrade:
 			listener.lock()->OnPawnEvolve();
 			break;
-		case Response::TIE_REQUEST:
+		case EResponse::TieRequest:
 			listener.lock()->OnTieRequest();
 			break;
-		case Response::WHITE_WON:
-		case Response::BLACK_WON:
-		case Response::TIE:
+		case EResponse::WhiteWon:
+		case EResponse::BlackWon:
+		case EResponse::Tie:
 			listener.lock()->OnGameOver();
 			break;
-		case Response::RESTART:
+		case EResponse::Restart:
 			listener.lock()->OnRestart();
 			break;
 		}
@@ -580,13 +580,13 @@ void Game::OnSecondPass()
 	if (!m_blackTimer)
 	{
 		UpdateState(EGameState::WhiteWon);
-		Notify(Response::WHITE_WON);
+		Notify(EResponse::WhiteWon);
 		m_timer.RemoveListener(this);
 	}
 	else if (!m_whiteTimer)
 	{
 		UpdateState(EGameState::BlackWon);
-		Notify(Response::BLACK_WON);
+		Notify(EResponse::BlackWon);
 		m_timer.RemoveListener(this);
 	}
 }

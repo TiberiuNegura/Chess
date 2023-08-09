@@ -3,6 +3,9 @@
 #include "IPiece.h"
 #include "CheckException.h"
 
+#include <vector>
+#include <memory>
+
 class IGameListener
 {
 public:
@@ -19,3 +22,6 @@ public:
 
 	virtual ~IGameListener() = default;
 };
+
+using ListenerWeakPtr = std::weak_ptr<IGameListener>;
+using ListenerList = std::vector<ListenerWeakPtr>;
