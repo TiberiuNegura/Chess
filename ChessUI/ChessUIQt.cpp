@@ -64,7 +64,6 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	QPushButton* minimizeButton = new QPushButton(titleBar);
 	minimizeButton->setFixedSize(30, 30); // Set a fixed size for the button
 	minimizeButton->setIcon(QIcon("res/minimize.png")); // Set the custom icon
-	minimizeButton->setIconSize(QSize(30, 30)); // Set the icon size
 	minimizeButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -80,7 +79,6 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	m_expandButton = new QPushButton(titleBar);
 	m_expandButton->setFixedSize(30, 30); // Set a fixed size for the button
 	m_expandButton->setIcon(QIcon("res/expand.png")); // Set the custom icon
-	m_expandButton->setIconSize(QSize(30, 30)); // Set the icon size
 	m_expandButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -96,7 +94,6 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	QPushButton* exitButton = new QPushButton(titleBar);
 	exitButton->setFixedSize(30, 30); // Set a fixed size for the button
 	exitButton->setIcon(QIcon("res/exit.png")); // Set the custom icon
-	exitButton->setIconSize(QSize(30, 30)); // Set the icon size
 	exitButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -120,9 +117,9 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	titleBarGrid->addWidget(m_expandButton, 0, 3);
 	titleBarGrid->addWidget(exitButton, 0, 4);
 
-	// Set spacing and margins
-	titleBarGrid->setSpacing(10);
-	titleBarGrid->setContentsMargins(10, 0, 10, 0);
+	titleBarGrid->setSpacing(0);
+	titleBarGrid->setContentsMargins(0, 0, 0, 0);
+
 
 	// Add the title bar to the mainGridLayout
 	mainGridLayout->addWidget(titleBar, 0, 0, 1, 2);
@@ -186,7 +183,7 @@ QPushButton& SetIcon(QPushButton* button, QString path)
 	button->setContentsMargins(0, 0, 0, 0);
 	button->setIcon(ButtonIcon);
 	button->setIconSize({40, 40});
-	button->setStyleSheet("border: none; padding: 7px 7px; margin: 1px;");
+	button->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px;");
 
 	return *button;
 }
@@ -220,6 +217,9 @@ QWidget* ChessUIQt::InitializeButtons()
 	SetIcon(drawButton, "res/draw.png");
 	SetIcon(copyButton, "res/copy.png");
 
+	saveButton->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px; border-top-left-radius: 15px; border-bottom-left-radius: 15px;");
+	copyButton->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px; border-top-right-radius: 15px; border-bottom-right-radius: 15px;");
+
 	btnGrid->addWidget(saveButton, 0, 0);
 	btnGrid->addWidget(loadButton, 0, 1);
 	btnGrid->addWidget(restartButton, 0, 2);
@@ -248,8 +248,8 @@ QWidget* ChessUIQt::InitializeTimers()
 	timerGrid->setSpacing(0);
 	timerGrid->setContentsMargins(0, 0, 0, 0);
 
-	QPushButton* pauseTimerBtn = new QPushButton("START");
-	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnTimerButtonClicked);
+	m_pauseTimerBtn = new QPushButton("START");
+	connect(m_pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnTimerButtonClicked);
 
 	timerContainer->setStyleSheet(
 		"QPushButton {"
@@ -259,22 +259,27 @@ QWidget* ChessUIQt::InitializeTimers()
 		"QPushButton:hover {"
 		"   background-color: #d234eb;" // Highlighted background color on hover
 		"}"
+		"font-family: Segoe UI;"
 	);
-
-
-	m_BlackTimer = new QLabel("00:00");
-	m_WhiteTimer = new QLabel("00:00");
 
 	
 
-	pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px;");
 
-	timerGrid->addWidget(m_BlackTimer, 0, 1, 1, 2, Qt::AlignCenter);
-	timerGrid->addWidget(pauseTimerBtn, 0, 3, Qt::AlignCenter);
-	timerGrid->addWidget(m_WhiteTimer, 0, 4, 1, 2, Qt::AlignCenter);
+	m_BlackTimer = new QLabel("00:00");
+	m_BlackTimer->setStyleSheet("color: white; font-size: 25px; background-color: #21201d; border-top-left-radius: 15px;");
+	m_BlackTimer->setAlignment(Qt::AlignCenter);
 
-	m_BlackTimer->setStyleSheet("color: white; font-size: 25px;");
-	m_WhiteTimer->setStyleSheet("color: white; font-size: 25px;");
+	m_WhiteTimer = new QLabel("00:00");
+	m_WhiteTimer->setStyleSheet("color: white; font-size: 25px; background-color: #21201d; border-top-right-radius: 15px;");
+	m_WhiteTimer->setAlignment(Qt::AlignCenter);
+	
+
+	m_pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px; font-size: 22px; width: 80px;");
+
+	timerGrid->addWidget(m_BlackTimer, 0, 1, 1, 2);
+	timerGrid->addWidget(m_pauseTimerBtn, 0, 3);
+	timerGrid->addWidget(m_WhiteTimer, 0, 4, 1, 2);
+
 
 
 	timerContainer->setLayout(timerGrid);
@@ -284,9 +289,9 @@ QWidget* ChessUIQt::InitializeTimers()
 
 QWidget* ChessUIQt::InitializeHistory()
 {
+	QWidget::adjustSize();
 	m_MovesList = new QListWidget();
-	m_MovesList->setMinimumWidth(100);
-	m_MovesList->setMaximumWidth(350);
+	m_MovesList->setSizeAdjustPolicy(QListWidget::AdjustToContents);
 
 	m_MovesList->setContentsMargins(0, 0, 0, 0);
 	m_MovesList->setSpacing(0);
@@ -297,6 +302,8 @@ QWidget* ChessUIQt::InitializeHistory()
 		"   background-color: #262522;" // Set the background color for dark theme
 		"   border: none;" // Add a thin border
 		"   color: white;" // Set the text color to white
+		"	border-bottom-left-radius: 15px;"
+		"	border-bottom-right-radius: 15px;"
 		"}"
 
 		"QListWidget::item {"
@@ -402,27 +409,31 @@ void ChessUIQt::InitializePanel(QGridLayout* mainGridLayout)
 	layout->addWidget(buttons, 0, 0);
 	layout->addWidget(timers, 1, 0);
 	layout->addWidget(history, 2, 0);
+	layout->setContentsMargins(0, 0, 0, 0);
+	layout->setSpacing(0);
+
 	container->setLayout(layout);
+	container->setContentsMargins(0, 0, 0, 0);
+
 	mainGridLayout->addWidget(container, 1, 1, 2, 1);
 }
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
 	QGridLayout* chessGridLayout = new QGridLayout();
+	chessGridLayout->setSpacing(0);
+	chessGridLayout->setContentsMargins(0, 0, 0, 0);
 
 	QWidget* board = new QWidget();
+
 
 	for (int row = 0; row < 8; row++) {
 		for (int column = 0; column < 8; column++) {
 			m_grid[row][column] = new GridButton({ row,column }, EType::EMPTY, EColor::NONE);
 			chessGridLayout->addWidget(m_grid[row][column], row, column, 1, 1);
-			chessGridLayout->setSpacing(0);
-			chessGridLayout->setContentsMargins(0, 0, 0, 0);
 			connect(m_grid[row][column], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
 		}
 	}
-
-	board->setStyleSheet("border: none;");
 	board->setLayout(chessGridLayout);
 	mainGridLayout->addWidget(board, 2, 0);
 }
@@ -433,7 +444,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 	if (m_selectedCell.has_value()) {
 		Position start({ m_selectedCell.value().first , m_selectedCell.value().second });
 
-		auto possibleMoves = m_game->GetMoves(start);
+		auto possibleMoves = m_game->Status()->GetMoves(start);
 		try
 		{
 			std::string source, target, turn;
@@ -469,7 +480,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>& position)
 		m_selectedCell = position;
 		m_grid[position.first][position.second]->setSelected(true);
 
-		HighlightPossibleMoves(m_game->GetMoves(position));
+		HighlightPossibleMoves(m_game->Status()->GetMoves(position));
 	}
 }
 
@@ -528,8 +539,8 @@ void ChessUIQt::OnLoadButtonClicked()
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
 
 
-	TypeList whitePieces = m_game->GetMissingPieces(EColor::BLACK);
-	TypeList blackPieces = m_game->GetMissingPieces(EColor::WHITE);
+	TypeList whitePieces = m_game->Status()->GetMissingPieces(EColor::BLACK);
+	TypeList blackPieces = m_game->Status()->GetMissingPieces(EColor::WHITE);
 
 	for (auto& pieceType : whitePieces)
 	{
@@ -551,7 +562,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	}
 
 	// Create history list
-	MovesList moves = m_game->GetMovesList();
+	MovesList moves = m_game->Status()->GetMovesList();
 	
 	int color = -1;
 	for (auto& move : moves)
@@ -585,7 +596,11 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnTimerButtonClicked()
 {
+	
 	m_game->PlayPauseTimer();
+	m_game->IsTimerPaused() ? m_pauseTimerBtn->setText("RESUME") : m_pauseTimerBtn->setText("PAUSE");
+
+
 }
 
 void ChessUIQt::OnDrawButtonClicked()
@@ -597,7 +612,7 @@ void ChessUIQt::OnCopyButtonClicked()
 {
 	QClipboard* clipboard = QGuiApplication::clipboard();
 	QString config = "Game game({\n";
-	MatrixPtr board = m_game->GetBoard();
+	MatrixPtr board = m_game->Status()->GetBoard();
 	for (int row = 0; row < 8; row++)
 	{
 		config += QString("\t");
@@ -754,7 +769,7 @@ void ChessUIQt::UpdateBoard()
 {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			m_grid[i][j]->setPiece(m_game->GetBoard()->GetElement({ i, j }));
+			m_grid[i][j]->setPiece(m_game->Status()->GetBoard()->GetElement({ i, j }));
 			m_grid[i][j]->setSelected(false);
 			m_grid[i][j]->setHighlighted(EHighlight::NONE);
 		}
@@ -768,7 +783,7 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 	for (const auto& position : possibleMoves) 
 	{
 		auto possibleMove = m_grid[position.first][position.second];
-		if (m_game->GetBoard()->GetElement(position))
+		if (m_game->Status()->GetBoard()->GetElement(position))
 			possibleMove->setHighlighted(EHighlight::OCCUPIED_POS); // highlight opponent piece
 		else
 			possibleMove->setHighlighted(EHighlight::EMPTY_POS); // highlight empty 

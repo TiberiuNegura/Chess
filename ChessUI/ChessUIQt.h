@@ -90,5 +90,5 @@ private:
 	QLabel* m_BlackTimer, *m_WhiteTimer, *m_StatusMessage;
 	IGamePtr m_game;
 	QPoint m_dragStartPos;
-	QPushButton* m_expandButton;
+	QPushButton* m_expandButton, * m_pauseTimerBtn;
 };

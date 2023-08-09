@@ -39,7 +39,7 @@ public:
 	Game();
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
 
-	bool LoadFromFormat(std::string path) override;
+	bool LoadFromFormat(const std::string& path) override;
 	void LoadFromFEN(std::string fen);
 	void LoadFromPGN(PGN pgnObj, bool loadFromBackup = false);
 	Move ChessMoveToMatrix(const std::string& move);
@@ -61,11 +61,9 @@ public:
 
 	std::string GetFenString() const;
 	PGN GetPGN() const;
-	void SavePGN(std::string path) const override;
-	void SaveFEN(std::string path) const override;
+	void SavePGN(const std::string& path) const override;
+	void SaveFEN(const std::string& path) const override;
 
-	// -----------------------
-	// IGameStatus.h
 
 	const IGameStatus* Status() const override;
 
@@ -86,12 +84,11 @@ public:
 	bool IsGameOver() const override;
 	void Restart() override;
 
-	// -----------------------
-
 	bool FindSubstring(std::string input, const std::set<std::string>& substrings) const;
 
 	void PlayPauseTimer() override;
 	void StopTimer() override;
+	bool IsTimerPaused() const override;
 
 	void AddListener(ListenerWeakPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;

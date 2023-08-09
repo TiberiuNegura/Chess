@@ -14,18 +14,7 @@ public:
 	Timer();
 	Timer(const Timer& other);
 
-	Timer& operator=(const Timer& other)
-	{
-		if (&other != this)
-		{
-			std::unique_lock<std::mutex> lock_this(m_timerMutex, std::defer_lock);
-			std::unique_lock<std::mutex> lock_other(other.m_timerMutex, std::defer_lock);
-
-			std::lock(lock_this, lock_other);
-		}
-		return *this;
-	}
-
+	Timer& operator=(const Timer& other);
 
 	void Start(int durationMilliseconds);
 	void PlayPause();
@@ -33,12 +22,15 @@ public:
 
 	size_t GetListenerSize() const;
 
+	bool IsPaused() const;
+
 
 	~Timer();
 
 	void AddListener(TimerWeakPtr listener);
 	void RemoveListener(ITimerListener* listener);
 	void Notify();
+
 private:
 	mutable std::mutex m_timerMutex;
 	std::condition_variable m_timerCondVariable;

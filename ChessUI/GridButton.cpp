@@ -14,6 +14,7 @@ void GridButton::mouseReleaseEvent(QMouseEvent* event)
 
 void GridButton::updatePiece()
 {
+
 	std::string imagePath = "res/";
 
 	switch (m_PieceColor)
@@ -70,7 +71,10 @@ void GridButton::updateBackgroundColor()
 
 	defaultColorBlack == true ? backColor = BLACK_SQUARE_COLOR : backColor = WHITE_SQUARE_COLOR;
 
-	setStyleSheet("background-color: " + backColor + "; border: none;");
+	QString styleSheet = "background-color: " + backColor + "; border: none;";
+
+
+	setStyleSheet(styleSheet);
 }
 
 void GridButton::setPiece(IPiecePtr newPiece)
@@ -184,6 +188,6 @@ GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pi
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	updateBackgroundColor();
-
 	updatePiece();
+
 }

@@ -39,7 +39,7 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 }
 
 
-bool Game::LoadFromFormat(std::string path)
+bool Game::LoadFromFormat(const std::string& path)
 {
 	PGN currentPGN = m_pgn;
 	try
@@ -340,12 +340,12 @@ PGN Game::GetPGN() const
 	return m_pgn;
 }
 
-void Game::SavePGN(std::string path) const
+void Game::SavePGN(const std::string& path) const
 {
 	m_pgn.Save(path);
 }
 
-void Game::SaveFEN(std::string path) const
+void Game::SaveFEN(const std::string& path) const
 {
 	std::ofstream file(path);
 	if (file.good())
@@ -493,6 +493,11 @@ void Game::PlayPauseTimer()
 void Game::StopTimer()
 {
 	m_timer.Stop();
+}
+
+bool Game::IsTimerPaused() const
+{
+	return m_timer.IsPaused();
 }
 
 void Game::AddListener(ListenerWeakPtr listener)

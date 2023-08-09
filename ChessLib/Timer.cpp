@@ -14,6 +14,18 @@ Timer::Timer(const Timer& other)
 	std::unique_lock<std::mutex> lock_other(other.m_timerMutex);
 }
 
+Timer& Timer::operator=(const Timer& other)
+{
+	if (&other != this)
+	{
+		std::unique_lock<std::mutex> lock_this(m_timerMutex, std::defer_lock);
+		std::unique_lock<std::mutex> lock_other(other.m_timerMutex, std::defer_lock);
+
+		std::lock(lock_this, lock_other);
+	}
+	return *this;
+}
+
 void Timer::Start(int durationMilliseconds)
 {
 	std::unique_lock<std::mutex> lock(m_timerMutex);
@@ -67,6 +79,11 @@ size_t Timer::GetListenerSize() const
 	return m_listeners.size();
 }
 
+
+bool Timer::IsPaused() const
+{
+	return m_isPaused;
+}
 
 Timer::~Timer()
 {
