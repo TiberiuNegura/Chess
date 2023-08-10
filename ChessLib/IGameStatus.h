@@ -21,6 +21,9 @@ class IGameStatus
 public:
 	virtual ~IGameStatus() = default;
 
+	virtual bool IsStarted() const = 0;
+	virtual bool IsPaused() const = 0;
+
 	virtual EColor GetTurn() const = 0;
 
 	virtual MatrixPtr GetBoard() const = 0;
@@ -37,5 +40,6 @@ public:
 	virtual bool BlackWon() const = 0;
 	virtual bool WhiteWon() const = 0;
 	virtual bool IsGameOver() const = 0;
+
 
 };

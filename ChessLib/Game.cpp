@@ -390,9 +390,9 @@ PGN Game::GetPGN() const
 	return m_pgn;
 }
 
-void Game::SavePGN(const std::string& path) const
+bool Game::SavePGN(const std::string& path) const
 {
-	m_pgn.Save(path);
+	return m_pgn.Save(path);
 }
 
 void Game::SaveFEN(const std::string& path) const

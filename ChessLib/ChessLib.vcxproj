@@ -150,8 +150,10 @@
     <ClInclude Include="GameOverException.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="Horse.h" />
+    <ClInclude Include="IGameControls.h" />
     <ClInclude Include="IGameListener.h" />
     <ClInclude Include="IGameStatus.h" />
+    <ClInclude Include="IGameStorage.h" />
     <ClInclude Include="IllegalMoveException.h" />
     <ClInclude Include="InvalidFileException.h" />
     <ClInclude Include="InvalidOptionException.h" />

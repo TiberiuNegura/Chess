@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Mock Tests">
       <UniqueIdentifier>{eb18ae4b-46c3-49b0-a2af-2fbb3a3bc5d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Unit Tests\PGN">
+      <UniqueIdentifier>{455fef6a-9e54-4e3e-b35e-d46a57ada33b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -55,7 +58,7 @@
       <Filter>Source Files\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="PGNTests.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Unit Tests\PGN</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,9 @@
+[Event "Invalid Moves Example"]
+[Site "Nowhere"]
+[Date "2023.08.10"]
+[Round "1"]
+[White "Player1"]
+[Black "Player2"]
+[Result "1-0"]
+
+1. e4 e6 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. Re1 Nd6 6. Bxc6 dxc6 7. d4 Be7 8. Qe2 O-O 9. c4 Nf5 10. Rd1 b5 11. Nc3 Ba6 12. Ne5 Nxd4 13. Qg4 f5 14. Qxd4 Qxd4 15. Rxd4 c5 16. Rd1 bxc4 17. Rd7 Bd6 18. Bf4 Bc8 19. Rxd6 cxd6 20. Nxc4 e5 21. Bg5 Be6 22. Nxd6 Rab8 23. Be7 Rxb2 24. Bxf8 Kxf8 25. Rb1 Rxb1+ 26. Nxb1 Bxa2 27. Nc3 Be6 28. Na4 c4 29. Nc3 Ke7 30. Ndb5 a6 31. Na3 Kd6 32. f3 Kc5 33. Kf2 Kb4 34. Nab1 f4 35. g3 fxg3+ 36. hxg3 Bf5 37. Ke3 Bxb1 38. Nxb1 Kb3 39. Kd2 Kb2 40. Nc3 h5 41. f4 exf4 42. gxf4 h4 43. Ne2 a5 44. f5 a4 45. Nf4 a3 46. Nd5 a2 47. f6 gxf6 48. Nxf6 a1=Q 49. Ke3 c3 50. Kf3 c2 51. Kg4 c1=Q 52. Kxh4 Qg1 53. Kh5 Qaf1 54. Kh6 Qh3+ 55. Nh5 Qc1+ 56. Kg6 Qe6+ 57. Nf6 Qf4 58. Kg7 Qexf6+ 59. Kh7 Q4h6+ 60. Kg8 Qhg7# 0-1

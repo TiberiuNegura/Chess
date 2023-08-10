@@ -85,7 +85,6 @@ std::string PGN::ComputeMovesPgn() const
 		pgn += ( m_moves[i] + " ");
 	}
 
-
 	return pgn;
 }
 

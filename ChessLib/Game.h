@@ -59,7 +59,7 @@ public:
 	const IGameStatus* Status() const override;
 
 
-	void SavePGN(const std::string& path) const override;
+	bool SavePGN(const std::string& path) const override;
 	void SaveFEN(const std::string& path) const override;
 	bool LoadFromFormat(const std::string& path) override;
 

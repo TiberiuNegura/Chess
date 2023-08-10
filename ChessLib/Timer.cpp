@@ -1,6 +1,7 @@
 #include "Timer.h"
 
 #include <chrono>
+
 using namespace std::chrono_literals;
 
 Timer::Timer() 
@@ -19,7 +20,7 @@ void Timer::Start()
 	m_isPaused = false;
 	m_timerThread = std::thread([this]()
 	{
-		std::chrono::milliseconds interval(1s);
+		std::chrono::milliseconds interval(10ms);
 		while (m_isRunning)
 		{
 			if (!m_isPaused)

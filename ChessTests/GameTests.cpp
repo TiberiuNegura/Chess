@@ -8,6 +8,17 @@
 
 #include "gtest/gtest.h"
 
+bool SameAs(IPiecePtr fp, IPiecePtr sp)
+{
+	if (!fp && sp || !sp && fp)
+		return false;
+	else
+		if (!fp && !sp)
+			return true;
+
+	return (fp->GetColor() == sp->GetColor() && fp->GetName() == sp->GetName() && fp->GetType() == sp->GetType());
+}
+
 TEST(PawnEvolveTest, BlackPawn)
 {
 	Game game({
@@ -192,3 +203,41 @@ TEST(ThreeFoldRepetitionTest, Test)
 	EXPECT_THROW(game.MovePiece({ 7,4 }, { 7,3 }), GameOverException);
 }
 
+TEST(PGNGameTest, Load)
+{
+	Game game, expectedGame({
+	' ', 'h', 'B', ' ', ' ', 'b', ' ', 'q',
+	'p', ' ', 'p', ' ', ' ', ' ', ' ', ' ',
+	'B', ' ', 'B', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ',
+	' ', ' ', ' ', ' ', 'p', ' ', ' ', 'k',
+	' ', ' ', ' ', ' ', 'P', ' ', ' ', 'p',
+	' ', 'P', ' ', 'P', 'B', 'P', ' ', 'P',
+	'R', 'H', 'B', 'Q', 'K', ' ', 'H', 'R'
+		}, EColor::BLACK, EGameState::Playing);
+
+	game.LoadFromFormat("files/gabi.pgn");
+
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			EXPECT_TRUE(SameAs(game.GetBoard()->GetElement({ i,j }), expectedGame.GetBoard()->GetElement({ i,j })));
+		}
+}
+
+TEST(PGNGameTest, Save)
+{
+	Game game;
+	game.Start();
+
+	std::vector<std::pair<Position, Position>> moveList = {
+		{{6,0},{4,0}}, {{1,1},{3,1}}, {{7,1},{5,2}}, {{3,1},{4,0}},
+		{{5,2},{4,0}}, {{1,0},{3,0}}, {{7,0},{5,0}}, {{1,2},{3,2}}
+	};
+
+	for (const auto& move : moveList) {
+		game.MovePiece(move.first, move.second);
+	}
+
+	EXPECT_TRUE(game.SavePGN("files/game_save.pgn"));
+}
