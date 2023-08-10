@@ -1,0 +1,28 @@
+\doxysection{Position.\+h}
+\hypertarget{_position_8h_source}{}\label{_position_8h_source}\index{source/Position.h@{source/Position.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_position}{Position}}}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_position_a1928093277641559869cae2a45a99891}{first}};\ \ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_position_a14bc4abdeb2c04c458498ae32d9047ad}{second}};\ }
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_position_aeaa3f8c527d3536d98981faa1d5bdbca}{Position}}(\textcolor{keywordtype}{int}\ x\ =\ -\/1,\ \textcolor{keywordtype}{int}\ y\ =\ -\/1);}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{struct_position_a0035b8b376e447f5f8553dbe779a6693}{Position}}(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_position_a1928093277641559869cae2a45a99891}{first}}(static\_cast<int>(x))}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ ,\ \mbox{\hyperlink{struct_position_a14bc4abdeb2c04c458498ae32d9047ad}{second}}(static\_cast<int>(y))}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_acf13e7e45c7c07a67c2adf2f7e1dcc5f}{operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ other)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_ae4d491be71bc11896f864835187e860d}{operator!=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ other)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_a6d8dd3a8d081a0047b6d37bc31ece7df}{IsValid}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\ \mbox{\hyperlink{struct_position_afe28353f0327807bf2177adfd122604b}{EMPTY}};}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00059\ \textcolor{keyword}{using\ }PositionList\ =\ std::vector<Position>;}
+\DoxyCodeLine{00063\ \textcolor{keyword}{using\ }Directions\ =\ std::vector<PositionList>;}
+
+\end{DoxyCode}

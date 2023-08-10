@@ -1,0 +1,250 @@
+\doxysection{IGame\+Status Class Reference}
+\hypertarget{class_i_game_status}{}\label{class_i_game_status}\index{IGameStatus@{IGameStatus}}
+
+
+The interface for accessing and managing the status of a chess game.  
+
+
+
+
+{\ttfamily \#include $<$IGame\+Status.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_game_status_a4992b3711832b57069f293847b37171a}\label{class_i_game_status_a4992b3711832b57069f293847b37171a} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IGame\+Status} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor to ensure proper cleanup in derived classes. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a4e6edce519fd416dcc2abcfb3b4fe651}{Is\+Started}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game has started. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_af431d7d3d4c18f9e097ab09a21aced70}{Is\+Paused}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is currently paused. \end{DoxyCompactList}\item 
+virtual EColor \mbox{\hyperlink{class_i_game_status_a6a6a67a198a33c7c59a1d64029e9cfcd}{Get\+Turn}} () const =0
+\begin{DoxyCompactList}\small\item\em Gets the color of the player whose turn it is. \end{DoxyCompactList}\item 
+virtual Matrix\+Ptr \mbox{\hyperlink{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff}{Get\+Board}} () const =0
+\begin{DoxyCompactList}\small\item\em Gets a shared pointer to the matrix (chessboard) of the game. \end{DoxyCompactList}\item 
+virtual Position\+List \mbox{\hyperlink{class_i_game_status_ab9c6974a71ede90dd776b41aac3f1fcb}{Get\+Moves}} (\mbox{\hyperlink{struct_position}{Position}} piece\+Pos) const =0
+\begin{DoxyCompactList}\small\item\em Gets a list of valid moves for the specified piece position. \end{DoxyCompactList}\item 
+virtual Type\+List \mbox{\hyperlink{class_i_game_status_ab507c572dacd34f21841c9002de523f4}{Get\+Missing\+Pieces}} (EColor color) const =0
+\begin{DoxyCompactList}\small\item\em Gets a list of missing pieces for the specified color. \end{DoxyCompactList}\item 
+virtual Moves\+List \mbox{\hyperlink{class_i_game_status_a0538037b6312e550576e6048d40a2188}{Get\+Moves\+List}} () const =0
+\begin{DoxyCompactList}\small\item\em Gets a list of moves representing the game\textquotesingle{}s moves history. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a27bf4ed8402c14d57998e1b608b61ee3}{Is\+Pawn\+Evolving}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if a pawn is currently eligible for evolution. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a498d5fe49b7cd1bf761bf6f0f491a9c5}{Is\+Tie\+Request}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks the current state of the game in order to decide if a tie request has been made in the game. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_abcfa26af03e23199a2ca25fc51fdc114}{Is\+Check}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the current state is a check (one player\textquotesingle{}s king is under threat). \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a0e07f72459f6d783ea0b9762574c33c0}{Is\+Tie}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game has ended in a tie. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_aa89161d53a3d24870c9f866bb856fd5a}{Black\+Won}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the black player has won the game. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191}{White\+Won}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the white player has won the game. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_a486181105b73affa92cfc76a64277ea3}{Is\+Game\+Over}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game has ended (either in checkmate, stalemate, or a tie). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The interface for accessing and managing the status of a chess game. 
+
+This interface provides methods to query various aspects of the game status, such as the current turn, available moves, missing pieces, game-\/over states, and more. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_game_status_aa89161d53a3d24870c9f866bb856fd5a}\label{class_i_game_status_aa89161d53a3d24870c9f866bb856fd5a} 
+\index{IGameStatus@{IGameStatus}!BlackWon@{BlackWon}}
+\index{BlackWon@{BlackWon}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{BlackWon()}{BlackWon()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Black\+Won (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the black player has won the game. 
+
+\begin{DoxyReturn}{Returns}
+True if the black player has won, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff}\label{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff} 
+\index{IGameStatus@{IGameStatus}!GetBoard@{GetBoard}}
+\index{GetBoard@{GetBoard}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetBoard()}{GetBoard()}}
+{\footnotesize\ttfamily virtual Matrix\+Ptr IGame\+Status\+::\+Get\+Board (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets a shared pointer to the matrix (chessboard) of the game. 
+
+\begin{DoxyReturn}{Returns}
+A shared pointer to the game\textquotesingle{}s matrix. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_ab507c572dacd34f21841c9002de523f4}\label{class_i_game_status_ab507c572dacd34f21841c9002de523f4} 
+\index{IGameStatus@{IGameStatus}!GetMissingPieces@{GetMissingPieces}}
+\index{GetMissingPieces@{GetMissingPieces}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetMissingPieces()}{GetMissingPieces()}}
+{\footnotesize\ttfamily virtual Type\+List IGame\+Status\+::\+Get\+Missing\+Pieces (\begin{DoxyParamCaption}\item[{EColor}]{color }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets a list of missing pieces for the specified color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The color of the player for which to retrieve missing pieces. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of missing piece types for the specified color. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_ab9c6974a71ede90dd776b41aac3f1fcb}\label{class_i_game_status_ab9c6974a71ede90dd776b41aac3f1fcb} 
+\index{IGameStatus@{IGameStatus}!GetMoves@{GetMoves}}
+\index{GetMoves@{GetMoves}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetMoves()}{GetMoves()}}
+{\footnotesize\ttfamily virtual Position\+List IGame\+Status\+::\+Get\+Moves (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{piece\+Pos }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets a list of valid moves for the specified piece position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece\+Pos} & The position of the piece for which to retrieve valid moves. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of valid move positions. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a0538037b6312e550576e6048d40a2188}\label{class_i_game_status_a0538037b6312e550576e6048d40a2188} 
+\index{IGameStatus@{IGameStatus}!GetMovesList@{GetMovesList}}
+\index{GetMovesList@{GetMovesList}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetMovesList()}{GetMovesList()}}
+{\footnotesize\ttfamily virtual Moves\+List IGame\+Status\+::\+Get\+Moves\+List (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets a list of moves representing the game\textquotesingle{}s moves history. 
+
+\begin{DoxyReturn}{Returns}
+A list of moves representing the game\textquotesingle{}s history. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a6a6a67a198a33c7c59a1d64029e9cfcd}\label{class_i_game_status_a6a6a67a198a33c7c59a1d64029e9cfcd} 
+\index{IGameStatus@{IGameStatus}!GetTurn@{GetTurn}}
+\index{GetTurn@{GetTurn}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetTurn()}{GetTurn()}}
+{\footnotesize\ttfamily virtual EColor IGame\+Status\+::\+Get\+Turn (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets the color of the player whose turn it is. 
+
+\begin{DoxyReturn}{Returns}
+The color of the current player\textquotesingle{}s turn. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_abcfa26af03e23199a2ca25fc51fdc114}\label{class_i_game_status_abcfa26af03e23199a2ca25fc51fdc114} 
+\index{IGameStatus@{IGameStatus}!IsCheck@{IsCheck}}
+\index{IsCheck@{IsCheck}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsCheck()}{IsCheck()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Check (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the current state is a check (one player\textquotesingle{}s king is under threat). 
+
+\begin{DoxyReturn}{Returns}
+True if the game is in check, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a486181105b73affa92cfc76a64277ea3}\label{class_i_game_status_a486181105b73affa92cfc76a64277ea3} 
+\index{IGameStatus@{IGameStatus}!IsGameOver@{IsGameOver}}
+\index{IsGameOver@{IsGameOver}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsGameOver()}{IsGameOver()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Game\+Over (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game has ended (either in checkmate, stalemate, or a tie). 
+
+\begin{DoxyReturn}{Returns}
+True if the game has ended, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_af431d7d3d4c18f9e097ab09a21aced70}\label{class_i_game_status_af431d7d3d4c18f9e097ab09a21aced70} 
+\index{IGameStatus@{IGameStatus}!IsPaused@{IsPaused}}
+\index{IsPaused@{IsPaused}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsPaused()}{IsPaused()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Paused (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is currently paused. 
+
+\begin{DoxyReturn}{Returns}
+True if the game is paused, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a27bf4ed8402c14d57998e1b608b61ee3}\label{class_i_game_status_a27bf4ed8402c14d57998e1b608b61ee3} 
+\index{IGameStatus@{IGameStatus}!IsPawnEvolving@{IsPawnEvolving}}
+\index{IsPawnEvolving@{IsPawnEvolving}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsPawnEvolving()}{IsPawnEvolving()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Pawn\+Evolving (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if a pawn is currently eligible for evolution. 
+
+\begin{DoxyReturn}{Returns}
+True if a pawn is eligible for evolution, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a4e6edce519fd416dcc2abcfb3b4fe651}\label{class_i_game_status_a4e6edce519fd416dcc2abcfb3b4fe651} 
+\index{IGameStatus@{IGameStatus}!IsStarted@{IsStarted}}
+\index{IsStarted@{IsStarted}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsStarted()}{IsStarted()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Started (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game has started. 
+
+\begin{DoxyReturn}{Returns}
+True if the game has started, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a0e07f72459f6d783ea0b9762574c33c0}\label{class_i_game_status_a0e07f72459f6d783ea0b9762574c33c0} 
+\index{IGameStatus@{IGameStatus}!IsTie@{IsTie}}
+\index{IsTie@{IsTie}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsTie()}{IsTie()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Tie (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game has ended in a tie. 
+
+\begin{DoxyReturn}{Returns}
+True if the game is a tie, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a498d5fe49b7cd1bf761bf6f0f491a9c5}\label{class_i_game_status_a498d5fe49b7cd1bf761bf6f0f491a9c5} 
+\index{IGameStatus@{IGameStatus}!IsTieRequest@{IsTieRequest}}
+\index{IsTieRequest@{IsTieRequest}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsTieRequest()}{IsTieRequest()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Tie\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks the current state of the game in order to decide if a tie request has been made in the game. 
+
+\begin{DoxyReturn}{Returns}
+True if a tie request has been made, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191}\label{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191} 
+\index{IGameStatus@{IGameStatus}!WhiteWon@{WhiteWon}}
+\index{WhiteWon@{WhiteWon}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{WhiteWon()}{WhiteWon()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+White\+Won (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the white player has won the game. 
+
+\begin{DoxyReturn}{Returns}
+True if the white player has won, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame\+Status.\+h\end{DoxyCompactItemize}

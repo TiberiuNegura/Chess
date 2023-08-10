@@ -1,0 +1,32 @@
+\doxysection{IGame\+Listener.\+h}
+\hypertarget{_i_game_listener_8h_source}{}\label{_i_game_listener_8h_source}\index{source/IGameListener.h@{source/IGameListener.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}IPiece.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ }TimeSeconds\ =\ std::chrono::seconds;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_game_listener}{IGameListener}}}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_ab193111ecf63a03be35c4473a45e1837}{OnGameOver}}()\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a8344d73f2e79fb8da3743868d2e78912}{OnCheck}}(std::string\ msg)\ =\ 0;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a6d47495af60302f102f61cec97e64f59}{OnPawnEvolve}}()\ =\ 0;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a6e101905af5d1c4329d6ea443865991a}{OnTieRequest}}()\ =\ 0;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f}{OnMovePiece}}(\mbox{\hyperlink{struct_position}{Position}}\ start,\ \mbox{\hyperlink{struct_position}{Position}}\ end)\ =\ 0;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a079832216771a3224a90505943cebbe4}{OnPieceCapture}}(EType\ pieceType,\ EColor\ pieceColor)\ =\ 0;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a3241499260171d7e41c4692c4352f56a}{OnRestart}}()\ =\ 0;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e}{OnTimerTick}}(TimeSeconds\ whiteTimer,\ TimeSeconds\ blackTimer)\ =\ 0;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_game_listener_aa75029cbc38192375b5fcf175eebca54}{\string~IGameListener}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00073\ \textcolor{keyword}{using\ }ListenerWeakPtr\ =\ std::weak\_ptr<IGameListener>;}
+\DoxyCodeLine{00077\ \textcolor{keyword}{using\ }ListenerList\ =\ std::vector<ListenerWeakPtr>;}
+
+\end{DoxyCode}

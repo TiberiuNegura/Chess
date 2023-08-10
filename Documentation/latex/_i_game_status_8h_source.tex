@@ -1,0 +1,42 @@
+\doxysection{IGame\+Status.\+h}
+\hypertarget{_i_game_status_8h_source}{}\label{_i_game_status_8h_source}\index{source/IGameStatus.h@{source/IGameStatus.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}IPiece.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Position.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ }Move\ =\ std::pair<Position,\ Position>;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{using\ }MovesList\ =\ std::vector<Move>;}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_matrix}{IMatrix}}}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ IPiecePtr\ \mbox{\hyperlink{class_i_matrix_a17998b552fb5e43136fcab60a3ee9a06}{GetElement}}(\mbox{\hyperlink{struct_position}{Position}}\ element)\ =\ 0;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_matrix_a7f8258317231afe3d6de66a25fe93651}{\string~IMatrix}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{using\ }MatrixPtr\ =\ std::shared\_ptr<IMatrix>;}
+\DoxyCodeLine{00045\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_game_status}{IGameStatus}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_game_status_a4992b3711832b57069f293847b37171a}{\string~IGameStatus}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a4e6edce519fd416dcc2abcfb3b4fe651}{IsStarted}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_af431d7d3d4c18f9e097ab09a21aced70}{IsPaused}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ EColor\ \mbox{\hyperlink{class_i_game_status_a6a6a67a198a33c7c59a1d64029e9cfcd}{GetTurn}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{virtual}\ MatrixPtr\ \mbox{\hyperlink{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff}{GetBoard}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{virtual}\ PositionList\ \mbox{\hyperlink{class_i_game_status_ab9c6974a71ede90dd776b41aac3f1fcb}{GetMoves}}(\mbox{\hyperlink{struct_position}{Position}}\ piecePos)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{virtual}\ TypeList\ \mbox{\hyperlink{class_i_game_status_ab507c572dacd34f21841c9002de523f4}{GetMissingPieces}}(EColor\ color)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{virtual}\ MovesList\ \mbox{\hyperlink{class_i_game_status_a0538037b6312e550576e6048d40a2188}{GetMovesList}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a27bf4ed8402c14d57998e1b608b61ee3}{IsPawnEvolving}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a498d5fe49b7cd1bf761bf6f0f491a9c5}{IsTieRequest}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_abcfa26af03e23199a2ca25fc51fdc114}{IsCheck}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a0e07f72459f6d783ea0b9762574c33c0}{IsTie}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_aa89161d53a3d24870c9f866bb856fd5a}{BlackWon}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191}{WhiteWon}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_game_status_a486181105b73affa92cfc76a64277ea3}{IsGameOver}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \};}
+
+\end{DoxyCode}

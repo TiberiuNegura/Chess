@@ -1,0 +1,113 @@
+\doxysection{IGame\+Storage Class Reference}
+\hypertarget{class_i_game_storage}{}\label{class_i_game_storage}\index{IGameStorage@{IGameStorage}}
+
+
+The interface for storing and loading game data using different formats.  
+
+
+
+
+{\ttfamily \#include $<$IGame\+Storage.\+h$>$}
+
+Inheritance diagram for IGame\+Storage\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_game_storage}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{class_i_game_storage_ae4b02f2919f5daacd91518cb86382447}{Save\+PGN}} (const std\+::string \&path) const =0
+\begin{DoxyCompactList}\small\item\em Saves the game data in PGN format to the specified file path. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_storage_a25ea16777417280db925b4c7b17e1393}{Save\+FEN}} (const std\+::string \&path) const =0
+\begin{DoxyCompactList}\small\item\em Saves the game data in FEN format to the specified file path. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_storage_a96dc03663582e9d9078551ab746f89e7}{Load\+From\+Format}} (const std\+::string \&path)=0
+\begin{DoxyCompactList}\small\item\em Loads game data from a specified file path and format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The interface for storing and loading game data using different formats. 
+
+This interface defines methods for saving and loading game data in different formats, such as PGN (Portable Game Notation) and FEN (Forsyth-\/\+Edwards Notation). 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_game_storage_a96dc03663582e9d9078551ab746f89e7}\label{class_i_game_storage_a96dc03663582e9d9078551ab746f89e7} 
+\index{IGameStorage@{IGameStorage}!LoadFromFormat@{LoadFromFormat}}
+\index{LoadFromFormat@{LoadFromFormat}!IGameStorage@{IGameStorage}}
+\doxysubsubsection{\texorpdfstring{LoadFromFormat()}{LoadFromFormat()}}
+{\footnotesize\ttfamily virtual bool IGame\+Storage\+::\+Load\+From\+Format (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Loads game data from a specified file path and format. 
+
+This method loads game data from a file in a specific format (e.\+g., PGN or FEN). Based on the extension (.pgn or .fen) it determines which load method to call and if it is not successful, it reverts back to the current state.
+
+Since it simulates the whole game, it may throw some exceptions if the moves are not valid.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The file path from which to load the data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the data was successfully loaded, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Illegal\+Move\+Exception} & If the move is not allowed by the game rules. \\
+\hline
+{\em Game\+Over\+Exception} & If the state of the game is either black/white won nor a tie. \\
+\hline
+{\em Tie\+Request\+Exception} & If a tie proposal has been made and someone tries to move a piece. \\
+\hline
+{\em Pawn\+Evolve\+Exception} & If a pawn is supposed to be upgraded but someone tries to move other piece. \\
+\hline
+{\em Empty\+Position\+Exception} & If an action is requested on a nullptr piece. \\
+\hline
+{\em Out\+Of\+Bounds\+Exception} & If start position or the destination is not in the \mbox{[}0,7\mbox{]} interval. \\
+\hline
+{\em Check\+Exception} & If a player tries to move a piece while in check that does not solve the check state. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_i_game_storage_a25ea16777417280db925b4c7b17e1393}\label{class_i_game_storage_a25ea16777417280db925b4c7b17e1393} 
+\index{IGameStorage@{IGameStorage}!SaveFEN@{SaveFEN}}
+\index{SaveFEN@{SaveFEN}!IGameStorage@{IGameStorage}}
+\doxysubsubsection{\texorpdfstring{SaveFEN()}{SaveFEN()}}
+{\footnotesize\ttfamily virtual void IGame\+Storage\+::\+Save\+FEN (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Saves the game data in FEN format to the specified file path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The file path where the FEN data will be saved. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_storage_ae4b02f2919f5daacd91518cb86382447}\label{class_i_game_storage_ae4b02f2919f5daacd91518cb86382447} 
+\index{IGameStorage@{IGameStorage}!SavePGN@{SavePGN}}
+\index{SavePGN@{SavePGN}!IGameStorage@{IGameStorage}}
+\doxysubsubsection{\texorpdfstring{SavePGN()}{SavePGN()}}
+{\footnotesize\ttfamily virtual bool IGame\+Storage\+::\+Save\+PGN (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Saves the game data in PGN format to the specified file path. 
+
+It makes a call to the Save method in a PGN class that handles the file operations such as open, validation, write and close. It also uses the Compute\+Moves\+Pgn to put it in the desired format.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The file path where the PGN data will be saved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the data was successfully saved, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame\+Storage.\+h\end{DoxyCompactItemize}

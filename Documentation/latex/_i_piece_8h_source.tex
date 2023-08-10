@@ -1,0 +1,46 @@
+\doxysection{IPiece.\+h}
+\hypertarget{_i_piece_8h_source}{}\label{_i_piece_8h_source}\index{source/IPiece.h@{source/IPiece.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ }IPiecePtr\ =\ std::shared\_ptr<class\ IPiece>;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{enum\ class}\ EColor\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ WHITE,\ }
+\DoxyCodeLine{00017\ \ \ \ \ BLACK,\ }
+\DoxyCodeLine{00018\ \ \ \ \ NONE\ }
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{enum\ class}\ EType\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ PAWN,\ \ \ }
+\DoxyCodeLine{00026\ \ \ \ \ ROOK,\ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ BISHOP,\ }
+\DoxyCodeLine{00028\ \ \ \ \ HORSE,\ \ }
+\DoxyCodeLine{00029\ \ \ \ \ QUEEN,\ \ }
+\DoxyCodeLine{00030\ \ \ \ \ KING,\ \ \ }
+\DoxyCodeLine{00031\ \ \ \ \ EMPTY\ \ \ }
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{using\ }TypeList\ =\ std::vector<EType>;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_piece}{IPiece}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{class_i_piece_ae4373bc60c620fd4a87a81e32010f488}{GetName}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{virtual}\ EColor\ \mbox{\hyperlink{class_i_piece_a241ac98a4cc8f67cd80232a5429c1883}{GetColor}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ EType\ \mbox{\hyperlink{class_i_piece_a14a18ec658edfcac872eb279f672b172}{GetType}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_piece_aca1cb9512c50cd1c59d2705723f5f7d4}{Is}}(EType\ type,\ EColor\ color)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_piece_a23bd5fa1f9b41e526c805ef23b0ad0e3}{Is}}(EType\ type)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_piece_af8a8eb8e22bcd860fa0715a380870844}{Is}}(EColor\ color)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_piece_a328cd32b3ac6b9b69ebbfe9f59016207}{Is}}(\textcolor{keyword}{const}\ std::vector<EType>\&\ typeList)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_piece_a59d0789487cc116f135a9110d805fe3f}{\string~IPiece}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00100\ \};}
+\DoxyCodeLine{00101\ }
+
+\end{DoxyCode}

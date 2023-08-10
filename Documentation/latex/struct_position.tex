@@ -1,0 +1,136 @@
+\doxysection{Position Struct Reference}
+\hypertarget{struct_position}{}\label{struct_position}\index{Position@{Position}}
+
+
+Represents a two-\/dimensional position.  
+
+
+
+
+{\ttfamily \#include $<$Position.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_position_aeaa3f8c527d3536d98981faa1d5bdbca}{Position}} (int x=-\/1, int y=-\/1)
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{struct_position}{Position} object with specified coordinates. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_position_a0035b8b376e447f5f8553dbe779a6693}{Position}} (double x, double y)
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{struct_position}{Position} object with specified floating-\/point coordinates. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_position_acf13e7e45c7c07a67c2adf2f7e1dcc5f}{operator==}} (const \mbox{\hyperlink{struct_position}{Position}} \&other) const
+\begin{DoxyCompactList}\small\item\em Overloads the == operator (checks if the current position is equal to another position). \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_position_ae4d491be71bc11896f864835187e860d}{operator!=}} (const \mbox{\hyperlink{struct_position}{Position}} \&other) const
+\begin{DoxyCompactList}\small\item\em Overloads the != operator (checks if the current position is not equal to another position). \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_position_a6d8dd3a8d081a0047b6d37bc31ece7df}{Is\+Valid}} () const
+\begin{DoxyCompactList}\small\item\em Checks if the position is valid (non-\/negative coordinates). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_position_a1928093277641559869cae2a45a99891}\label{struct_position_a1928093277641559869cae2a45a99891} 
+int {\bfseries first}
+\begin{DoxyCompactList}\small\item\em The first coordinate (e.\+g., x-\/coordinate). \end{DoxyCompactList}\item 
+\Hypertarget{struct_position_a14bc4abdeb2c04c458498ae32d9047ad}\label{struct_position_a14bc4abdeb2c04c458498ae32d9047ad} 
+int {\bfseries second}
+\begin{DoxyCompactList}\small\item\em The second coordinate (e.\+g., y-\/coordinate). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_position_afe28353f0327807bf2177adfd122604b}\label{struct_position_afe28353f0327807bf2177adfd122604b} 
+static const \mbox{\hyperlink{struct_position}{Position}} {\bfseries EMPTY}
+\begin{DoxyCompactList}\small\item\em Represents an empty (invalid) \doxylink{struct_position}{Position}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a two-\/dimensional position. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{struct_position_aeaa3f8c527d3536d98981faa1d5bdbca}\label{struct_position_aeaa3f8c527d3536d98981faa1d5bdbca} 
+\index{Position@{Position}!Position@{Position}}
+\index{Position@{Position}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{Position()}{Position()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Position\+::\+Position (\begin{DoxyParamCaption}\item[{int}]{x = {\ttfamily -\/1},  }\item[{int}]{y = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+
+
+Constructs a \doxylink{struct_position}{Position} object with specified coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The first coordinate. \\
+\hline
+{\em y} & The second coordinate. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{struct_position_a0035b8b376e447f5f8553dbe779a6693}\label{struct_position_a0035b8b376e447f5f8553dbe779a6693} 
+\index{Position@{Position}!Position@{Position}}
+\index{Position@{Position}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{Position()}{Position()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Position\+::\+Position (\begin{DoxyParamCaption}\item[{double}]{x,  }\item[{double}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructs a \doxylink{struct_position}{Position} object with specified floating-\/point coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The first coordinate as a double. \\
+\hline
+{\em y} & The second coordinate as a double. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_position_a6d8dd3a8d081a0047b6d37bc31ece7df}\label{struct_position_a6d8dd3a8d081a0047b6d37bc31ece7df} 
+\index{Position@{Position}!IsValid@{IsValid}}
+\index{IsValid@{IsValid}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{IsValid()}{IsValid()}}
+{\footnotesize\ttfamily bool Position\+::\+Is\+Valid (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Checks if the position is valid (non-\/negative coordinates). 
+
+\begin{DoxyReturn}{Returns}
+True if the position is valid, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{struct_position_ae4d491be71bc11896f864835187e860d}\label{struct_position_ae4d491be71bc11896f864835187e860d} 
+\index{Position@{Position}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily bool Position\+::operator!= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_position}{Position}} \&}]{other }\end{DoxyParamCaption}) const}
+
+
+
+Overloads the != operator (checks if the current position is not equal to another position). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The other \doxylink{struct_position}{Position} to compare with. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the positions are not equal, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{struct_position_acf13e7e45c7c07a67c2adf2f7e1dcc5f}\label{struct_position_acf13e7e45c7c07a67c2adf2f7e1dcc5f} 
+\index{Position@{Position}!operator==@{operator==}}
+\index{operator==@{operator==}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool Position\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_position}{Position}} \&}]{other }\end{DoxyParamCaption}) const}
+
+
+
+Overloads the == operator (checks if the current position is equal to another position). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The other \doxylink{struct_position}{Position} to compare with. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the positions are equal, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/Position.\+h\end{DoxyCompactItemize}

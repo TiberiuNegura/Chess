@@ -1,0 +1,93 @@
+\doxysection{IGame\+Controls Class Reference}
+\hypertarget{class_i_game_controls}{}\label{class_i_game_controls}\index{IGameControls@{IGameControls}}
+
+
+The interface for controlling the state of a game.  
+
+
+
+
+{\ttfamily \#include $<$IGame\+Controls.\+h$>$}
+
+Inheritance diagram for IGame\+Controls\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_game_controls}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a2d0bdb993e80a9a7653836bb5687e4af}{Start}} ()=0
+\begin{DoxyCompactList}\small\item\em Starts the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a3560eb551917531b8ccae309f0e66353}{Pause}} ()=0
+\begin{DoxyCompactList}\small\item\em Pauses the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a6cc009a0fc0c89882814938064c04bf4}{Resume}} ()=0
+\begin{DoxyCompactList}\small\item\em Resumes the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_aecc1513929c5ba53919b6b3f9110d427}{Stop}} ()=0
+\begin{DoxyCompactList}\small\item\em Stops the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a2669d22e71ea4de1d9f2cbcd391e70d3}{Restart}} ()=0
+\begin{DoxyCompactList}\small\item\em Restarts the game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The interface for controlling the state of a game. 
+
+This interface defines methods for starting, pausing, resuming, stopping, and restarting a game. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_game_controls_a3560eb551917531b8ccae309f0e66353}\label{class_i_game_controls_a3560eb551917531b8ccae309f0e66353} 
+\index{IGameControls@{IGameControls}!Pause@{Pause}}
+\index{Pause@{Pause}!IGameControls@{IGameControls}}
+\doxysubsubsection{\texorpdfstring{Pause()}{Pause()}}
+{\footnotesize\ttfamily virtual void IGame\+Controls\+::\+Pause (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Pauses the game. 
+
+This method pauses the game, temporarily halting any ongoing gameplay. \Hypertarget{class_i_game_controls_a2669d22e71ea4de1d9f2cbcd391e70d3}\label{class_i_game_controls_a2669d22e71ea4de1d9f2cbcd391e70d3} 
+\index{IGameControls@{IGameControls}!Restart@{Restart}}
+\index{Restart@{Restart}!IGameControls@{IGameControls}}
+\doxysubsubsection{\texorpdfstring{Restart()}{Restart()}}
+{\footnotesize\ttfamily virtual void IGame\+Controls\+::\+Restart (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Restarts the game. 
+
+This method restarts the game, resetting it to its initial state. \Hypertarget{class_i_game_controls_a6cc009a0fc0c89882814938064c04bf4}\label{class_i_game_controls_a6cc009a0fc0c89882814938064c04bf4} 
+\index{IGameControls@{IGameControls}!Resume@{Resume}}
+\index{Resume@{Resume}!IGameControls@{IGameControls}}
+\doxysubsubsection{\texorpdfstring{Resume()}{Resume()}}
+{\footnotesize\ttfamily virtual void IGame\+Controls\+::\+Resume (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Resumes the game. 
+
+This method resumes the game from a paused state, allowing gameplay to continue. \Hypertarget{class_i_game_controls_a2d0bdb993e80a9a7653836bb5687e4af}\label{class_i_game_controls_a2d0bdb993e80a9a7653836bb5687e4af} 
+\index{IGameControls@{IGameControls}!Start@{Start}}
+\index{Start@{Start}!IGameControls@{IGameControls}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily virtual void IGame\+Controls\+::\+Start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Starts the game. 
+
+This method initiates the game and transitions it into an active state. \Hypertarget{class_i_game_controls_aecc1513929c5ba53919b6b3f9110d427}\label{class_i_game_controls_aecc1513929c5ba53919b6b3f9110d427} 
+\index{IGameControls@{IGameControls}!Stop@{Stop}}
+\index{Stop@{Stop}!IGameControls@{IGameControls}}
+\doxysubsubsection{\texorpdfstring{Stop()}{Stop()}}
+{\footnotesize\ttfamily virtual void IGame\+Controls\+::\+Stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Stops the game. 
+
+This method stops the game and brings it to a complete halt. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame\+Controls.\+h\end{DoxyCompactItemize}

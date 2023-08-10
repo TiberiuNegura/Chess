@@ -1,0 +1,222 @@
+\doxysection{IGame Class Reference}
+\hypertarget{class_i_game}{}\label{class_i_game}\index{IGame@{IGame}}
+
+
+The base interface for a chess game.  
+
+
+
+
+{\ttfamily \#include $<$IGame.\+h$>$}
+
+Inheritance diagram for IGame\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_game}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_i_game_afad925595fce46cf6eaa67da21820783}{Add\+Listener}} (Listener\+Weak\+Ptr listener)=0
+\begin{DoxyCompactList}\small\item\em Adds an observer to the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_adc4f440bc579eb882a3e454594a51865}{Remove\+Listener}} (\mbox{\hyperlink{class_i_game_listener}{IGame\+Listener}} \texorpdfstring{$\ast$}{*}listener)=0
+\begin{DoxyCompactList}\small\item\em Removes an observer from the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_a3d7fae360a7076f42a3f42dbd260aef9}{Move\+Piece}} (\mbox{\hyperlink{struct_position}{Position}} start, \mbox{\hyperlink{struct_position}{Position}} destination)=0
+\begin{DoxyCompactList}\small\item\em Moves a chess piece from the start position to the destination position. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_game_af9240c8dd27ad28d293dbda54422f0b5}\label{class_i_game_af9240c8dd27ad28d293dbda54422f0b5} 
+virtual void {\bfseries Make\+Tie\+Request} ()=0
+\begin{DoxyCompactList}\small\item\em Initiates a tie request in the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_ac75fd3d9e313caff50039688ebaba270}{Tie\+Request\+Response}} (bool answer)=0
+\begin{DoxyCompactList}\small\item\em Responds to a tie request. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_a86f35a91f30963d0fec2bd8709cbcb6d}{Evolve\+Pawn}} (EType piece\+Type)=0
+\begin{DoxyCompactList}\small\item\em Evolves a pawn to a specified piece type. \end{DoxyCompactList}\item 
+virtual const \mbox{\hyperlink{class_i_game_status}{IGame\+Status}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_i_game_a196b29f70612d2ec6a3d26f11b8e6f0d}{Status}} () const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the current status of the chess game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_a10afae10facd8292d30f2ba4dbb9e4c4}{Preview\+Past\+Config}} (int move\+Index)=0
+\begin{DoxyCompactList}\small\item\em Previews the game configuration at a specific move index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_i_game_controls}{IGame\+Controls}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a2d0bdb993e80a9a7653836bb5687e4af}{Start}} ()=0
+\begin{DoxyCompactList}\small\item\em Starts the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a3560eb551917531b8ccae309f0e66353}{Pause}} ()=0
+\begin{DoxyCompactList}\small\item\em Pauses the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a6cc009a0fc0c89882814938064c04bf4}{Resume}} ()=0
+\begin{DoxyCompactList}\small\item\em Resumes the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_aecc1513929c5ba53919b6b3f9110d427}{Stop}} ()=0
+\begin{DoxyCompactList}\small\item\em Stops the game. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_controls_a2669d22e71ea4de1d9f2cbcd391e70d3}{Restart}} ()=0
+\begin{DoxyCompactList}\small\item\em Restarts the game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_i_game_storage}{IGame\+Storage}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{class_i_game_storage_ae4b02f2919f5daacd91518cb86382447}{Save\+PGN}} (const std\+::string \&path) const =0
+\begin{DoxyCompactList}\small\item\em Saves the game data in PGN format to the specified file path. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_storage_a25ea16777417280db925b4c7b17e1393}{Save\+FEN}} (const std\+::string \&path) const =0
+\begin{DoxyCompactList}\small\item\em Saves the game data in FEN format to the specified file path. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_storage_a96dc03663582e9d9078551ab746f89e7}{Load\+From\+Format}} (const std\+::string \&path)=0
+\begin{DoxyCompactList}\small\item\em Loads game data from a specified file path and format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static IGame\+Ptr \mbox{\hyperlink{class_i_game_abc213545b44cb9ca904c4444a1607a09}{Produce}} (int timer\+Seconds=2000)
+\begin{DoxyCompactList}\small\item\em Creates an instance of the chess game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The base interface for a chess game. 
+
+This interface defines the core functionality and methods for interacting with a chess game. It combines aspects related to game controls, storage, and observer/listener management. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_game_afad925595fce46cf6eaa67da21820783}\label{class_i_game_afad925595fce46cf6eaa67da21820783} 
+\index{IGame@{IGame}!AddListener@{AddListener}}
+\index{AddListener@{AddListener}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{AddListener()}{AddListener()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Add\+Listener (\begin{DoxyParamCaption}\item[{Listener\+Weak\+Ptr}]{listener }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Adds an observer to the game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em listener} & A weak pointer to the listener to be added. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_a86f35a91f30963d0fec2bd8709cbcb6d}\label{class_i_game_a86f35a91f30963d0fec2bd8709cbcb6d} 
+\index{IGame@{IGame}!EvolvePawn@{EvolvePawn}}
+\index{EvolvePawn@{EvolvePawn}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{EvolvePawn()}{EvolvePawn()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Evolve\+Pawn (\begin{DoxyParamCaption}\item[{EType}]{piece\+Type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Evolves a pawn to a specified piece type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece\+Type} & The type to which the pawn should be evolved. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Piece\+Not\+Found\+Exception} & If the pawn cannot found. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_i_game_a3d7fae360a7076f42a3f42dbd260aef9}\label{class_i_game_a3d7fae360a7076f42a3f42dbd260aef9} 
+\index{IGame@{IGame}!MovePiece@{MovePiece}}
+\index{MovePiece@{MovePiece}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{MovePiece()}{MovePiece()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Move\+Piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{start,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{destination }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Moves a chess piece from the start position to the destination position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start} & The starting position of the piece. \\
+\hline
+{\em destination} & The destination position for the piece.\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Illegal\+Move\+Exception} & If the move is not allowed by the game rules. \\
+\hline
+{\em Game\+Over\+Exception} & If the state of the game is either black/white won nor a tie. \\
+\hline
+{\em Tie\+Request\+Exception} & If a tie proposal has been made and someone tries to move a piece. \\
+\hline
+{\em Pawn\+Evolve\+Exception} & If a pawn is supposed to be upgraded but someone tries to move other piece. \\
+\hline
+{\em Empty\+Position\+Exception} & If an action is requested on a nullptr piece. \\
+\hline
+{\em Out\+Of\+Bounds\+Exception} & If start position or the destination is not in the \mbox{[}0,7\mbox{]} interval. \\
+\hline
+{\em Check\+Exception} & If a player tries to move a piece while in check that does not solve the check state. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_i_game_a10afae10facd8292d30f2ba4dbb9e4c4}\label{class_i_game_a10afae10facd8292d30f2ba4dbb9e4c4} 
+\index{IGame@{IGame}!PreviewPastConfig@{PreviewPastConfig}}
+\index{PreviewPastConfig@{PreviewPastConfig}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{PreviewPastConfig()}{PreviewPastConfig()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Preview\+Past\+Config (\begin{DoxyParamCaption}\item[{int}]{move\+Index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Previews the game configuration at a specific move index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em move\+Index} & The index of the move for which to preview the configuration. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_abc213545b44cb9ca904c4444a1607a09}\label{class_i_game_abc213545b44cb9ca904c4444a1607a09} 
+\index{IGame@{IGame}!Produce@{Produce}}
+\index{Produce@{Produce}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{Produce()}{Produce()}}
+{\footnotesize\ttfamily static IGame\+Ptr IGame\+::\+Produce (\begin{DoxyParamCaption}\item[{int}]{timer\+Seconds = {\ttfamily 2000} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Creates an instance of the chess game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em timer\+Seconds} & The initial time limit for the game in seconds (optional). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the created \doxylink{class_i_game}{IGame} instance. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_adc4f440bc579eb882a3e454594a51865}\label{class_i_game_adc4f440bc579eb882a3e454594a51865} 
+\index{IGame@{IGame}!RemoveListener@{RemoveListener}}
+\index{RemoveListener@{RemoveListener}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{RemoveListener()}{RemoveListener()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Remove\+Listener (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_i_game_listener}{IGame\+Listener}} \texorpdfstring{$\ast$}{*}}]{listener }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Removes an observer from the game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em listener} & A pointer to the listener to be removed. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_a196b29f70612d2ec6a3d26f11b8e6f0d}\label{class_i_game_a196b29f70612d2ec6a3d26f11b8e6f0d} 
+\index{IGame@{IGame}!Status@{Status}}
+\index{Status@{Status}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{Status()}{Status()}}
+{\footnotesize\ttfamily virtual const \mbox{\hyperlink{class_i_game_status}{IGame\+Status}} \texorpdfstring{$\ast$}{*} IGame\+::\+Status (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the current status of the chess game. 
+
+\begin{DoxyReturn}{Returns}
+A const pointer to the \doxylink{class_i_game_status}{IGame\+Status} object representing the game status. 
+\end{DoxyReturn}
+\Hypertarget{class_i_game_ac75fd3d9e313caff50039688ebaba270}\label{class_i_game_ac75fd3d9e313caff50039688ebaba270} 
+\index{IGame@{IGame}!TieRequestResponse@{TieRequestResponse}}
+\index{TieRequestResponse@{TieRequestResponse}!IGame@{IGame}}
+\doxysubsubsection{\texorpdfstring{TieRequestResponse()}{TieRequestResponse()}}
+{\footnotesize\ttfamily virtual void IGame\+::\+Tie\+Request\+Response (\begin{DoxyParamCaption}\item[{bool}]{answer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Responds to a tie request. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em answer} & The response to the tie request. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame.\+h\end{DoxyCompactItemize}

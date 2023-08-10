@@ -1,0 +1,50 @@
+\doxysection{IMatrix Class Reference}
+\hypertarget{class_i_matrix}{}\label{class_i_matrix}\index{IMatrix@{IMatrix}}
+
+
+The interface for accessing elements of a matrix, such as a chessboard.  
+
+
+
+
+{\ttfamily \#include $<$IGame\+Status.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual IPiece\+Ptr \mbox{\hyperlink{class_i_matrix_a17998b552fb5e43136fcab60a3ee9a06}{Get\+Element}} (\mbox{\hyperlink{struct_position}{Position}} element)=0
+\begin{DoxyCompactList}\small\item\em Retrieves the element (piece) at the specified position. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_matrix_a7f8258317231afe3d6de66a25fe93651}\label{class_i_matrix_a7f8258317231afe3d6de66a25fe93651} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IMatrix} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor to ensure proper cleanup in derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The interface for accessing elements of a matrix, such as a chessboard. 
+
+This interface provides methods to retrieve elements (pieces) from a matrix at specific positions. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_matrix_a17998b552fb5e43136fcab60a3ee9a06}\label{class_i_matrix_a17998b552fb5e43136fcab60a3ee9a06} 
+\index{IMatrix@{IMatrix}!GetElement@{GetElement}}
+\index{GetElement@{GetElement}!IMatrix@{IMatrix}}
+\doxysubsubsection{\texorpdfstring{GetElement()}{GetElement()}}
+{\footnotesize\ttfamily virtual IPiece\+Ptr IMatrix\+::\+Get\+Element (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{element }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the element (piece) at the specified position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & The position of the element to retrieve. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the retrieved element (piece). 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame\+Status.\+h\end{DoxyCompactItemize}

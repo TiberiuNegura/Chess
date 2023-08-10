@@ -1,0 +1,116 @@
+\doxysection{IGame\+Listener Class Reference}
+\hypertarget{class_i_game_listener}{}\label{class_i_game_listener}\index{IGameListener@{IGameListener}}
+
+
+The interface for receiving game-\/related events and notifications.  
+
+
+
+
+{\ttfamily \#include $<$IGame\+Listener.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_game_listener_ab193111ecf63a03be35c4473a45e1837}\label{class_i_game_listener_ab193111ecf63a03be35c4473a45e1837} 
+virtual void {\bfseries On\+Game\+Over} ()=0
+\begin{DoxyCompactList}\small\item\em Called when the game is over. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_listener_a8344d73f2e79fb8da3743868d2e78912}{On\+Check}} (std\+::string msg)=0
+\begin{DoxyCompactList}\small\item\em Called when a check condition is detected. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_game_listener_a6d47495af60302f102f61cec97e64f59}\label{class_i_game_listener_a6d47495af60302f102f61cec97e64f59} 
+virtual void {\bfseries On\+Pawn\+Evolve} ()=0
+\begin{DoxyCompactList}\small\item\em Called when a pawn is eligible for evolution. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_game_listener_a6e101905af5d1c4329d6ea443865991a}\label{class_i_game_listener_a6e101905af5d1c4329d6ea443865991a} 
+virtual void {\bfseries On\+Tie\+Request} ()=0
+\begin{DoxyCompactList}\small\item\em Called when a tie request is made. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f}{On\+Move\+Piece}} (\mbox{\hyperlink{struct_position}{Position}} start, \mbox{\hyperlink{struct_position}{Position}} end)=0
+\begin{DoxyCompactList}\small\item\em Called when a chess piece is moved on the board. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_listener_a079832216771a3224a90505943cebbe4}{On\+Piece\+Capture}} (EType piece\+Type, EColor piece\+Color)=0
+\begin{DoxyCompactList}\small\item\em Called when a chess piece is captured. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_game_listener_a3241499260171d7e41c4692c4352f56a}\label{class_i_game_listener_a3241499260171d7e41c4692c4352f56a} 
+virtual void {\bfseries On\+Restart} ()=0
+\begin{DoxyCompactList}\small\item\em Called when the game is restarted. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e}{On\+Timer\+Tick}} (Time\+Seconds white\+Timer, Time\+Seconds black\+Timer)=0
+\begin{DoxyCompactList}\small\item\em Called when a timer tick occurs. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_game_listener_aa75029cbc38192375b5fcf175eebca54}\label{class_i_game_listener_aa75029cbc38192375b5fcf175eebca54} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IGame\+Listener} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor to ensure proper cleanup in derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The interface for receiving game-\/related events and notifications. 
+
+This interface defines methods to be implemented by classes that wish to receive notifications about various events that occur during a game, such as game over, check, pawn evolution, tie requests, piece movement, captures, restarts, and timer ticks. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_game_listener_a8344d73f2e79fb8da3743868d2e78912}\label{class_i_game_listener_a8344d73f2e79fb8da3743868d2e78912} 
+\index{IGameListener@{IGameListener}!OnCheck@{OnCheck}}
+\index{OnCheck@{OnCheck}!IGameListener@{IGameListener}}
+\doxysubsubsection{\texorpdfstring{OnCheck()}{OnCheck()}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Check (\begin{DoxyParamCaption}\item[{std\+::string}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a check condition is detected. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & A message providing additional information about the check. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f}\label{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f} 
+\index{IGameListener@{IGameListener}!OnMovePiece@{OnMovePiece}}
+\index{OnMovePiece@{OnMovePiece}!IGameListener@{IGameListener}}
+\doxysubsubsection{\texorpdfstring{OnMovePiece()}{OnMovePiece()}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Move\+Piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{start,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a chess piece is moved on the board. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start} & The starting position of the moved piece. \\
+\hline
+{\em end} & The destination position of the moved piece. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_listener_a079832216771a3224a90505943cebbe4}\label{class_i_game_listener_a079832216771a3224a90505943cebbe4} 
+\index{IGameListener@{IGameListener}!OnPieceCapture@{OnPieceCapture}}
+\index{OnPieceCapture@{OnPieceCapture}!IGameListener@{IGameListener}}
+\doxysubsubsection{\texorpdfstring{OnPieceCapture()}{OnPieceCapture()}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Piece\+Capture (\begin{DoxyParamCaption}\item[{EType}]{piece\+Type,  }\item[{EColor}]{piece\+Color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a chess piece is captured. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece\+Type} & The type of the captured piece. \\
+\hline
+{\em piece\+Color} & The color of the captured piece. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e}\label{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e} 
+\index{IGameListener@{IGameListener}!OnTimerTick@{OnTimerTick}}
+\index{OnTimerTick@{OnTimerTick}!IGameListener@{IGameListener}}
+\doxysubsubsection{\texorpdfstring{OnTimerTick()}{OnTimerTick()}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Timer\+Tick (\begin{DoxyParamCaption}\item[{Time\+Seconds}]{white\+Timer,  }\item[{Time\+Seconds}]{black\+Timer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a timer tick occurs. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em white\+Timer} & The remaining time for the white player. \\
+\hline
+{\em black\+Timer} & The remaining time for the black player. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/IGame\+Listener.\+h\end{DoxyCompactItemize}
