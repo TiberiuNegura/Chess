@@ -146,11 +146,35 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	profileName->setText(name);
 	profileName->setStyleSheet("color: white; font-size: 18px; font-weight: bold;");
 
-	if (color == EColor::BLACK)
-		m_blackPieces = new QListWidget();
-	else
-		m_whitePieces = new QListWidget();
 
+	color == EColor::BLACK ? m_BlackTimer = new QLabel("00:00:00") : m_WhiteTimer = new QLabel("00:00:00");
+	QLabel* playerTimer;
+	playerTimer = color == EColor::BLACK ? m_BlackTimer : m_WhiteTimer;
+	if (color == EColor::BLACK)
+		playerTimer->setStyleSheet
+		(
+			"font-family: Segoe UI;"
+			"color: white;"
+			"font-size: 25px;"
+			"background-color: #262421;"
+			"padding-left: 30px;"
+			"font-weight: bold;"
+			"border-radius: 5px;"
+		);
+	else 
+		playerTimer->setStyleSheet
+		(
+			"font-family: Segoe UI;"
+			"color: black;"
+			"font-size: 25px;"
+			"background-color: #ffffff;"
+			"padding-left: 30px;"
+			"font-weight: bold;"
+			"border-radius: 5px;"
+		);
+
+
+	color == EColor::BLACK ? m_blackPieces = new QListWidget() : m_whitePieces = new QListWidget();
 	QListWidget* playerPieces;
 	color == EColor::BLACK ? playerPieces = m_blackPieces : playerPieces = m_whitePieces;
 
@@ -164,6 +188,7 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	playerGrid->addWidget(profilePicture, 0, 0, 2, 1);
 	playerGrid->addWidget(profileName, 0, 1, Qt::AlignTop);
 	playerGrid->addWidget(playerPieces, 1, 1, Qt::AlignCenter);
+	playerGrid->addWidget(playerTimer, 0, 2, 2, 1, Qt::AlignRight);
 
 
 
@@ -183,7 +208,7 @@ QPushButton& SetIcon(QPushButton* button, QString path)
 	button->setContentsMargins(0, 0, 0, 0);
 	button->setIcon(ButtonIcon);
 	button->setIconSize({40, 40});
-	button->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px;");
+	button->setStyleSheet("border: none; padding: 7px 7px;");
 
 	return *button;
 }
@@ -262,23 +287,10 @@ QWidget* ChessUIQt::InitializeTimers()
 		"font-family: Segoe UI;"
 	);
 
-	
 
+	m_pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px; font-size: 22px; width: 80px; border-top-left-radius: 15px; border-top-right-radius: 15px;");
 
-	m_BlackTimer = new QLabel("00:00");
-	m_BlackTimer->setStyleSheet("color: white; font-size: 25px; background-color: #21201d; border-top-left-radius: 15px;");
-	m_BlackTimer->setAlignment(Qt::AlignCenter);
-
-	m_WhiteTimer = new QLabel("00:00");
-	m_WhiteTimer->setStyleSheet("color: white; font-size: 25px; background-color: #21201d; border-top-right-radius: 15px;");
-	m_WhiteTimer->setAlignment(Qt::AlignCenter);
-	
-
-	m_pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px; font-size: 22px; width: 80px;");
-
-	timerGrid->addWidget(m_BlackTimer, 0, 1, 1, 2);
 	timerGrid->addWidget(m_pauseTimerBtn, 0, 3);
-	timerGrid->addWidget(m_WhiteTimer, 0, 4, 1, 2);
 
 
 
@@ -596,14 +608,15 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	if (!m_game->Status()->IsStarted())
+	auto status = m_game->Status();
+	if (!status->IsStarted())
 	{
 		m_game->Start();
 		m_pauseTimerBtn->setText("PAUSE");
 		return;
 	}
 
-	if (m_game->Status()->IsPaused())
+	if (status->IsPaused())
 	{
 		m_game->Resume();
 		m_pauseTimerBtn->setText("PAUSE");
@@ -947,23 +960,27 @@ void ChessUIQt::SetGame(IGamePtr game)
 	m_game = game;
 }
 
-static QString ConvertTime(int seconds)
+static QString ConvertTime(milliseconds time)
 {
-	QString timeString = "";
+	
+	int minutes = time.count() / 60000;  // 1 minute = 60000 milliseconds
+	time %= 60000;
 
-	timeString.push_back(QString::number(seconds/60));
-	timeString.push_back(":");
-	if (seconds % 60 < 10)
-		timeString.push_back("0");
-	timeString.push_back(QString::number(seconds%60));
+	int seconds = time.count() / 1000;   // 1 second = 1000 milliseconds
+	time %= 1000;
+
+	int milliseconds = time.count();
+
+	QString timeString = QTime(0, minutes, seconds, milliseconds).toString("mm:ss.zzz");
+	timeString.removeLast();
 
 	return timeString;
 }
 
-void ChessUIQt::OnTimerTick(TimeSeconds whiteTimer, TimeSeconds blackTimer)
+void ChessUIQt::OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer)
 {
-	m_WhiteTimer->setText(ConvertTime(whiteTimer.count()));
-	m_BlackTimer->setText(ConvertTime(blackTimer.count()));
+	m_WhiteTimer->setText(ConvertTime(whiteTimer));
+	m_BlackTimer->setText(ConvertTime(blackTimer));
 	qDebug() << whiteTimer.count() << " " << blackTimer.count();
 }
 

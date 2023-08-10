@@ -21,13 +21,10 @@ IGamePtr IGame::Produce(int timerSeconds)
 // Constructor
 Game::Game(int timerTime)
 	: m_turn(EColor::WHITE)
-	, m_currentState(EGameState::Paused)
-	, m_lastState(EGameState::Paused)
+	, m_currentState(EGameState::NotStarted)
+	, m_lastState(EGameState::NotStarted)
 	, m_bEnableNotifications(true)
-	, m_timerTime(timerTime)
-	, m_whiteTimer(timerTime)
-	, m_blackTimer(timerTime)
-	, m_roundTime(0s)
+	, m_timer(timerTime)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -38,10 +35,6 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	, m_currentState(state)
 	, m_lastState(state)
 	, m_bEnableNotifications(true)
-	, m_blackTimer(0s)
-	, m_whiteTimer(0s)
-	, m_timerTime(0s)
-	, m_roundTime(0s)
 {
 
 }
@@ -59,7 +52,7 @@ bool Game::LoadFromFormat(const std::string& path)
 
 		if (FileUtils::HasAnyExtension(path, "pgn"))
 		{
-			m_currentState = EGameState::Playing;
+			UpdateState(EGameState::Playing);
 			if (m_pgn.Load(path))
 				LoadFromPGN(m_pgn);
 		}
@@ -177,19 +170,20 @@ void Game::PreviewPastConfig(int moveIndex)
 
 void Game::Start()
 {
-	if (!m_timer.HadStarted() && m_blackTimer != 0s && m_whiteTimer != 0s)
+	m_currentState = EGameState::Playing;
+
+	if (!m_timer.IsRunning() && m_timer.IsEnabled())
 	{
 		m_timer.AddListener(shared_from_this());
 		m_timer.Start();
 	}
-	m_currentState = EGameState::Playing;
 }
 
 void Game::Pause()
 {
 	m_lastState = m_currentState;
 	m_timer.Pause();
-	m_currentState = EGameState::Paused;
+	UpdateState(EGameState::Paused);
 }
 
 void Game::Resume()
@@ -205,7 +199,8 @@ void Game::Stop()
 
 bool Game::IsStarted() const
 {
-	return m_timer.HadStarted();
+	return m_currentState != EGameState::NotStarted;
+		
 }
 
 bool Game::IsPaused() const
@@ -321,6 +316,9 @@ void Game::MovePiece(Position start, Position destination)
 void Game::UpdateTurn()
 {
 	m_turn = (m_turn == EColor::WHITE ? EColor::BLACK : EColor::WHITE);
+
+	if (m_timer.IsEnabled())
+		m_timer.UpdateTurn();
 }
 
 void Game::UpdateState(EGameState state)
@@ -359,10 +357,9 @@ EGameState Game::GetState() const
 
 PositionList Game::GetMoves(Position piecePos) const
 {
-	if (IsGameOver())
+	if (IsGameOver() || IsPaused() || !IsStarted())
 		return PositionList();
-	else if (IsPaused())
-		return PositionList();
+
 	return m_board.GetMoves(piecePos, m_turn);
 }
 
@@ -515,17 +512,15 @@ void Game::Restart()
 	m_board.Reset();
 	m_board.Init();
 	m_turn = EColor::WHITE;
-	m_currentState = EGameState::Paused;
+	m_currentState = EGameState::NotStarted;
 	m_whiteMissing.clear();
 	m_blackMissing.clear();
 	m_boardConfigs.clear();
 	m_pgn.Clear();
 	m_gameMoves.clear();
 	
-	m_timer.Stop();
-
-	m_blackTimer = m_timerTime;
-	m_whiteTimer = m_timerTime;
+	//m_timer.Stop();
+	m_timer.Restart();
 
 	Notify(EResponse::Restart);
 }
@@ -594,27 +589,31 @@ void Game::Notify(EType pieceType, EColor pieceColor)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
 } 
 
-void Game::Notify(TimeSeconds whiteTimer, TimeSeconds blackTimer)
+
+void Game::Notify(milliseconds whiteRemaining, milliseconds blackRemaining)
 {
 	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
-		listener.lock()->OnTimerTick(whiteTimer, blackTimer);
+		listener.lock()->OnTimerTick(whiteRemaining, blackRemaining);
 }
 
-
-void Game::OnSecondPass()
+void Game::OnTimerTick(milliseconds whiteRemaining, milliseconds blackRemaining)
 {
-	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
-	m_roundTime++;
-	Notify(m_whiteTimer, m_blackTimer);
-	if (m_blackTimer == 0s)
+	if (blackRemaining <= 0s) 
+		blackRemaining = 0s;
+
+	if (whiteRemaining <= 0s) 
+		whiteRemaining = 0s; // notify only positive numbers
+
+	Notify(whiteRemaining, blackRemaining);
+	if (blackRemaining == 0s)
 	{
 		UpdateState(EGameState::WhiteWon);
 		Notify(EResponse::WhiteWon);
 		m_timer.RemoveListener(this);
 	}
-	else if (m_whiteTimer == 0s)
+	else if (whiteRemaining == 0s)
 	{
 		UpdateState(EGameState::BlackWon);
 		Notify(EResponse::BlackWon);

@@ -6,6 +6,7 @@
 #include "gmock/gmock.h"
 
 using ::testing::_;
+using namespace std::chrono;
 
 
 void MakeMovesFrom(std::vector<std::pair<Position, Position>>& moves, Game& game)
@@ -25,7 +26,7 @@ public:
 	MOCK_METHOD(void, OnMovePiece, (Position start, Position end), (override));
 	MOCK_METHOD(void, OnRestart, (), (override));
 	MOCK_METHOD(void, OnPieceCapture, (EType pieceType, EColor pieceColor), (override));
-	MOCK_METHOD(void, OnTimerTick, (std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer), (override));
+	MOCK_METHOD(void, OnTimerTick, (milliseconds whiteTimer, milliseconds blackTimer), (override));
 };
 
 class GameMockTests : public ::testing::Test

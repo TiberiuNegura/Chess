@@ -13,7 +13,7 @@ using IGamePtr = std::shared_ptr<class IGame>;
 class IGame : public IGameControls, public IGameStorage
 {
 public:
-	static IGamePtr Produce(int timerSeconds = 2000);
+	static IGamePtr Produce(int timerSeconds = 600);
 
 	virtual ~IGame() = default;
 

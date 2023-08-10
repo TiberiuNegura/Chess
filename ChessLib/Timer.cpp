@@ -1,12 +1,13 @@
 #include "Timer.h"
 
-#include <chrono>
-
-using namespace std::chrono_literals;
-
-Timer::Timer() 
+Timer::Timer(int s_timer, int ms_resolution) 
 	: m_isRunning(false) 
 	, m_isPaused(false)
+	, m_time(1000 * s_timer)
+	, m_resolution(ms_resolution)
+	, m_blackRemaining(m_time)
+	, m_whiteRemaining(m_time)
+	, m_turn(ETurn::White)
 {
 
 }
@@ -16,18 +17,26 @@ void Timer::Start()
 	if (m_isRunning)
 		return;
 
+	Notify(m_blackRemaining, m_whiteRemaining);
+
 	m_isRunning = true;
 	m_isPaused = false;
 	m_timerThread = std::thread([this]()
 	{
-		std::chrono::milliseconds interval(10ms);
 		while (m_isRunning)
 		{
-			if (!m_isPaused)
-				Notify();
-
+			time_point<system_clock> start_lock = system_clock::now();
 			std::unique_lock<std::mutex> lock(m_timerMutex);
-			m_timerCondVariable.wait_for(lock, interval, [&] { return !m_isRunning; });
+			m_timerCondVariable.wait_for(lock, m_resolution, [&] { return !m_isRunning; });
+			time_point<system_clock> end_lock = system_clock::now();
+			if (!m_isPaused)
+			{
+				milliseconds timePass = duration_cast<milliseconds>(end_lock - start_lock);
+				m_turn == ETurn::Black ? m_blackRemaining -= timePass : m_whiteRemaining -= timePass;
+
+				Notify(m_whiteRemaining, m_blackRemaining);
+			}
+			
 		}
 	});
 }
@@ -35,6 +44,14 @@ void Timer::Start()
 void Timer::Resume()
 {
 	m_isPaused = false;
+}
+
+void Timer::Restart()
+{
+	m_whiteRemaining = m_time;
+	m_blackRemaining = m_time;
+	m_isPaused = true;
+	Stop();
 }
 
 void Timer::Pause()
@@ -57,15 +74,30 @@ void Timer::Stop()
 }
 
 
-bool Timer::HadStarted() const
+bool Timer::IsEnabled() const
 {
-	return m_listeners.size() != 0;
+	return m_time != 0ms;
+}
+
+bool Timer::IsRunning() const
+{
+	return m_isRunning;
 }
 
 
 bool Timer::IsPaused() const
 {
 	return m_isPaused;
+}
+
+void Timer::SetResolution(milliseconds resolution)
+{
+	m_resolution = resolution;
+}
+
+void Timer::UpdateTurn()
+{
+	m_turn = (m_turn == ETurn::White ? ETurn::Black : ETurn::White);
 }
 
 Timer::~Timer()
@@ -92,8 +124,8 @@ void Timer::RemoveListener(ITimerListener* listener)
 	));
 }
 
-void Timer::Notify()
+void Timer::Notify(milliseconds whiteTimer, milliseconds blackTimer)
 {
 	for (auto listener : m_listeners)
-		listener.lock()->OnSecondPass();
+		listener.lock()->OnTimerTick(whiteTimer, blackTimer);
 }

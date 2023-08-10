@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "PGN.h"
 
+
 enum class EGameState
 {
 	Playing,
@@ -17,7 +18,8 @@ enum class EGameState
 	BlackWon,
 	WhiteWon,
 	Check,
-	Paused
+	Paused,
+	NotStarted
 };
 
 enum class EResponse
@@ -83,7 +85,7 @@ public:
 	bool IsGameOver() const override;
 
 	// ITimerListener methods
-	void OnSecondPass() override;
+	void OnTimerTick(milliseconds blackRemaining, milliseconds whiteRemaining) override;
 
 
 	// State changes
@@ -104,7 +106,7 @@ public:
 	void Notify(EResponse response);
 	void Notify(Position start, Position end);
 	void Notify(EType pieceType, EColor pieceColor);
-	void Notify(TimeSeconds whiteTimer, TimeSeconds blackTimer);
+	void Notify(milliseconds whiteRemaining, milliseconds blackRemaining);
 
 
 private:
@@ -120,7 +122,6 @@ private:
 	ListenerList m_listeners;
 
 	Timer m_timer;
-	TimeSeconds m_timerTime, m_roundTime, m_whiteTimer, m_blackTimer;
 
 	PGN m_pgn;
 };

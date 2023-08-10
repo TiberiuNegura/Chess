@@ -7,7 +7,7 @@
 #include <string>
 #include <chrono>
 
-using TimeSeconds = std::chrono::seconds;
+using namespace std::chrono;
 
 class IGameListener
 {
@@ -19,7 +19,7 @@ public:
 	virtual void OnMovePiece(Position start, Position end) = 0;
 	virtual void OnPieceCapture(EType pieceType, EColor pieceColor) = 0;
 	virtual void OnRestart() = 0;
-	virtual void OnTimerTick(TimeSeconds whiteTimer, TimeSeconds blackTimer) = 0;
+	virtual void OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer) = 0;
 
 	virtual ~IGameListener() = default;
 };
