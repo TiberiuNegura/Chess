@@ -13,19 +13,20 @@
 
 using namespace std::literals::chrono_literals;
 
-IGamePtr IGame::Produce()
+IGamePtr IGame::Produce(int timerSeconds)
 {
-	return std::make_shared<Game>();
+	return std::make_shared<Game>(timerSeconds);
 }
 
 // Constructor
-Game::Game()
+Game::Game(int timerTime)
 	: m_turn(EColor::WHITE)
 	, m_currentState(EGameState::Paused)
 	, m_lastState(EGameState::Paused)
 	, m_bEnableNotifications(true)
-	, m_whiteTimer(30s)
-	, m_blackTimer(30s)
+	, m_timerTime(timerTime)
+	, m_whiteTimer(timerTime)
+	, m_blackTimer(timerTime)
 	, m_roundTime(0s)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
@@ -37,8 +38,9 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	, m_currentState(state)
 	, m_lastState(state)
 	, m_bEnableNotifications(true)
-	, m_blackTimer(30s)
-	, m_whiteTimer(30s)
+	, m_blackTimer(0s)
+	, m_whiteTimer(0s)
+	, m_timerTime(0s)
 	, m_roundTime(0s)
 {
 
@@ -174,7 +176,7 @@ void Game::PreviewPastConfig(int moveIndex)
 
 void Game::Start()
 {
-	if (!m_timer.HadStarted())
+	if (!m_timer.HadStarted() && m_blackTimer != 0s && m_whiteTimer != 0s)
 	{
 		m_timer.AddListener(shared_from_this());
 		m_timer.Start();
@@ -521,8 +523,8 @@ void Game::Restart()
 	
 	m_timer.Stop();
 
-	m_blackTimer = 600s;
-	m_whiteTimer = 600s;
+	m_blackTimer = m_timerTime;
+	m_whiteTimer = m_timerTime;
 
 	Notify(EResponse::Restart);
 }
@@ -591,21 +593,19 @@ void Game::Notify(EType pieceType, EColor pieceColor)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
 } 
 
-void Game::Notify(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer)
+void Game::Notify(TimeSeconds whiteTimer, TimeSeconds blackTimer)
 {
 	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
-		listener.lock()->OnTimePass(whiteTimer, blackTimer);
+		listener.lock()->OnTimerTick(whiteTimer, blackTimer);
 }
 
 
 void Game::OnSecondPass()
 {
 	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
-
-
-	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
+	m_roundTime++;
 	Notify(m_whiteTimer, m_blackTimer);
 	if (m_blackTimer == 0s)
 	{

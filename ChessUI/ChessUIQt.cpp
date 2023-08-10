@@ -960,7 +960,7 @@ static QString ConvertTime(int seconds)
 	return timeString;
 }
 
-void ChessUIQt::OnTimePass(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer)
+void ChessUIQt::OnTimerTick(TimeSeconds whiteTimer, TimeSeconds blackTimer)
 {
 	m_WhiteTimer->setText(ConvertTime(whiteTimer.count()));
 	m_BlackTimer->setText(ConvertTime(blackTimer.count()));

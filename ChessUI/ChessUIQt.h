@@ -53,7 +53,7 @@ public:
 	void OnRestart() override;
 	void OnPieceCapture(EType pieceType, EColor pieceColor) override;
 	void SetGame(IGamePtr game);
-	void OnTimePass(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer) override;
+	void OnTimerTick(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer) override;
 
 public slots:
 	void OnButtonClicked(const Position& position);

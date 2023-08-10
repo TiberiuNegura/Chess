@@ -35,7 +35,7 @@ class Game : public IGame, public IGameStatus, public ITimerListener, public std
 {
 public:
 	// Constructor
-	Game();
+	Game(int timerTime = 0);
 	Game(CharBoardRepresentation mat, EColor turn, EGameState state);
 
 	// IGame methods
@@ -104,7 +104,7 @@ public:
 	void Notify(EResponse response);
 	void Notify(Position start, Position end);
 	void Notify(EType pieceType, EColor pieceColor);
-	void Notify(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer);
+	void Notify(TimeSeconds whiteTimer, TimeSeconds blackTimer);
 
 
 private:
@@ -120,7 +120,7 @@ private:
 	ListenerList m_listeners;
 
 	Timer m_timer;
-	std::chrono::seconds m_roundTime, m_whiteTimer, m_blackTimer;
+	TimeSeconds m_timerTime, m_roundTime, m_whiteTimer, m_blackTimer;
 
 	PGN m_pgn;
 };

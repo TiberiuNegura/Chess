@@ -25,7 +25,7 @@ public:
 	MOCK_METHOD(void, OnMovePiece, (Position start, Position end), (override));
 	MOCK_METHOD(void, OnRestart, (), (override));
 	MOCK_METHOD(void, OnPieceCapture, (EType pieceType, EColor pieceColor), (override));
-	MOCK_METHOD(void, OnTimePass, (std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer), (override));
+	MOCK_METHOD(void, OnTimerTick, (std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer), (override));
 };
 
 class GameMockTests : public ::testing::Test
