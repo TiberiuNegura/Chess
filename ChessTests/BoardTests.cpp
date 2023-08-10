@@ -21,6 +21,7 @@ protected:
 		'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
 		'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R'
 			}, EColor::WHITE, EGameState::Playing);
+		game->Start();
 	}
 
 	void TearDown() override
@@ -786,6 +787,7 @@ TEST(FenStringTest, FromBoardToFen)
 TEST(PgnStringTest, FromPgnToBoard1)
 {
 	Game game;
+	game.Start();
 	game.LoadFromFormat("files/FromPgnToBoard1.pgn");
 	Board board(CharBoardRepresentation{
 		'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -810,6 +812,7 @@ TEST(PgnStringTest, FromPgnToBoard1)
 TEST(PgnStringTest, FromPgnToBoard2)
 {
 	Game game;
+	game.Start();
 	game.LoadFromFormat("files/FromPgnToBoard2.pgn");
 	Board board(CharBoardRepresentation{
 		' ', 'h', 'B', ' ', ' ', 'b', ' ', 'q',

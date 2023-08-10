@@ -59,6 +59,7 @@ bool Game::LoadFromFormat(const std::string& path)
 
 		if (FileUtils::HasAnyExtension(path, "pgn"))
 		{
+			m_currentState = EGameState::Playing;
 			if (m_pgn.Load(path))
 				LoadFromPGN(m_pgn);
 		}
@@ -202,7 +203,7 @@ void Game::Stop()
 	m_timer.Stop();
 }
 
-bool Game::HadStarted() const
+bool Game::IsStarted() const
 {
 	return m_timer.HadStarted();
 }

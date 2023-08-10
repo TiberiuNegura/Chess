@@ -10,7 +10,8 @@
 using TimerWeakPtr = std::weak_ptr<class ITimerListener>;
 using TimerListenerList = std::vector<TimerWeakPtr>;
 
-class Timer {
+class Timer 
+{
 public:
 	Timer();
 
@@ -42,5 +43,4 @@ private:
 	bool m_isPaused;
 
 	TimerListenerList m_listeners;
-
 };

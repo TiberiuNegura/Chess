@@ -596,7 +596,7 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	if (!m_game->HadStarted())
+	if (!m_game->IsStarted())
 	{
 		m_game->Start();
 		m_pauseTimerBtn->setText("PAUSE");

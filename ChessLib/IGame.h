@@ -32,7 +32,7 @@ public:
 	virtual void Stop() = 0; 
 	virtual void Restart() = 0;
 
-	virtual bool HadStarted() const = 0;
+	virtual bool IsStarted() const = 0;
 	virtual bool IsPaused() const = 0; 
 
 	// Game status getters

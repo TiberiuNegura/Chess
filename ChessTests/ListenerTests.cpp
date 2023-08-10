@@ -48,6 +48,9 @@ TEST_F(GameMockTests, NotifyObserverMove)
 	Game game;
 	Game game2;
 
+	game.Start();
+	game2.Start();
+
 	game.AddListener(mock);
 	game2.AddListener(mock);
 
@@ -60,6 +63,9 @@ TEST_F(GameMockTests, AddRemoveListenerTest)
 	Game game;
 	Game game2;
 	EXPECT_CALL(*mock, OnMovePiece(_, _)).Times(3);
+
+	game.Start();
+	game2.Start();
 
 	game.AddListener(mock);
 	game2.AddListener(mock);
@@ -126,6 +132,9 @@ TEST_F(GameMockTests, NotifyObserverGameOverTie)
 TEST_F(GameMockTests, NotifyObserverRestart)
 {
 	auto game = IGame::Produce();
+
+	game->Start();
+
 	game->AddListener(mock);
 
 	EXPECT_CALL(*mock, OnRestart()).Times(1);
@@ -200,6 +209,8 @@ TEST_F(GameMockTests, NotifyObserverTieRequest)
 TEST_F(GameMockTests, NotifyObserver)
 {
 	Game game;
+	game.Start();
+
 	game.AddListener(mock);
 
 	EXPECT_CALL(*mock, OnMovePiece).Times(25);
@@ -234,6 +245,7 @@ TEST_F(GameMockTests, NotifyObserver)
 	EXPECT_THROW(game.MovePiece({ 7,2 }, { 3,6 }), CheckException);
 
 	game.Restart();
+	game.Start();
 
 	moves = {
 		{{6,6},{4,6}},{{1,4},{2,4}},{{6,5},{5,5}},{{0,3},{4,7}} // black checkmate white

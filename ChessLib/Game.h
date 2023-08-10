@@ -53,7 +53,7 @@ public:
 	void Stop() override;
 	void Restart() override;
 
-	bool HadStarted() const override;
+	bool IsStarted() const override;
 	bool IsPaused() const override;
 
 	const IGameStatus* Status() const override;

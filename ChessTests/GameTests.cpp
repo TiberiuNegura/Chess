@@ -99,6 +99,8 @@ TEST(CheckTest, BlackChecksWhite)
 TEST(CheckmateTest, WhiteChecksmateBlack)
 {
 	Game game;
+	game.Start();
+
 	std::vector<std::pair<Position, Position>> moves = { 
 		{{6,4},{5,4}},
 		{{1,6},{3,6}},
@@ -117,6 +119,8 @@ TEST(CheckmateTest, WhiteChecksmateBlack)
 TEST(CheckmateTest, BlackChecksmateWhite)
 {
 	Game game;
+	game.Start();
+
 	std::vector<std::pair<Position, Position>> moves = {
 		{{6,6},{4,6}},
 		{{1,4},{2,4}},
