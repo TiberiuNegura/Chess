@@ -10,16 +10,16 @@ Timer::Timer()
 
 }
 
-void Timer::Start(int durationMilliseconds)
+void Timer::Start()
 {
 	if (m_isRunning)
 		return;
 
 	m_isRunning = true;
 	m_isPaused = false;
-	m_timerThread = std::thread([this, durationMilliseconds]()
+	m_timerThread = std::thread([this]()
 	{
-		std::chrono::milliseconds interval(durationMilliseconds);
+		std::chrono::milliseconds interval(1s);
 		while (m_isRunning)
 		{
 			if (!m_isPaused)

@@ -1,10 +1,11 @@
+#include "ITimerListener.h"
+
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <mutex>
 #include <condition_variable>
 #include <vector>
-#include "ITimerListener.h"
 
 using TimerWeakPtr = std::weak_ptr<class ITimerListener>;
 using TimerListenerList = std::vector<TimerWeakPtr>;
@@ -18,7 +19,7 @@ public:
 
 	~Timer();
 
-	void Start(int durationMilliseconds);
+	void Start();
 	void Pause();
 	void Resume();
 	void Stop();

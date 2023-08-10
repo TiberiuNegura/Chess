@@ -104,7 +104,7 @@ public:
 	void Notify(EResponse response);
 	void Notify(Position start, Position end);
 	void Notify(EType pieceType, EColor pieceColor);
-	void Notify(int whiteTimer, int blackTimer);
+	void Notify(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer);
 
 
 private:
@@ -120,7 +120,7 @@ private:
 	ListenerList m_listeners;
 
 	Timer m_timer;
-	int m_whiteTimer, m_blackTimer;
+	std::chrono::seconds m_roundTime, m_whiteTimer, m_blackTimer;
 
 	PGN m_pgn;
 };

@@ -11,6 +11,8 @@
 #include "InvalidOptionException.h"
 #include "InvalidFileException.h"
 
+using namespace std::literals::chrono_literals;
+
 IGamePtr IGame::Produce()
 {
 	return std::make_shared<Game>();
@@ -22,8 +24,9 @@ Game::Game()
 	, m_currentState(EGameState::Paused)
 	, m_lastState(EGameState::Paused)
 	, m_bEnableNotifications(true)
-	, m_whiteTimer(30)
-	, m_blackTimer(30)
+	, m_whiteTimer(30s)
+	, m_blackTimer(30s)
+	, m_roundTime(0s)
 {
 	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 }
@@ -34,8 +37,9 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 	, m_currentState(state)
 	, m_lastState(state)
 	, m_bEnableNotifications(true)
-	, m_blackTimer(600)
-	, m_whiteTimer(600)
+	, m_blackTimer(30s)
+	, m_whiteTimer(30s)
+	, m_roundTime(0s)
 {
 
 }
@@ -173,7 +177,7 @@ void Game::Start()
 	if (!m_timer.HadStarted())
 	{
 		m_timer.AddListener(shared_from_this());
-		m_timer.Start(1000);
+		m_timer.Start();
 	}
 	m_currentState = EGameState::Playing;
 }
@@ -517,8 +521,8 @@ void Game::Restart()
 	
 	m_timer.Stop();
 
-	m_blackTimer = 600;
-	m_whiteTimer = 600;
+	m_blackTimer = 600s;
+	m_whiteTimer = 600s;
 
 	Notify(EResponse::Restart);
 }
@@ -587,7 +591,7 @@ void Game::Notify(EType pieceType, EColor pieceColor)
 		listener.lock()->OnPieceCapture(pieceType, pieceColor);
 } 
 
-void Game::Notify(int whiteTimer, int blackTimer)
+void Game::Notify(std::chrono::seconds whiteTimer, std::chrono::seconds blackTimer)
 {
 	if (!m_bEnableNotifications)
 		return;
@@ -599,14 +603,17 @@ void Game::Notify(int whiteTimer, int blackTimer)
 void Game::OnSecondPass()
 {
 	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
+
+
+	m_turn == EColor::BLACK ? --m_blackTimer : --m_whiteTimer;
 	Notify(m_whiteTimer, m_blackTimer);
-	if (!m_blackTimer)
+	if (m_blackTimer == 0s)
 	{
 		UpdateState(EGameState::WhiteWon);
 		Notify(EResponse::WhiteWon);
 		m_timer.RemoveListener(this);
 	}
-	else if (!m_whiteTimer)
+	else if (m_whiteTimer == 0s)
 	{
 		UpdateState(EGameState::BlackWon);
 		Notify(EResponse::BlackWon);
