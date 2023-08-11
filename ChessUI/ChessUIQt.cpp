@@ -108,7 +108,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 
 	// Title text
 	QLabel* title = new QLabel();
-	title->setPixmap(QPixmap("res/logo.png"));
+	title->setPixmap(QPixmap(":/ChessUI/res/logo.png"));
 	QFont titleFont = title->font();
 	titleFont.setPointSize(16);
 	titleFont.setBold(true);
@@ -118,7 +118,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	// Minimize button
 	QPushButton* minimizeButton = new QPushButton(titleBar);
 	minimizeButton->setFixedSize(30, 30); // Set a fixed size for the button
-	minimizeButton->setIcon(QIcon("res/minimize.png")); // Set the custom icon
+	minimizeButton->setIcon(QIcon(":/ChessUI/res/minimize.png")); // Set the custom icon
 	minimizeButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -133,7 +133,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	// Expand button
 	m_expandButton = new QPushButton(titleBar);
 	m_expandButton->setFixedSize(30, 30); // Set a fixed size for the button
-	m_expandButton->setIcon(QIcon("res/expand.png")); // Set the custom icon
+	m_expandButton->setIcon(QIcon(":/ChessUI/res/expand.png")); // Set the custom icon
 	m_expandButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -148,7 +148,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 	// Close button
 	QPushButton* exitButton = new QPushButton(titleBar);
 	exitButton->setFixedSize(30, 30); // Set a fixed size for the button
-	exitButton->setIcon(QIcon("res/exit.png")); // Set the custom icon
+	exitButton->setIcon(QIcon(":/ChessUI/res/exit.png")); // Set the custom icon
 	exitButton->setStyleSheet(
 		"QPushButton {"
 		"   background-color: transparent;" // Normal background color
@@ -184,7 +184,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 {
 	QString path, name;
-	color == EColor::BLACK ? path = "res/black.png" : path = "res/white.png";
+	color == EColor::BLACK ? path = ":/ChessUI/res/black.png" : path = ":/ChessUI/res/white.png";
 	color == EColor::BLACK ? name = "Black" : name = "White";
 
 
@@ -291,11 +291,11 @@ QWidget* ChessUIQt::InitializeButtons()
 	QGridLayout* btnGrid = new QGridLayout();
 
 
-	SetIcon(saveButton, "res/save.png");
-	SetIcon(loadButton, "res/load.png");
-	SetIcon(restartButton, "res/restart.png");
-	SetIcon(drawButton, "res/draw.png");
-	SetIcon(copyButton, "res/copy.png");
+	SetIcon(saveButton, ":/ChessUI/res/save.png");
+	SetIcon(loadButton, ":/ChessUI/res/load.png");
+	SetIcon(restartButton, ":/ChessUI/res/restart.png");
+	SetIcon(drawButton, ":/ChessUI/res/draw.png");
+	SetIcon(copyButton, ":/ChessUI/res/copy.png");
 
 	saveButton->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px; border-top-left-radius: 15px; border-bottom-left-radius: 15px;");
 	copyButton->setStyleSheet("border: none; padding: 7px 7px; margin: 0px; margin: 10px 0px; border-top-right-radius: 15px; border-bottom-right-radius: 15px;");
@@ -615,7 +615,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	for (auto& pieceType : whitePieces)
 	{
 		QListWidgetItem* capturedPiece = new QListWidgetItem();
-		QString imagePath = "res/b";
+		QString imagePath = ":/ChessUI/res/b";
 		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 		QPixmap pixmap(imagePath);
 		capturedPiece->setIcon(QIcon(pixmap));
@@ -624,7 +624,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	for (auto& pieceType : blackPieces)
 	{
 		QListWidgetItem* capturedPiece = new QListWidgetItem();
-		QString imagePath = "res/w";
+		QString imagePath = ":/ChessUI/res/w";
 		imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 		QPixmap pixmap(imagePath);
 		capturedPiece->setIcon(QIcon(pixmap));
@@ -764,8 +764,8 @@ QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int elap
 
 	std::string turn = turnColor == EColor::WHITE ? "Black" : "White";
 
-	static QPixmap pixmap_white = QPixmap("res/white.png").scaled(30, 30);
-	static QPixmap pixmap_black = QPixmap("res/black.png").scaled(30, 30);
+	static QPixmap pixmap_white = QPixmap(":/ChessUI/res/white.png").scaled(30, 30);
+	static QPixmap pixmap_black = QPixmap(":/ChessUI/res/black.png").scaled(30, 30);
 
 	QLabel* turnPicture = new QLabel();
 	turnPicture->setPixmap(turnColor == EColor::WHITE ? pixmap_white : pixmap_black);
@@ -778,7 +778,7 @@ QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int elap
 	QLabel* initialPos = new QLabel(QString::fromStdString(source));
 	initialPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
 	
-	static QPixmap pixmap = QPixmap("res/arrow.png").scaled(30, 30);
+	static QPixmap pixmap = QPixmap(":/ChessUI/res/arrow.png").scaled(30, 30);
 
 	QLabel* arrow = new QLabel();
 	arrow->setPixmap(pixmap);
@@ -827,12 +827,12 @@ void ChessUIQt::toggleFullScreen()
 	if (isFullScreen())
 	{
 		showNormal();
-		m_expandButton->setIcon(QIcon("res/expand.png"));
+		m_expandButton->setIcon(QIcon(":/ChessUI/res/expand.png"));
 	}
 	else
 	{
 		showFullScreen();
-		m_expandButton->setIcon(QIcon("res/restore.png"));
+		m_expandButton->setIcon(QIcon(":/ChessUI/res/restore.png"));
 	}
 }
 
@@ -1023,7 +1023,7 @@ void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 
 	QListWidgetItem* capturedPiece = new QListWidgetItem();
 	QString imagePath;
-	pieceColor == EColor::BLACK ? imagePath = "res/b" : imagePath = "res/w";
+	pieceColor == EColor::BLACK ? imagePath = ":/ChessUI/res/b" : imagePath = ":/ChessUI/res/w";
 	QString pieces[] = {"p", "r", "b", "h", "q", "k", "empty"};
 	imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 	QPixmap pixmap(imagePath);

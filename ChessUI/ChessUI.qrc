@@ -1,4 +1,31 @@
 <RCC>
-    <qresource prefix="ChessUI">
+    <qresource prefix="/ChessUI">
+        <file>res/arrow.png</file>
+        <file>res/bb.png</file>
+        <file>res/bh.png</file>
+        <file>res/bk.png</file>
+        <file>res/black.png</file>
+        <file>res/bp.png</file>
+        <file>res/bq.png</file>
+        <file>res/br.png</file>
+        <file>res/copy.png</file>
+        <file>res/draw.png</file>
+        <file>res/empty.png</file>
+        <file>res/exit.png</file>
+        <file>res/expand.png</file>
+        <file>res/load.png</file>
+        <file>res/logo.png</file>
+        <file>res/logo2.png</file>
+        <file>res/minimize.png</file>
+        <file>res/restart.png</file>
+        <file>res/restore.png</file>
+        <file>res/save.png</file>
+        <file>res/wb.png</file>
+        <file>res/wh.png</file>
+        <file>res/white.png</file>
+        <file>res/wk.png</file>
+        <file>res/wp.png</file>
+        <file>res/wq.png</file>
+        <file>res/wr.png</file>
     </qresource>
 </RCC>

@@ -15,7 +15,7 @@ void GridButton::mouseReleaseEvent(QMouseEvent* event)
 void GridButton::updatePiece()
 {
 
-	std::string imagePath = "res/";
+	std::string imagePath = ":/ChessUI/res/";
 
 	switch (m_PieceColor)
 	{
@@ -107,8 +107,6 @@ void GridButton::setSelected(bool selected)
 
 void GridButton::paintEvent(QPaintEvent* event)
 {
-
-
 	QPushButton::paintEvent(event);
 	QPainter painter(this);
 	QColor penColor;
