@@ -507,7 +507,6 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 
 void ChessUIQt::OnButtonClicked(const Position& position)
 {
-	//At second click
 	if (m_selectedCell.has_value()) {
 		Position start({ m_selectedCell.value().first , m_selectedCell.value().second });
 
@@ -541,14 +540,14 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 		m_selectedCell.reset();
 	}
-	else 
-	{
-		UpdateBoard();
-		m_selectedCell = position;
-		m_grid[position.first][position.second]->setSelected(true);
 
-		HighlightPossibleMoves(m_game->Status()->GetMoves(position));
-	}
+
+	UpdateBoard();
+	m_selectedCell = position;
+	m_grid[position.first][position.second]->setSelected(true);
+
+	HighlightPossibleMoves(m_game->Status()->GetMoves(position));
+
 }
 
 void ChessUIQt::OnSaveButtonClicked()
