@@ -22,6 +22,61 @@ ChessUIQt::~ChessUIQt()
 	//https://doc.qt.io/qt-6/objecttrees.html
 }
 
+void ChessUIQt::InitGame()
+{
+	QDialog dialog;
+	dialog.setWindowTitle("Options");
+
+	// Create the combo box and add options
+	QComboBox comboBox;
+	comboBox.addItem("5 seconds");
+	comboBox.addItem("5 minutes");
+	comboBox.addItem("10 minutes");
+	comboBox.addItem("30 minutes");
+	comboBox.addItem("No Timer");
+
+	// Create the OK button
+	QPushButton okButton("OK");
+	QObject::connect(&okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+
+	// Create the layout and add widgets
+	QVBoxLayout layout;
+	layout.addWidget(&comboBox);
+	layout.addWidget(&okButton);
+	dialog.setLayout(&layout);
+
+	// Make the dialog modal
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		int selectedIndex = comboBox.currentIndex();
+		switch (selectedIndex)
+		{
+		case 0:
+			m_game = IGame::Produce(5);
+			break;
+		case 1:
+			m_game = IGame::Produce(300);
+			break;
+		case 2:
+			m_game = IGame::Produce(600);
+			break;
+		case 3:
+			m_game = IGame::Produce(1800);
+			break;
+		case 4:
+			m_game = IGame::Produce();
+			delete m_WhiteTimer;
+			delete m_BlackTimer;
+			break;
+		}
+		m_game->AddListener(shared_from_this());
+	}
+	else
+	{
+		InitGame();
+	}
+}
+
 void ChessUIQt::Init(QGridLayout* mainGridLayout)
 {
 
@@ -273,8 +328,8 @@ QWidget* ChessUIQt::InitializeTimers()
 	timerGrid->setSpacing(0);
 	timerGrid->setContentsMargins(0, 0, 0, 0);
 
-	m_pauseTimerBtn = new QPushButton("START");
-	connect(m_pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
+	m_pauseGameBtn = new QPushButton("START");
+	connect(m_pauseGameBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 
 	timerContainer->setStyleSheet(
 		"QPushButton {"
@@ -288,9 +343,9 @@ QWidget* ChessUIQt::InitializeTimers()
 	);
 
 
-	m_pauseTimerBtn->setStyleSheet("border: none; padding: 7px 7px; font-size: 22px; width: 80px; border-top-left-radius: 15px; border-top-right-radius: 15px;");
+	m_pauseGameBtn->setStyleSheet("border: none; padding: 7px 7px; font-size: 22px; width: 80px; border-top-left-radius: 15px; border-top-right-radius: 15px;");
 
-	timerGrid->addWidget(m_pauseTimerBtn, 0, 3);
+	timerGrid->addWidget(m_pauseGameBtn, 0, 3);
 
 
 
@@ -608,23 +663,28 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
+	// if preview enabled, disable the pause/resume button
+	int index = m_MovesList->currentRow(); 
+	if (index < m_MovesList->count() - 1 && index != -1)
+		return;
+
 	auto status = m_game->Status();
 	if (!status->IsStarted())
 	{
 		m_game->Start();
-		m_pauseTimerBtn->setText("PAUSE");
+		m_pauseGameBtn->setText("PAUSE");
 		return;
 	}
 
 	if (status->IsPaused())
 	{
 		m_game->Resume();
-		m_pauseTimerBtn->setText("PAUSE");
+		m_pauseGameBtn->setText("PAUSE");
 	}
 	else
 	{
 		m_game->Pause();
-		m_pauseTimerBtn->setText("RESUME");
+		m_pauseGameBtn->setText("RESUME");
 	}
 }
 
@@ -655,26 +715,27 @@ void ChessUIQt::OnCopyButtonClicked()
 	clipboard->setText(config);
 }
 
-void ChessUIQt::BoardLock(bool disabled)
+void ChessUIQt::BoardLock(bool enabled)
 {
 	for (int row = 0; row < 8; row++)
 	{
 		for (int column = 0; column < 8; column++)
 		{
-			m_grid[row][column]->setEnabled(disabled);
+			m_grid[row][column]->setEnabled(enabled);
 		}
 	}
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 {
-	int index = m_MovesList->currentRow();
-	if (index == m_MovesList->count() - 1)
-		BoardLock(true);
-	else
-		BoardLock(false);
 
-	m_game->PreviewPastConfig(index-1);
+	int index = m_MovesList->currentRow();
+	//if (index == m_MovesList->count() - 1)
+	//	BoardLock(false);
+	//else
+	//	BoardLock(true);
+
+	m_game->PreviewPastConfig(index);
 	UpdateBoard();
 	
 }
@@ -934,6 +995,7 @@ void ChessUIQt::OnRestart()
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
 	Init(mainGridLayout);
+	InitGame();
 	UpdateBoard();
 }
 
@@ -981,7 +1043,7 @@ void ChessUIQt::OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer)
 {
 	m_WhiteTimer->setText(ConvertTime(whiteTimer));
 	m_BlackTimer->setText(ConvertTime(blackTimer));
-	qDebug() << whiteTimer.count() << " " << blackTimer.count();
+	//qDebug() << whiteTimer.count() << " " << blackTimer.count();
 }
 
 char ChessUIQt::PieceToChar(IPiecePtr piece) const

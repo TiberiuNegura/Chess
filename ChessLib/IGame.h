@@ -13,7 +13,7 @@ using IGamePtr = std::shared_ptr<class IGame>;
 class IGame : public IGameControls, public IGameStorage
 {
 public:
-	static IGamePtr Produce(int timerSeconds = 600);
+	static IGamePtr Produce(int timerSeconds = 0);
 
 	virtual ~IGame() = default;
 
@@ -29,9 +29,6 @@ public:
 
 	// Game status getters
 	virtual const IGameStatus* Status() const = 0;
-
-	// Timer
-	// virtual ITimerInfo* TimerInfo() const = 0; // TODO to add
 
 	// Back visualization
 	virtual void PreviewPastConfig(int moveIndex) = 0;

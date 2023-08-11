@@ -9,6 +9,8 @@
 #include <QClipboard>
 #include <QProcess>
 #include <QApplication>
+#include <QDialog>
+#include <QComboBox>
 
 #include "GridButton.h"
 
@@ -24,6 +26,7 @@ public:
 	ChessUIQt(QWidget *parent = nullptr);
 	~ChessUIQt() override;
 
+	void InitGame();
 
 	void Init(QGridLayout* mainGridLayout);
 	void InitializeTitleBar(QGridLayout* mainGridLayout);
@@ -55,6 +58,7 @@ public:
 	void SetGame(IGamePtr game);
 	void OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer) override;
 
+
 public slots:
 	void OnButtonClicked(const Position& position);
 
@@ -65,7 +69,7 @@ public slots:
 	void OnDrawButtonClicked();
 	char PieceToChar(IPiecePtr piece) const;
 	void OnCopyButtonClicked();
-	void BoardLock(bool disabled);
+	void BoardLock(bool enabled);
 	void OnHistoryClicked(QListWidgetItem* item);
 	void centerOnScreen();
 	
@@ -90,5 +94,5 @@ private:
 	QLabel* m_BlackTimer, *m_WhiteTimer, *m_StatusMessage;
 	IGamePtr m_game;
 	QPoint m_dragStartPos;
-	QPushButton* m_expandButton, * m_pauseTimerBtn;
+	QPushButton* m_expandButton, * m_pauseGameBtn;
 };

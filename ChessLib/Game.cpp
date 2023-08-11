@@ -164,6 +164,7 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 
 void Game::PreviewPastConfig(int moveIndex)
 {
+	moveIndex == m_boardConfigs.size() - 2 ? Resume() : Pause();
 	BoardConfig config = m_boardConfigs[++moveIndex];
 	m_board.SetBoardConfiguration(config);
 }
@@ -181,7 +182,6 @@ void Game::Start()
 
 void Game::Pause()
 {
-	m_lastState = m_currentState;
 	m_timer.Pause();
 	UpdateState(EGameState::Paused);
 }
@@ -189,7 +189,7 @@ void Game::Pause()
 void Game::Resume()
 {
 	m_timer.Resume();
-	m_currentState = m_lastState;
+	UpdateState(m_lastState);
 }
 
 void Game::Stop()
@@ -323,6 +323,7 @@ void Game::UpdateTurn()
 
 void Game::UpdateState(EGameState state)
 {
+	m_lastState = m_currentState;
 	m_currentState = state;
 }
 
