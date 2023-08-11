@@ -78,6 +78,8 @@ protected:
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 
+	void RunMethod(std::function<void(void)> func);
+
 signals:
 	void Exit();
 

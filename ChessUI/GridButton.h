@@ -22,6 +22,9 @@ public:
 	void setPiece(IPiecePtr newPiece);
 	void setHighlighted(EHighlight highlighted);
 	void setSelected(bool selected);
+	void ClicksIncrease();
+	void ClicksReset();
+	int ClicksCounter();
 
 
 signals:
@@ -37,4 +40,5 @@ private:
 	EColor m_PieceColor;
 	EHighlight m_Highlighted;
 	bool m_Selected;
+	int m_Clicks;
 };

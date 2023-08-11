@@ -105,6 +105,23 @@ void GridButton::setSelected(bool selected)
 	updateBackgroundColor();
 }
 
+void GridButton::ClicksIncrease()
+{
+	m_Clicks++;
+}
+
+
+
+void GridButton::ClicksReset()
+{
+	m_Clicks = 0;
+}
+
+int GridButton::ClicksCounter()
+{
+	return m_Clicks;
+}
+
 void GridButton::paintEvent(QPaintEvent* event)
 {
 	QPushButton::paintEvent(event);
@@ -181,6 +198,7 @@ GridButton::GridButton(const Position& boardPosition, EType pieceType, EColor pi
 	, m_PieceColor(pieceColor)
 	, m_Highlighted(EHighlight::NONE)
 	, m_Selected(false)
+	, m_Clicks(0)
 {
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QFileDialog>
 
-ChessUIQt::ChessUIQt(QWidget *parent)
+ChessUIQt::ChessUIQt(QWidget* parent)
 	: QMainWindow(parent)
 {
 	QGridLayout* mainGridLayout = new QGridLayout();
@@ -181,7 +181,7 @@ void ChessUIQt::InitializeTitleBar(QGridLayout* mainGridLayout)
 }
 
 
-void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
+void ChessUIQt::InitializePlayers(QGridLayout* mainGridLayout, EColor color)
 {
 	QString path, name;
 	color == EColor::BLACK ? path = ":/ChessUI/res/black.png" : path = ":/ChessUI/res/white.png";
@@ -194,7 +194,7 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	QLabel* profilePicture = new QLabel();
 	QPixmap pic(path);
 	profilePicture->setPixmap(pic.scaled(60, 60));
-	
+
 
 
 	QLabel* profileName = new QLabel();
@@ -216,7 +216,7 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 			"font-weight: bold;"
 			"border-radius: 5px;"
 		);
-	else 
+	else
 		playerTimer->setStyleSheet
 		(
 			"font-family: Segoe UI;"
@@ -250,7 +250,7 @@ void ChessUIQt::InitializePlayers(QGridLayout * mainGridLayout, EColor color)
 	player->setLayout(playerGrid);
 	if (color == EColor::BLACK)
 		mainGridLayout->addWidget(player, 1, 0, Qt::AlignLeft);
-	else 
+	else
 		mainGridLayout->addWidget(player, 3, 0, Qt::AlignLeft);
 
 
@@ -262,7 +262,7 @@ QPushButton& SetIcon(QPushButton* button, QString path)
 	QIcon ButtonIcon(pixmap);
 	button->setContentsMargins(0, 0, 0, 0);
 	button->setIcon(ButtonIcon);
-	button->setIconSize({40, 40});
+	button->setIconSize({ 40, 40 });
 	button->setStyleSheet("border: none; padding: 7px 7px;");
 
 	return *button;
@@ -305,7 +305,7 @@ QWidget* ChessUIQt::InitializeButtons()
 	btnGrid->addWidget(restartButton, 0, 2);
 	btnGrid->addWidget(drawButton, 0, 3);
 	btnGrid->addWidget(copyButton, 0, 4);
-	
+
 
 	connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
 	connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
@@ -455,8 +455,8 @@ QWidget* ChessUIQt::InitializeHistory()
 	QFont listFont;
 	listFont.setFamily("Segoe UI");
 	listFont.setPointSize(20);
-	m_MovesList->setFont(listFont); 
-	
+	m_MovesList->setFont(listFont);
+
 
 	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
 
@@ -537,16 +537,19 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 		}
 		UpdateBoard();
-		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->ClicksIncrease();
 		m_selectedCell.reset();
 	}
 
-
 	UpdateBoard();
 	m_selectedCell = position;
-	m_grid[position.first][position.second]->setSelected(true);
-
 	HighlightPossibleMoves(m_game->Status()->GetMoves(position));
+
+	if (m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->ClicksCounter() == 2)
+	{
+		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->ClicksReset();
+		UpdateBoard();
+	}
 
 }
 
@@ -603,8 +606,8 @@ void ChessUIQt::OnLoadButtonClicked()
 	m_MovesList->clear();
 
 	bool success = m_game->LoadFromFormat(filePath.toStdString());
-		
-	
+
+
 	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
 
 
@@ -632,7 +635,7 @@ void ChessUIQt::OnLoadButtonClicked()
 
 	// Create history list
 	MovesList moves = m_game->Status()->GetMovesList();
-	
+
 	int color = -1;
 	for (auto& move : moves)
 	{
@@ -657,10 +660,10 @@ void ChessUIQt::OnRestartButtonClicked()
 		m_game->Restart();
 		m_MovesList->clear();
 		m_whitePieces->clear();
-		m_blackPieces->clear();	
+		m_blackPieces->clear();
 		UpdateBoard();
 	}
-	
+
 }
 
 void ChessUIQt::OnPauseButtonClicked()
@@ -740,7 +743,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 	m_game->PreviewPastConfig(index);
 	UpdateBoard();
-	
+
 }
 
 void ChessUIQt::mousePressEvent(QMouseEvent* event)
@@ -757,6 +760,11 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 		// Calculate the new position of the window based on the mouse movement
 		move(event->globalPos() - m_dragStartPos);
 	}
+}
+
+void ChessUIQt::RunMethod(std::function<void(void)> func)
+{
+	QMetaObject::invokeMethod(this, func, Qt::QueuedConnection);
 }
 
 QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int elapsedTime, int color)
@@ -782,7 +790,7 @@ QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int elap
 
 	QLabel* initialPos = new QLabel(QString::fromStdString(source));
 	initialPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
-	
+
 	static QPixmap pixmap = QPixmap(":/ChessUI/res/arrow.png").scaled(30, 30);
 
 	QLabel* arrow = new QLabel();
@@ -887,7 +895,7 @@ void ChessUIQt::UpdateBoard()
 
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
-	for (const auto& position : possibleMoves) 
+	for (const auto& position : possibleMoves)
 	{
 		auto possibleMove = m_grid[position.first][position.second];
 		if (m_game->Status()->GetBoard()->GetElement(position))
@@ -967,21 +975,23 @@ QString ChessUIQt::GameStateToString()
 
 void ChessUIQt::OnGameOver()
 {
+	RunMethod([&]() 
+	{
 	m_game->Stop();
-
 	auto status = m_game->Status();
-	if (status->BlackWon())
-		m_StatusMessage->setText("Black won the game!\n");
-	else if (status->WhiteWon())
-		m_StatusMessage->setText("White won the game!\n");
-	else if (status->IsTie())
-		m_StatusMessage->setText("Tie!");
+		if (status->BlackWon())
+			m_StatusMessage->setText("Black won the game!\n");
+		else if (status->WhiteWon())
+			m_StatusMessage->setText("White won the game!\n");
+		else if (status->IsTie())
+			m_StatusMessage->setText("Tie!");
+	});
 }
 
 void ChessUIQt::OnCheck(std::string msg)
 {
 	QString s = GetTurnMessage();
-	s.append(msg);	
+	s.append(msg);
 }
 
 void ChessUIQt::OnPawnEvolve()
@@ -1031,12 +1041,12 @@ void ChessUIQt::OnPieceCapture(EType pieceType, EColor pieceColor)
 	QListWidgetItem* capturedPiece = new QListWidgetItem();
 	QString imagePath;
 	pieceColor == EColor::BLACK ? imagePath = ":/ChessUI/res/b" : imagePath = ":/ChessUI/res/w";
-	QString pieces[] = {"p", "r", "b", "h", "q", "k", "empty"};
+	QString pieces[] = { "p", "r", "b", "h", "q", "k", "empty" };
 	imagePath.push_back(QString(pieces[(int)pieceType] + ".png"));
 	QPixmap pixmap(imagePath);
 	QIcon icon(pixmap);
 	capturedPiece->setIcon(QIcon(pixmap));
-	
+
 	playerPieces->addItem(capturedPiece);
 }
 
@@ -1047,7 +1057,7 @@ void ChessUIQt::SetGame(IGamePtr game)
 
 static QString ConvertTime(milliseconds time)
 {
-	
+
 	int minutes = time.count() / 60000;  // 1 minute = 60000 milliseconds
 	time %= 60000;
 
@@ -1064,8 +1074,11 @@ static QString ConvertTime(milliseconds time)
 
 void ChessUIQt::OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer)
 {
-	m_WhiteTimer->setText(ConvertTime(whiteTimer));
-	m_BlackTimer->setText(ConvertTime(blackTimer));
+	RunMethod([&, whiteTimer, blackTimer]()
+		{
+			m_WhiteTimer->setText(ConvertTime(whiteTimer));
+			m_BlackTimer->setText(ConvertTime(blackTimer));
+		});
 	//qDebug() << whiteTimer.count() << " " << blackTimer.count();
 }
 
