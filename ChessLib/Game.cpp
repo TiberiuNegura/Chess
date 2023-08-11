@@ -421,7 +421,13 @@ void Game::MakeTieRequest()
 
 void Game::TieRequestResponse(bool answer)
 {
-	answer ? UpdateState(EGameState::Tie) : UpdateState(EGameState::Playing);
+	if (answer == true)
+	{
+		UpdateState(EGameState::Tie);
+		Stop();
+	}
+	else
+		UpdateState(EGameState::Playing);
 }
 
 bool Game::IsTie() const

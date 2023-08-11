@@ -667,6 +667,10 @@ void ChessUIQt::OnRestartButtonClicked()
 void ChessUIQt::OnPauseButtonClicked()
 {
 	auto status = m_game->Status();
+
+	if (status->IsGameOver())
+		return;
+
 	if (!status->IsStarted())
 	{
 		m_game->Start();
@@ -688,6 +692,8 @@ void ChessUIQt::OnPauseButtonClicked()
 
 void ChessUIQt::OnDrawButtonClicked()
 {
+	if (m_game->Status()->IsGameOver())
+		return;
 	m_game->MakeTieRequest();
 }
 
@@ -962,6 +968,8 @@ QString ChessUIQt::GameStateToString()
 
 void ChessUIQt::OnGameOver()
 {
+	m_game->Stop();
+
 	auto status = m_game->Status();
 	if (status->BlackWon())
 		m_StatusMessage->setText("Black won the game!\n");
