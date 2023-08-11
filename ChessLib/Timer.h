@@ -36,6 +36,8 @@ public:
 	void Restart();
 	void Stop();
 
+	milliseconds GetElapsedTime() const;
+
 	bool IsEnabled() const;
 	bool IsRunning() const;
 	bool IsPaused() const;
@@ -45,6 +47,7 @@ public:
 
 	void AddListener(TimerWeakPtr listener);
 	void RemoveListener(ITimerListener* listener);
+
 	
 	void Notify(milliseconds whiteTimer, milliseconds blackTimer);
 
@@ -58,7 +61,7 @@ private:
 
 	ETurn m_turn;
 
-	milliseconds m_time, m_whiteRemaining, m_blackRemaining, m_resolution;
+	milliseconds m_time, m_whiteRemaining, m_blackRemaining, m_resolution, m_elapsedTime;
 
 	TimerListenerList m_listeners;
 };

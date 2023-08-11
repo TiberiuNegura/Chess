@@ -8,6 +8,7 @@ Timer::Timer(int s_timer, int ms_resolution)
 	, m_blackRemaining(m_time)
 	, m_whiteRemaining(m_time)
 	, m_turn(ETurn::White)
+	, m_elapsedTime(0)
 {
 
 }
@@ -31,9 +32,9 @@ void Timer::Start()
 			time_point<system_clock> end_lock = system_clock::now();
 			if (!m_isPaused)
 			{
-				milliseconds timePass = duration_cast<milliseconds>(end_lock - start_lock);
-				m_turn == ETurn::Black ? m_blackRemaining -= timePass : m_whiteRemaining -= timePass;
-
+				milliseconds timePassed = duration_cast<milliseconds>(end_lock - start_lock);
+				m_turn == ETurn::Black ? m_blackRemaining -= timePassed : m_whiteRemaining -= timePassed;
+				m_elapsedTime += timePassed;
 				Notify(m_whiteRemaining, m_blackRemaining);
 			}
 			
@@ -74,6 +75,11 @@ void Timer::Stop()
 }
 
 
+milliseconds Timer::GetElapsedTime() const
+{
+	return m_elapsedTime;
+}
+
 bool Timer::IsEnabled() const
 {
 	return m_time != 0ms;
@@ -98,6 +104,7 @@ void Timer::SetResolution(milliseconds resolution)
 void Timer::UpdateTurn()
 {
 	m_turn = (m_turn == ETurn::White ? ETurn::Black : ETurn::White);
+	m_elapsedTime = 0ms;
 }
 
 Timer::~Timer()

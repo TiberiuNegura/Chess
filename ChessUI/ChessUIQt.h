@@ -52,7 +52,7 @@ public:
 	void OnCheck(std::string msg) override;
 	void OnPawnEvolve() override;
 	void OnTieRequest() override;
-	void OnMovePiece(Position start, Position end) override;
+	void OnMovePiece(Position start, Position end, milliseconds elapsedTime) override;
 	void OnRestart() override;
 	void OnPieceCapture(EType pieceType, EColor pieceColor) override;
 	void SetGame(IGamePtr game);
@@ -82,7 +82,7 @@ signals:
 	void Exit();
 
 private:
-	QWidget* FromMatrixToChessMove(Position start, Position end, int color = 2);
+	QWidget* FromMatrixToChessMove(Position start, Position end, int elapsedTime, int color = 2);
 	void toggleFullScreen();
 	void CloseApp();
 

@@ -21,6 +21,7 @@ class IGameStatus
 public:
 	virtual ~IGameStatus() = default;
 
+	virtual bool IsTimerEnabled() const = 0;
 	virtual bool IsStarted() const = 0;
 	virtual bool IsPaused() const = 0;
 

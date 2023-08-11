@@ -16,7 +16,7 @@ public:
 	virtual void OnCheck(std::string msg) = 0;
 	virtual void OnPawnEvolve() = 0;
 	virtual void OnTieRequest() = 0;
-	virtual void OnMovePiece(Position start, Position end) = 0;
+	virtual void OnMovePiece(Position start, Position end, milliseconds elapsedTime) = 0;
 	virtual void OnPieceCapture(EType pieceType, EColor pieceColor) = 0;
 	virtual void OnRestart() = 0;
 	virtual void OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer) = 0;

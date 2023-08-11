@@ -592,6 +592,9 @@ void ChessUIQt::OnSaveButtonClicked()
 
 void ChessUIQt::OnLoadButtonClicked()
 {
+	if (m_game->Status()->IsTimerEnabled())
+		return;
+
 	auto status = m_game->Status();
 	QString desktopPath = QDir::homePath() + "/Downloads";
 	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open File", desktopPath, "PGN Files(*.pgn);; FEN Files(*.fen);;All Files (*)");
@@ -635,7 +638,7 @@ void ChessUIQt::OnLoadButtonClicked()
 	for (auto& move : moves)
 	{
 		QListWidgetItem* item = new QListWidgetItem();
-		QWidget* design = FromMatrixToChessMove(move.first, move.second, ++color % 2);
+		QWidget* design = FromMatrixToChessMove(move.first, move.second, 0, ++color % 2);
 		m_MovesList->addItem(item);
 		m_MovesList->setItemWidget(item, design);
 	}
@@ -663,11 +666,6 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	// if preview enabled, disable the pause/resume button
-	int index = m_MovesList->currentRow(); 
-	if (index < m_MovesList->count() - 1 && index != -1)
-		return;
-
 	auto status = m_game->Status();
 	if (!status->IsStarted())
 	{
@@ -721,7 +719,7 @@ void ChessUIQt::BoardLock(bool enabled)
 	{
 		for (int column = 0; column < 8; column++)
 		{
-			m_grid[row][column]->setEnabled(enabled);
+			m_grid[row][column]->setEnabled(!enabled);
 		}
 	}
 }
@@ -730,10 +728,10 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 {
 
 	int index = m_MovesList->currentRow();
-	//if (index == m_MovesList->count() - 1)
-	//	BoardLock(false);
-	//else
-	//	BoardLock(true);
+	if (index == m_MovesList->count() - 1)
+		BoardLock(false);
+	else
+		BoardLock(true);
 
 	m_game->PreviewPastConfig(index);
 	UpdateBoard();
@@ -756,7 +754,7 @@ void ChessUIQt::mouseMoveEvent(QMouseEvent* event)
 	}
 }
 
-QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int color)
+QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int elapsedTime, int color)
 {
 	EColor turnColor = m_game->Status()->GetTurn();
 	if (color == 0)
@@ -792,11 +790,29 @@ QWidget* ChessUIQt::FromMatrixToChessMove(Position start, Position end, int colo
 	QLabel* targetPos = new QLabel(QString::fromStdString(target));
 	targetPos->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 18px; padding: 0px; margin: 0px;");
 
+
 	QGridLayout* layout = new QGridLayout;
+
 	layout->addWidget(turnPicture, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(initialPos, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(arrow, 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(targetPos, 0, 3, Qt::AlignLeft | Qt::AlignVCenter);
+
+	if (elapsedTime)
+	{
+		int seconds = elapsedTime / 1000;
+		elapsedTime %= 1000;
+
+		QString elapsed = QTime(0, 0, seconds, elapsedTime).toString("s.zzz");
+		elapsed.removeLast();
+		elapsed.removeLast();
+		elapsed += "s";
+
+		QLabel* elapsedLabel = new QLabel(elapsed);
+		elapsedLabel->setStyleSheet("color: white; font-family: Segoe UI; font-weight: bold; font-size: 14px; padding: 0px; margin: 0px;");
+
+		layout->addWidget(elapsedLabel, 0, 4, Qt::AlignLeft | Qt::AlignVCenter);
+	}
 
 	QWidget* item = new QWidget();
 	item->setStyleSheet("background: transparent; padding: 0px; margin: 0px;");
@@ -981,11 +997,10 @@ void ChessUIQt::OnTieRequest()
 		m_game->TieRequestResponse(false);
 }
 
-void ChessUIQt::OnMovePiece(Position start, Position end)
+void ChessUIQt::OnMovePiece(Position start, Position end, milliseconds elapsedTime)
 {
-
 	QListWidgetItem* item = new QListWidgetItem();
-	QWidget* design = FromMatrixToChessMove(start, end);
+	QWidget* design = FromMatrixToChessMove(start, end, elapsedTime.count());
 	m_MovesList->addItem(item);
 	m_MovesList->setItemWidget(item, design);
 	UpdateBoard();
@@ -993,6 +1008,7 @@ void ChessUIQt::OnMovePiece(Position start, Position end)
 
 void ChessUIQt::OnRestart()
 {
+	m_game->RemoveListener(this);
 	QGridLayout* mainGridLayout = new QGridLayout();
 	Init(mainGridLayout);
 	InitGame();

@@ -55,6 +55,7 @@ public:
 	void Stop() override;
 	void Restart() override;
 
+	bool IsTimerEnabled() const;
 	bool IsStarted() const override;
 	bool IsPaused() const override;
 
@@ -104,7 +105,7 @@ public:
 	
 	// Listeners notifications
 	void Notify(EResponse response);
-	void Notify(Position start, Position end);
+	void Notify(Position start, Position end, milliseconds elapsedTime);
 	void Notify(EType pieceType, EColor pieceColor);
 	void Notify(milliseconds whiteRemaining, milliseconds blackRemaining);
 

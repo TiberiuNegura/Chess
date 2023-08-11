@@ -42,13 +42,18 @@ Game::Game(CharBoardRepresentation mat, EColor turn, EGameState state)
 
 bool Game::LoadFromFormat(const std::string& path)
 {
+	if (m_timer.IsEnabled())
+		return false;
+
 	PGN currentPGN = m_pgn;
 	try
 	{
 		if (!FileUtils::HasAnyExtension(path, "pgn", "fen"))
 			return false;
 
+		m_bEnableNotifications = false;
 		Restart();
+		m_bEnableNotifications = true;
 
 		if (FileUtils::HasAnyExtension(path, "pgn"))
 		{
@@ -67,7 +72,9 @@ bool Game::LoadFromFormat(const std::string& path)
 	}
 	catch (...)
 	{
+		m_bEnableNotifications = false;
 		Restart();
+		m_bEnableNotifications = true;
 		LoadFromPGN(currentPGN, true);
 		return false;
 	}
@@ -164,7 +171,6 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 
 void Game::PreviewPastConfig(int moveIndex)
 {
-	moveIndex == m_boardConfigs.size() - 2 ? Resume() : Pause();
 	BoardConfig config = m_boardConfigs[++moveIndex];
 	m_board.SetBoardConfiguration(config);
 }
@@ -247,7 +253,7 @@ void Game::MovePiece(Position start, Position destination)
 
 			m_board.MovePiece(start, destination);
 			m_pgn.Add(m_board.MatrixToChessMove(start, destination, captures, lineOrCol)); // pgn
-			Notify(start, destination);
+			Notify(start, destination, m_timer.GetElapsedTime());
 			m_gameMoves.emplace_back(start, destination);
 			m_board[destination]->SetHasMoved();
 			
@@ -526,6 +532,11 @@ void Game::Restart()
 	Notify(EResponse::Restart);
 }
 
+bool Game::IsTimerEnabled() const
+{
+	return m_timer.IsEnabled();
+}
+
 void Game::AddListener(ListenerWeakPtr listener)
 {
 	m_listeners.push_back(listener);
@@ -574,12 +585,12 @@ void Game::Notify(EResponse response)
 	}
 }
 
-void Game::Notify(Position start, Position end)
+void Game::Notify(Position start, Position end, milliseconds elapsedTime)
 {
 	if (!m_bEnableNotifications)
 		return;
 	for (auto listener : m_listeners)
-		listener.lock()->OnMovePiece(start, end);
+		listener.lock()->OnMovePiece(start, end, elapsedTime);
 }
 
 void Game::Notify(EType pieceType, EColor pieceColor)
