@@ -7,8 +7,7 @@
 #include <string>
 #include <chrono>
 
-using TimeSeconds = std::chrono::seconds;
-
+using namespace std::chrono;
 /**
  * @brief The interface for receiving game-related events and notifications.
  *
@@ -43,7 +42,7 @@ public:
 	* @param start The starting position of the moved piece.
 	* @param end The destination position of the moved piece.
 	*/
-	virtual void OnMovePiece(Position start, Position end) = 0;
+	virtual void OnMovePiece(Position start, Position end, milliseconds elapsedTime) = 0;
 	/**
 	 * @brief Called when a chess piece is captured.
 	 *
@@ -61,7 +60,7 @@ public:
 	 * @param whiteTimer The remaining time for the white player.
 	 * @param blackTimer The remaining time for the black player.
 	 */
-	virtual void OnTimerTick(TimeSeconds whiteTimer, TimeSeconds blackTimer) = 0;
+	virtual void OnTimerTick(milliseconds whiteTimer, milliseconds blackTimer) = 0;
 	/**
 	* @brief Virtual destructor to ensure proper cleanup in derived classes.
 	*/

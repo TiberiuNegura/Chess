@@ -13,29 +13,28 @@ using IPiecePtr = std::shared_ptr<class IPiece>;
  * @brief An enumeration representing the color of a chess piece.
  */
 enum class EColor {
-	WHITE, ///< The white color.
-	BLACK, ///< The black color.
-	NONE ///< Represents an absence of color.
+	WHITE,
+	BLACK,
+	NONE
 };
+
 
 /**
  * @brief An enumeration representing the type of a chess piece.
  */
 enum class EType {
-	PAWN,   ///< A pawn chess piece.
-	ROOK,   ///< A rook chess piece.
-	BISHOP, ///< A bishop chess piece.
-	HORSE,  ///< A horse (knight) chess piece.
-	QUEEN,  ///< A queen chess piece.
-	KING,   ///< A king chess piece.
-	EMPTY   ///< Represents an empty (no) piece.
+	PAWN,
+	ROOK,
+	BISHOP,
+	HORSE,
+	QUEEN,
+	KING,
+	EMPTY
 };
-
 /**
  * @brief A list of chess piece types.
  */
 using TypeList = std::vector<EType>;
-
 /**
  * @brief The interface for a chess piece.
  *
@@ -92,7 +91,6 @@ public:
 	 * @return True if the piece matches any of the specified types, false otherwise.
 	 */
 	virtual bool Is(const std::vector<EType>& typeList) const = 0;
-
 	/**
 	* @brief Virtual destructor to ensure proper cleanup in derived classes.
 	*/

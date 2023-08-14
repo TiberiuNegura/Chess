@@ -88,6 +88,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IGameStatus</b> ()=default</td></tr>
 <tr class="memdesc:a4992b3711832b57069f293847b37171a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor to ensure proper cleanup in derived classes. <br /></td></tr>
 <tr class="separator:a4992b3711832b57069f293847b37171a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad80ca2c4328a422a5f2224c3ecc19610"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_game_status.html#ad80ca2c4328a422a5f2224c3ecc19610">IsTimerEnabled</a> () const =0</td></tr>
+<tr class="separator:ad80ca2c4328a422a5f2224c3ecc19610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e6edce519fd416dcc2abcfb3b4fe651"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_game_status.html#a4e6edce519fd416dcc2abcfb3b4fe651">IsStarted</a> () const =0</td></tr>
 <tr class="memdesc:a4e6edce519fd416dcc2abcfb3b4fe651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the game has started.  <br /></td></tr>
 <tr class="separator:a4e6edce519fd416dcc2abcfb3b4fe651"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,7 +124,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IGameStatus</b> (
 <tr class="memdesc:a0e07f72459f6d783ea0b9762574c33c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the game has ended in a tie.  <br /></td></tr>
 <tr class="separator:a0e07f72459f6d783ea0b9762574c33c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa89161d53a3d24870c9f866bb856fd5a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_game_status.html#aa89161d53a3d24870c9f866bb856fd5a">BlackWon</a> () const =0</td></tr>
-<tr class="memdesc:aa89161d53a3d24870c9f866bb856fd5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the black player has won the game.  <br /></td></tr>
+<tr class="memdesc:aa89161d53a3d24870c9f866bb856fd5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the white player has won the game.  <br /></td></tr>
 <tr class="separator:aa89161d53a3d24870c9f866bb856fd5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3891d62d221b0cb0cc3a396bc9e48191"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_game_status.html#a3891d62d221b0cb0cc3a396bc9e48191">WhiteWon</a> () const =0</td></tr>
 <tr class="memdesc:a3891d62d221b0cb0cc3a396bc9e48191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the white player has won the game.  <br /></td></tr>
@@ -158,8 +160,8 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IGameStatus</b> (
 </table>
 </div><div class="memdoc">
 
-<p>Checks if the black player has won the game. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if the black player has won, false otherwise. </dd></dl>
+<p>Checks if the white player has won the game. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the white player has won, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -513,6 +515,33 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IGameStatus</b> (
 
 </div>
 </div>
+<a id="ad80ca2c4328a422a5f2224c3ecc19610" name="ad80ca2c4328a422a5f2224c3ecc19610"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad80ca2c4328a422a5f2224c3ecc19610">&#9670;&#160;</a></span>IsTimerEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool IGameStatus::IsTimerEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Checks whether the timer is enabled.</p>
+<dl class="section return"><dt>Returns</dt><dd>True if the timer is enabled (time is not zero), false otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="a3891d62d221b0cb0cc3a396bc9e48191" name="a3891d62d221b0cb0cc3a396bc9e48191"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3891d62d221b0cb0cc3a396bc9e48191">&#9670;&#160;</a></span>WhiteWon()</h2>
 
@@ -542,7 +571,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IGameStatus</b> (
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>source/<a class="el" href="_i_game_status_8h_source.html">IGameStatus.h</a></li>
+<li>C:/Users/tnegura/Desktop/projects/Documentation/Chess.ro/source/<a class="el" href="_i_game_status_8h_source.html">IGameStatus.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

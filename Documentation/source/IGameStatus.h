@@ -2,7 +2,6 @@
 
 #include "IPiece.h"
 #include "Position.h"
-
 /**
  * @brief Represents a move from one position to another on the chessboard.
  */
@@ -31,7 +30,6 @@ public:
 	 */
 	virtual ~IMatrix() = default;
 };
-
 /**
  * @brief A shared pointer to an IMatrix instance.
  */
@@ -49,6 +47,12 @@ public:
 	 * @brief Virtual destructor to ensure proper cleanup in derived classes.
 	 */
 	virtual ~IGameStatus() = default;
+	/**
+	 * Checks whether the timer is enabled.
+	 *
+	 * @return True if the timer is enabled (time is not zero), false otherwise.
+	 */
+	virtual bool IsTimerEnabled() const = 0;
 	/**
 	 * @brief Checks if the game has started.
 	 *
@@ -118,10 +122,10 @@ public:
 	 */
 	virtual bool IsTie() const = 0;
 	/**
-	* @brief Checks if the black player has won the game.
-	*
-	* @return True if the black player has won, false otherwise.
-	*/
+	 * @brief Checks if the white player has won the game.
+	 *
+	 * @return True if the white player has won, false otherwise.
+	 */
 	virtual bool BlackWon() const = 0;
 	/**
 	 * @brief Checks if the white player has won the game.

@@ -9,7 +9,6 @@
 #include "AllChessExceptions.h"
 
 using IGamePtr = std::shared_ptr<class IGame>;
-
 /**
  * @brief The base interface for a chess game.
  *
@@ -26,7 +25,7 @@ public:
 	 * @param timerSeconds The initial time limit for the game in seconds (optional).
 	 * @return A shared pointer to the created IGame instance.
 	 */
-	static IGamePtr Produce(int timerSeconds = 2000);
+	static IGamePtr Produce(int timerSeconds = 0);
 
 	virtual ~IGame() = default;
 
@@ -36,7 +35,6 @@ public:
 	 * @param listener A weak pointer to the listener to be added.
 	 */
 	virtual void AddListener(ListenerWeakPtr listener) = 0;
-
 	/**
 	* @brief Removes an observer from the game.
 	*
@@ -49,7 +47,7 @@ public:
 	*
 	* @param start The starting position of the piece.
 	* @param destination The destination position for the piece.
-	* 
+	*
 	* @throws IllegalMoveException If the move is not allowed by the game rules.
 	* @throws GameOverException If the state of the game is either black/white won nor a tie.
 	* @throws TieRequestException If a tie proposal has been made and someone tries to move a piece.
@@ -59,19 +57,16 @@ public:
 	* @throws CheckException If a player tries to move a piece while in check that does not solve the check state.
 	*/
 	virtual void MovePiece(Position start, Position destination) = 0;
-
 	/**
 	 * @brief Initiates a tie request in the game.
 	 */
 	virtual void MakeTieRequest() = 0;
-
 	/**
 	 * @brief Responds to a tie request.
 	 *
 	 * @param answer The response to the tie request.
 	 */
 	virtual void TieRequestResponse(bool answer) = 0;
-
 	/**
 	 * @brief Evolves a pawn to a specified piece type.
 	 *

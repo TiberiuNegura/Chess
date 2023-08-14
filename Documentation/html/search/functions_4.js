@@ -8,5 +8,6 @@ var searchData=
   ['isstarted_5',['IsStarted',['../class_i_game_status.html#a4e6edce519fd416dcc2abcfb3b4fe651',1,'IGameStatus']]],
   ['istie_6',['IsTie',['../class_i_game_status.html#a0e07f72459f6d783ea0b9762574c33c0',1,'IGameStatus']]],
   ['istierequest_7',['IsTieRequest',['../class_i_game_status.html#a498d5fe49b7cd1bf761bf6f0f491a9c5',1,'IGameStatus']]],
-  ['isvalid_8',['IsValid',['../struct_position.html#a6d8dd3a8d081a0047b6d37bc31ece7df',1,'Position']]]
+  ['istimerenabled_8',['IsTimerEnabled',['../class_i_game_status.html#ad80ca2c4328a422a5f2224c3ecc19610',1,'IGameStatus']]],
+  ['isvalid_9',['IsValid',['../struct_position.html#a6d8dd3a8d081a0047b6d37bc31ece7df',1,'Position']]]
 ];

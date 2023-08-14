@@ -15,6 +15,8 @@ The interface for accessing and managing the status of a chess game.
 \Hypertarget{class_i_game_status_a4992b3711832b57069f293847b37171a}\label{class_i_game_status_a4992b3711832b57069f293847b37171a} 
 virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IGame\+Status} ()=default
 \begin{DoxyCompactList}\small\item\em Virtual destructor to ensure proper cleanup in derived classes. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_game_status_ad80ca2c4328a422a5f2224c3ecc19610}{Is\+Timer\+Enabled}} () const =0
+\item 
 virtual bool \mbox{\hyperlink{class_i_game_status_a4e6edce519fd416dcc2abcfb3b4fe651}{Is\+Started}} () const =0
 \begin{DoxyCompactList}\small\item\em Checks if the game has started. \end{DoxyCompactList}\item 
 virtual bool \mbox{\hyperlink{class_i_game_status_af431d7d3d4c18f9e097ab09a21aced70}{Is\+Paused}} () const =0
@@ -38,7 +40,7 @@ virtual bool \mbox{\hyperlink{class_i_game_status_abcfa26af03e23199a2ca25fc51fdc
 virtual bool \mbox{\hyperlink{class_i_game_status_a0e07f72459f6d783ea0b9762574c33c0}{Is\+Tie}} () const =0
 \begin{DoxyCompactList}\small\item\em Checks if the game has ended in a tie. \end{DoxyCompactList}\item 
 virtual bool \mbox{\hyperlink{class_i_game_status_aa89161d53a3d24870c9f866bb856fd5a}{Black\+Won}} () const =0
-\begin{DoxyCompactList}\small\item\em Checks if the black player has won the game. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Checks if the white player has won the game. \end{DoxyCompactList}\item 
 virtual bool \mbox{\hyperlink{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191}{White\+Won}} () const =0
 \begin{DoxyCompactList}\small\item\em Checks if the white player has won the game. \end{DoxyCompactList}\item 
 virtual bool \mbox{\hyperlink{class_i_game_status_a486181105b73affa92cfc76a64277ea3}{Is\+Game\+Over}} () const =0
@@ -59,10 +61,10 @@ This interface provides methods to query various aspects of the game status, suc
 
 
 
-Checks if the black player has won the game. 
+Checks if the white player has won the game. 
 
 \begin{DoxyReturn}{Returns}
-True if the black player has won, false otherwise. 
+True if the white player has won, false otherwise. 
 \end{DoxyReturn}
 \Hypertarget{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff}\label{class_i_game_status_a57546588c8cb5ceca557aa28494ff0ff} 
 \index{IGameStatus@{IGameStatus}!GetBoard@{GetBoard}}
@@ -230,6 +232,17 @@ Checks the current state of the game in order to decide if a tie request has bee
 \begin{DoxyReturn}{Returns}
 True if a tie request has been made, false otherwise. 
 \end{DoxyReturn}
+\Hypertarget{class_i_game_status_ad80ca2c4328a422a5f2224c3ecc19610}\label{class_i_game_status_ad80ca2c4328a422a5f2224c3ecc19610} 
+\index{IGameStatus@{IGameStatus}!IsTimerEnabled@{IsTimerEnabled}}
+\index{IsTimerEnabled@{IsTimerEnabled}!IGameStatus@{IGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsTimerEnabled()}{IsTimerEnabled()}}
+{\footnotesize\ttfamily virtual bool IGame\+Status\+::\+Is\+Timer\+Enabled (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks whether the timer is enabled.
+
+\begin{DoxyReturn}{Returns}
+True if the timer is enabled (time is not zero), false otherwise. 
+\end{DoxyReturn}
 \Hypertarget{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191}\label{class_i_game_status_a3891d62d221b0cb0cc3a396bc9e48191} 
 \index{IGameStatus@{IGameStatus}!WhiteWon@{WhiteWon}}
 \index{WhiteWon@{WhiteWon}!IGameStatus@{IGameStatus}}
@@ -247,4 +260,4 @@ True if the white player has won, false otherwise.
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-source/IGame\+Status.\+h\end{DoxyCompactItemize}
+C\+:/\+Users/tnegura/\+Desktop/projects/\+Documentation/\+Chess.\+ro/source/IGame\+Status.\+h\end{DoxyCompactItemize}

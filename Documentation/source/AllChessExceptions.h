@@ -1,8 +1,8 @@
 #pragma once
 /**
- * This header includes all the custom exception headers used in the project.
- * 
- * Including this header in your classes reduces the need to include individual exception headers. 
+ * @brief This header includes all the custom exception headers used in the project.
+ *
+ * Including this header in your classes reduces the need to include individual exception headers.
  */
 #include "CheckException.h"
 #include "EmptyPositionException.h"

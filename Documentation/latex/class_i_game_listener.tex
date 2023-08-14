@@ -23,14 +23,14 @@ virtual void {\bfseries On\+Pawn\+Evolve} ()=0
 \Hypertarget{class_i_game_listener_a6e101905af5d1c4329d6ea443865991a}\label{class_i_game_listener_a6e101905af5d1c4329d6ea443865991a} 
 virtual void {\bfseries On\+Tie\+Request} ()=0
 \begin{DoxyCompactList}\small\item\em Called when a tie request is made. \end{DoxyCompactList}\item 
-virtual void \mbox{\hyperlink{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f}{On\+Move\+Piece}} (\mbox{\hyperlink{struct_position}{Position}} start, \mbox{\hyperlink{struct_position}{Position}} end)=0
+virtual void \mbox{\hyperlink{class_i_game_listener_a29ba1e64d2d18c8ecfdcc81099544fc2}{On\+Move\+Piece}} (\mbox{\hyperlink{struct_position}{Position}} start, \mbox{\hyperlink{struct_position}{Position}} end, milliseconds elapsed\+Time)=0
 \begin{DoxyCompactList}\small\item\em Called when a chess piece is moved on the board. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{class_i_game_listener_a079832216771a3224a90505943cebbe4}{On\+Piece\+Capture}} (EType piece\+Type, EColor piece\+Color)=0
 \begin{DoxyCompactList}\small\item\em Called when a chess piece is captured. \end{DoxyCompactList}\item 
 \Hypertarget{class_i_game_listener_a3241499260171d7e41c4692c4352f56a}\label{class_i_game_listener_a3241499260171d7e41c4692c4352f56a} 
 virtual void {\bfseries On\+Restart} ()=0
 \begin{DoxyCompactList}\small\item\em Called when the game is restarted. \end{DoxyCompactList}\item 
-virtual void \mbox{\hyperlink{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e}{On\+Timer\+Tick}} (Time\+Seconds white\+Timer, Time\+Seconds black\+Timer)=0
+virtual void \mbox{\hyperlink{class_i_game_listener_aae1c29a4ccb2df1d0befeef6f412bf8d}{On\+Timer\+Tick}} (milliseconds white\+Timer, milliseconds black\+Timer)=0
 \begin{DoxyCompactList}\small\item\em Called when a timer tick occurs. \end{DoxyCompactList}\item 
 \Hypertarget{class_i_game_listener_aa75029cbc38192375b5fcf175eebca54}\label{class_i_game_listener_aa75029cbc38192375b5fcf175eebca54} 
 virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IGame\+Listener} ()=default
@@ -58,11 +58,11 @@ Called when a check condition is detected.
 {\em msg} & A message providing additional information about the check. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f}\label{class_i_game_listener_a4fdbbfa8ab5e5189de973dc1a88e546f} 
+\Hypertarget{class_i_game_listener_a29ba1e64d2d18c8ecfdcc81099544fc2}\label{class_i_game_listener_a29ba1e64d2d18c8ecfdcc81099544fc2} 
 \index{IGameListener@{IGameListener}!OnMovePiece@{OnMovePiece}}
 \index{OnMovePiece@{OnMovePiece}!IGameListener@{IGameListener}}
 \doxysubsubsection{\texorpdfstring{OnMovePiece()}{OnMovePiece()}}
-{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Move\+Piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{start,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Move\+Piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{start,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{end,  }\item[{milliseconds}]{elapsed\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -92,11 +92,11 @@ Called when a chess piece is captured.
 {\em piece\+Color} & The color of the captured piece. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e}\label{class_i_game_listener_a3f9ab396b873a6765683e0419916a68e} 
+\Hypertarget{class_i_game_listener_aae1c29a4ccb2df1d0befeef6f412bf8d}\label{class_i_game_listener_aae1c29a4ccb2df1d0befeef6f412bf8d} 
 \index{IGameListener@{IGameListener}!OnTimerTick@{OnTimerTick}}
 \index{OnTimerTick@{OnTimerTick}!IGameListener@{IGameListener}}
 \doxysubsubsection{\texorpdfstring{OnTimerTick()}{OnTimerTick()}}
-{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Timer\+Tick (\begin{DoxyParamCaption}\item[{Time\+Seconds}]{white\+Timer,  }\item[{Time\+Seconds}]{black\+Timer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual void IGame\+Listener\+::\+On\+Timer\+Tick (\begin{DoxyParamCaption}\item[{milliseconds}]{white\+Timer,  }\item[{milliseconds}]{black\+Timer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -113,4 +113,4 @@ Called when a timer tick occurs.
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-source/IGame\+Listener.\+h\end{DoxyCompactItemize}
+C\+:/\+Users/tnegura/\+Desktop/projects/\+Documentation/\+Chess.\+ro/source/IGame\+Listener.\+h\end{DoxyCompactItemize}

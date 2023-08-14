@@ -1,5 +1,5 @@
 \doxysection{IGame.\+h}
-\hypertarget{_i_game_8h_source}{}\label{_i_game_8h_source}\index{source/IGame.h@{source/IGame.h}}
+\hypertarget{_i_game_8h_source}{}\label{_i_game_8h_source}\index{C:/Users/tnegura/Desktop/projects/Documentation/Chess.ro/source/IGame.h@{C:/Users/tnegura/Desktop/projects/Documentation/Chess.ro/source/IGame.h}}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
@@ -13,31 +13,26 @@
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}AllChessExceptions.h"{}}}
 \DoxyCodeLine{00010\ }
 \DoxyCodeLine{00011\ \textcolor{keyword}{using\ }IGamePtr\ =\ std::shared\_ptr<class\ IGame>;}
-\DoxyCodeLine{00012\ }
-\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_game}{IGame}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_i_game_controls}{IGameControls}},\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_i_game_storage}{IGameStorage}}}
-\DoxyCodeLine{00021\ \{}
-\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ IGamePtr\ \mbox{\hyperlink{class_i_game_abc213545b44cb9ca904c4444a1607a09}{Produce}}(\textcolor{keywordtype}{int}\ timerSeconds\ =\ 2000);}
-\DoxyCodeLine{00030\ }
-\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_game}{\string~IGame}}()\ =\ \textcolor{keywordflow}{default};}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_afad925595fce46cf6eaa67da21820783}{AddListener}}(ListenerWeakPtr\ listener)\ =\ 0;}
-\DoxyCodeLine{00039\ }
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_adc4f440bc579eb882a3e454594a51865}{RemoveListener}}(\mbox{\hyperlink{class_i_game_listener}{IGameListener}}*\ listener)\ =\ 0;}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a3d7fae360a7076f42a3f42dbd260aef9}{MovePiece}}(\mbox{\hyperlink{struct_position}{Position}}\ start,\ \mbox{\hyperlink{struct_position}{Position}}\ destination)\ =\ 0;}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_af9240c8dd27ad28d293dbda54422f0b5}{MakeTieRequest}}()\ =\ 0;}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_ac75fd3d9e313caff50039688ebaba270}{TieRequestResponse}}(\textcolor{keywordtype}{bool}\ answer)\ =\ 0;}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a86f35a91f30963d0fec2bd8709cbcb6d}{EvolvePawn}}(EType\ pieceType)\ =\ 0;}
-\DoxyCodeLine{00082\ }
-\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_i_game_status}{IGameStatus}}*\ \mbox{\hyperlink{class_i_game_a196b29f70612d2ec6a3d26f11b8e6f0d}{Status}}()\ \textcolor{keyword}{const}\ =\ 0;}
-\DoxyCodeLine{00089\ }
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a10afae10facd8292d30f2ba4dbb9e4c4}{PreviewPastConfig}}(\textcolor{keywordtype}{int}\ moveIndex)\ =\ 0;}
-\DoxyCodeLine{00096\ \};}
-\DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_game}{IGame}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_i_game_controls}{IGameControls}},\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_i_game_storage}{IGameStorage}}}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ IGamePtr\ \mbox{\hyperlink{class_i_game_a64f18148fa0ea4e9e4bcec488ca947cf}{Produce}}(\textcolor{keywordtype}{int}\ timerSeconds\ =\ 0);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_game}{\string~IGame}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_afad925595fce46cf6eaa67da21820783}{AddListener}}(ListenerWeakPtr\ listener)\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_adc4f440bc579eb882a3e454594a51865}{RemoveListener}}(\mbox{\hyperlink{class_i_game_listener}{IGameListener}}*\ listener)\ =\ 0;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a3d7fae360a7076f42a3f42dbd260aef9}{MovePiece}}(\mbox{\hyperlink{struct_position}{Position}}\ start,\ \mbox{\hyperlink{struct_position}{Position}}\ destination)\ =\ 0;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_af9240c8dd27ad28d293dbda54422f0b5}{MakeTieRequest}}()\ =\ 0;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_ac75fd3d9e313caff50039688ebaba270}{TieRequestResponse}}(\textcolor{keywordtype}{bool}\ answer)\ =\ 0;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a86f35a91f30963d0fec2bd8709cbcb6d}{EvolvePawn}}(EType\ pieceType)\ =\ 0;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_i_game_status}{IGameStatus}}*\ \mbox{\hyperlink{class_i_game_a196b29f70612d2ec6a3d26f11b8e6f0d}{Status}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_game_a10afae10facd8292d30f2ba4dbb9e4c4}{PreviewPastConfig}}(\textcolor{keywordtype}{int}\ moveIndex)\ =\ 0;}
+\DoxyCodeLine{00091\ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
 
 \end{DoxyCode}
