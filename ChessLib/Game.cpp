@@ -100,6 +100,7 @@ void Game::LoadFromFEN(std::string path)
 void Game::LoadFromPGN(PGN pgnObj, bool loadFromBackup)
 {
 	m_bEnableNotifications = false;
+	m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 
 	std::string pgn = loadFromBackup ? pgnObj.ComputeMovesPgn() : pgnObj.GetMovesString();
 
@@ -171,8 +172,10 @@ Move Game::ChessMoveToMatrix(const std::string& move)
 
 void Game::PreviewPastConfig(int moveIndex)
 {
-	BoardConfig config = m_boardConfigs[++moveIndex];
-	m_board.SetBoardConfiguration(config);
+	if (moveIndex < m_boardConfigs.size())
+		moveIndex++;
+
+	m_board.SetBoardConfiguration(m_boardConfigs[moveIndex]);
 }
 
 void Game::Start()
@@ -266,15 +269,14 @@ void Game::MovePiece(Position start, Position destination)
 					m_board.MovePiece({ start.first, 7 }, { start.first, 5 });
 			}
 
-			BoardConfig configuration = m_board.GetBoardConfiguration();
-			m_boardConfigs.push_back(configuration);
-
 			if (m_board.CanPawnEvolve(destination))
 			{
 				UpdateState(EGameState::PawnEvolving);
 				Notify(EResponse::PawnUpgrade);
+				m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 				return;
 			}
+			m_boardConfigs.push_back(m_board.GetBoardConfiguration());
 
 			UpdateTurn();
 			bool opponentInCheck = m_board.IsCheck(m_turn);
@@ -305,7 +307,7 @@ void Game::MovePiece(Position start, Position destination)
 			else if (!opponentInCheck)
 				UpdateState(EGameState::Playing);
 
-			if (m_board.IsThreeFold(m_boardConfigs, configuration))
+			if (m_board.IsThreeFold(m_boardConfigs, m_board.GetBoardConfiguration()))
 			{
 				UpdateState(EGameState::Tie);
 				Notify(EResponse::Tie);

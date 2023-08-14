@@ -77,6 +77,13 @@ public:
 
 private:
 	Position FindKing(EColor color) const;
+	void AddCastlingPattern(IPiecePtr piece, PositionList& positions) const;
+	void SimulateMove(BoardPtr boardClone, PositionList& positions, Position pos) const;
+	void ValidateCastling(IPiecePtr piece, PositionList& positions, int row) const;
+	void ValidatePawnMove(Position pos, PositionList& positions) const;
+
+
+
 
 	Position FindStart(char name, Position end, EColor turn, Position pos) const;
 

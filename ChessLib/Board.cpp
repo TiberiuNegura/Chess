@@ -182,6 +182,25 @@ BoardConfig Board::GetBoardConfiguration() const
 	return config;
 }
 
+//void Board::SetBoardConfiguration(BoardConfig board)
+//{
+//	for (int index = 0; index < 256; index += 4)
+//	{
+//		int bits[4] = { index, index + 1, index + 2, index + 3 };
+//
+//		int color = board[bits[0]];
+//		int type = board[bits[1]] + 2 * board[bits[2]] + 4 * board[bits[3]];
+//
+//		int row = (index / 4 / 8);
+//		int column = (index / 4 % 8);
+//
+//		if ((EType)type == EType::EMPTY)
+//			m_board[row][column] = nullptr;
+//		else 
+//			m_board[row][column] = Piece::Produce((EType) type, (EColor) color);
+//	}
+//}
+
 void Board::SetBoardConfiguration(BoardConfig board)
 {
 	for (int index = 0; index < 256; index += 4)
@@ -191,13 +210,13 @@ void Board::SetBoardConfiguration(BoardConfig board)
 		int color = board[bits[0]];
 		int type = board[bits[1]] + 2 * board[bits[2]] + 4 * board[bits[3]];
 
-		int row = (index / 4 / 8);
-		int column = (index / 4 % 8);
+		int row = index / 32;      // Calculate the row
+		int column = (index / 4) % 8; // Calculate the column
 
 		if ((EType)type == EType::EMPTY)
 			m_board[row][column] = nullptr;
-		else 
-			m_board[row][column] = Piece::Produce((EType) type, (EColor) color);
+		else
+			m_board[row][column] = Piece::Produce((EType)type, (EColor)color);
 	}
 }
 
@@ -457,6 +476,69 @@ bool Board::IsCheck(EColor color) const
 	return false;
 }
 
+void Board::AddCastlingPattern(IPiecePtr piece, PositionList& positions) const
+{
+	int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
+	bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
+
+	if (kingMoveLeft && IsCastlingPossible(ECastling::Left, piece->GetColor()))
+		positions.emplace_back(row, 2);
+
+	bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5)) != positions.end();
+
+	if (kingMoveRight && IsCastlingPossible(ECastling::Right, piece->GetColor()))
+		positions.emplace_back(row, 6);
+}
+
+void Board::SimulateMove(BoardPtr boardClone, PositionList& positions, Position pos) const
+{
+	auto piece = boardClone->GetMatrix()[pos.first][pos.second];
+	for (auto it = positions.begin(); it != positions.end();)
+	{
+		Position currentPos = *it;
+
+		auto aux = Get(currentPos);
+
+		boardClone->MovePiece(pos, currentPos); // simulate the move
+
+		if (boardClone->IsCheck(piece->GetColor()))
+			it = positions.erase(it);
+		else
+			++it;
+
+		boardClone->MovePiece(currentPos, pos); // rollback to initial position
+		boardClone->SetPosition(aux, currentPos);
+	}
+}
+
+void Board::ValidateCastling(IPiecePtr piece, PositionList& positions, int row) const
+{
+	bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
+	auto castlingLeft = std::find(positions.begin(), positions.end(), Position(row, 2));
+
+	if (!kingMoveLeft && castlingLeft != positions.end()) // if King can't move left, castle can't happen
+		positions.erase(castlingLeft);
+
+	bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5)) != positions.end();
+	auto castlingRight = std::find(positions.begin(), positions.end(), Position(row, 6));
+
+	if (!kingMoveRight && castlingRight != positions.end()) // if King can't move right, castle can't happen
+		positions.erase(castlingRight);
+}
+
+void Board::ValidatePawnMove(Position pos, PositionList& positions) const
+{
+	int direction = Get(pos)->Is(EColor::BLACK) ? 1 : -1;
+	Position forwardOnePos(pos.first + direction, pos.second);
+	Position forwardTwoPos(pos.first + 2 * direction, pos.second);
+
+	auto forwardOneIt = std::find(positions.begin(), positions.end(), forwardOnePos);
+	auto forwardTwoIt = std::find(positions.begin(), positions.end(), forwardTwoPos);
+
+	if (forwardOneIt == positions.end() && forwardTwoIt != positions.end())
+		positions.erase(forwardTwoIt);
+}
+
 PositionList Board::GetMoves(Position piecePos, EColor turn) const
 {
 	if (IsOutOfBounds(piecePos))
@@ -468,61 +550,24 @@ PositionList Board::GetMoves(Position piecePos, EColor turn) const
 	if (!piece || !piece->Is(turn))
 		return PositionList();
 
-
 	PositionList positions = ComputePositionList(piecePos);
 
-
-	// Castling pattern without validation
 	if (piece->Is(EType::KING) && !IsCheck(piece->GetColor()))
 	{
-		int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
-		bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
-
-		if (kingMoveLeft && IsCastlingPossible(ECastling::Left, piece->GetColor()))
-			positions.emplace_back(row, 2);
-
-		bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5 )) != positions.end();
-
-		if (kingMoveRight && IsCastlingPossible(ECastling::Right, piece->GetColor()))
-			positions.emplace_back(row, 6);
+		AddCastlingPattern(piece, positions);
 	}
 
 	auto king = FindKing(turn);
 
-	for (auto it = positions.begin(); it != positions.end();)
-	{
-		Position currentPos = *it;
-
-		auto aux = Get(currentPos);
-		
-		boardClone->MovePiece(piecePos, currentPos); // simulate the move
-
-		if (boardClone->IsCheck(piece->GetColor()))
-			it = positions.erase(it);
-		else
-			++it;
-
-		boardClone->MovePiece(currentPos, piecePos); // rollback to initial position
-		boardClone->SetPosition(aux, currentPos); 
-	}
+	SimulateMove(boardClone, positions, piecePos);
 	
 	// Castling validation
 	int row = (piece->GetColor() == EColor::BLACK ? 0 : 7);
 	if (piece->Is(EType::KING) && piecePos == Position(row, 4))
-	{
-		bool kingMoveLeft = std::find(positions.begin(), positions.end(), Position(row, 3)) != positions.end();
-		auto castlingLeft = std::find(positions.begin(), positions.end(), Position(row, 2));
-
-		if (!kingMoveLeft && castlingLeft != positions.end()) // if King can't move left, castle can't happen
-			positions.erase(castlingLeft);
-
-		bool kingMoveRight = std::find(positions.begin(), positions.end(), Position(row, 5 )) != positions.end();
-		auto castlingRight = std::find(positions.begin(), positions.end(), Position(row, 6));
-
-		if (!kingMoveRight && castlingRight != positions.end()) // if King can't move right, castle can't happen
-			positions.erase(castlingRight);
-	}
+		ValidateCastling(piece, positions, row);
 	
+	if (piece->Is(EType::PAWN))
+		ValidatePawnMove(piecePos, positions);
 
 	return positions;
 }

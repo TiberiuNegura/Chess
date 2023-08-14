@@ -40,6 +40,8 @@ public:
 	void UpdateBoard();
 	void HighlightPossibleMoves(const PositionList& possibleMoves);
 
+	void UnhighlightPossibleMoves(const PositionList& possibleMoves);
+
 	void ShowPromoteOptions();
 
 	QString GetTurnMessage();

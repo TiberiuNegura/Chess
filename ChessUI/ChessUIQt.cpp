@@ -547,6 +547,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 	if (m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->ClicksCounter() == 2)
 	{
+		UnhighlightPossibleMoves(m_game->Status()->GetMoves(position));
 		m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->ClicksReset();
 		UpdateBoard();
 	}
@@ -743,7 +744,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 	m_game->PreviewPastConfig(index);
 	UpdateBoard();
-
+	m_MovesList->clearSelection();
 }
 
 void ChessUIQt::mousePressEvent(QMouseEvent* event)
@@ -902,6 +903,18 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 			possibleMove->setHighlighted(EHighlight::OCCUPIED_POS); // highlight opponent piece
 		else
 			possibleMove->setHighlighted(EHighlight::EMPTY_POS); // highlight empty 
+	}
+}
+
+void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
+{
+	for (const auto& position : possibleMoves)
+	{
+		auto possibleMove = m_grid[position.first][position.second];
+		if (m_game->Status()->GetBoard()->GetElement(position))
+			possibleMove->setHighlighted(EHighlight::NONE); // highlight opponent piece
+		else
+			possibleMove->setHighlighted(EHighlight::NONE); // highlight empty 
 	}
 }
 
